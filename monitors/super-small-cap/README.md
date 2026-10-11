@@ -10,7 +10,7 @@ AGENT_RULES.md carries the learned distinctions: peak versus held gain, winners 
 
 ## Owner activation
 
-The installer's --hash prints the reviewed bundle hash. Run --expected-sha256 HASH without --install for validation. Root --install checks the previously installed agent hash, appends only this trigger's instructions, installs separate units/private storage, runs the first shadow collection, verifies the existing trigger source hashes, and enables only its own timer. Production activation is pending until the owner receipt returns. It never restarts the existing triggers. A failed install restores its own agent patch where safe and preserves captured evidence for diagnosis.
+The installer's --hash prints the reviewed bundle hash. Run --expected-sha256 HASH without --install for validation. Root --install checks the previously installed agent hash, appends only this trigger's instructions, installs separate units/private storage, runs the first shadow collection, verifies the existing trigger source hashes, and enables only its own timer. The owner installation receipt confirms activation of this separate SHADOW collector. It never restarts the existing triggers. A failed install restores its own agent patch where safe and preserves captured evidence for diagnosis.
 
 Engineering source: client_learning/crypto_super_small_cap_20261011. Runtime: /opt/vivameda-super-small-cap. State: /var/lib/vivameda-super-small-cap. Timer: vivameda-super-small-cap.timer. To pause only this trigger, disable its timer and stop its service. STOP in its state directory suppresses collection.
 
@@ -28,4 +28,12 @@ Reviewed bundle SHA-256: 371e55050a77d27a222764d5365968fae013528f5dbfc116aacaa1d
 ssh -i ~/.ssh/vivameda_chatgpt_ed25519 -o IdentitiesOnly=yes root@77.42.42.75 'python3 /var/lib/vivameda-engineering/repo/client_learning/crypto_super_small_cap_20261011/install.py --install --expected-sha256 371e55050a77d27a222764d5365968fae013528f5dbfc116aacaa1dac320137d'
 ```
 
-Validation: all 16 tests passed on server Python 3.12; both unit files verified. A single live free profile request returned 30 profiles. No private production data, Telegram messages or paid requests were used in that feed check. Owner activation remains pending.
+Validation: all 16 tests passed on server Python 3.12; both unit files verified. A single live free profile request returned 30 profiles. No private production data, Telegram messages or paid requests were used in that feed check. Owner installation completed; the first collection reported no errors.
+
+## Owner installation receipt — 11 October 2026
+
+The owner reported successful installation, 16 passing tests and enabling `vivameda-super-small-cap.timer`. The first SHADOW run at Unix timestamp `1791738657` observed 22 tokens, saved 22 samples, recorded four band entries and completed two provider requests with no errors. Band entries are DISCOVERY records; they are not independently reviewed runner calls.
+
+No expiry is configured. Existing trigger sources and configuration remained unchanged. Fresh agent processes load the additional instructions. Independent review production and Telegram delivery remain disabled; zero messages were sent. No live execution or weight update occurred. Coverage remains limited to profiled Solana tokens and bounded polling. Capture latency, continuing service health and prospective outcomes have not been independently verified from this receipt.
+
+Installed agent source SHA-256: `44f1368e772f7b27724665ebe06cf34aa0a0a95d3f849a98bdf44f92d21f39c3`. Reviewed bundle SHA-256 remains `371e55050a77d27a222764d5365968fae013528f5dbfc116aacaa1dac320137d`. Evidence source: owner terminal receipt; no independent production re-read.
