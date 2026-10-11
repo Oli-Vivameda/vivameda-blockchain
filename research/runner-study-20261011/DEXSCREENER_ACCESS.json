@@ -1,0 +1,35 @@
+{
+  "schema": "dexscreener-history-access-pilot-v1",
+  "checked_at": "2026-10-11T18:52:30Z",
+  "source": "DEX Screener browser charts and official API documentation",
+  "pair_url": "https://dexscreener.com/solana/9tb2ohu5p16bpbarqd3n27wnkf51ukfs8z1gzzldxvzw",
+  "chain": "solana",
+  "pair_address": "9Tb2ohu5P16BpBarqd3N27WnKF51Ukfs8Z1GzzLDxVZW",
+  "mint": "CzLSujWBLFsSjncfkh59rUFqvafWcY5tZedWJSuypump",
+  "historical_visual_access_verified": true,
+  "verified_resolutions": [
+    "1 week",
+    "1 day",
+    "1 hour"
+  ],
+  "hourly_display_window": "11–13 October 2024, browser timezone UTC+3",
+  "documented_public_historical_ohlcv_endpoint_found": false,
+  "chart_context_menu_csv_export_found": false,
+  "machine_readable_candles_collected": 0,
+  "ranked_runner_records": 0,
+  "visual_access_pilots": 1,
+  "earliest_10k_20k_crossing_verified": false,
+  "early_audience_metrics_verified": false,
+  "study_complete": false,
+  "selection_quality_validated": false,
+  "paid_service_enabled": false,
+  "weights_updated": false,
+  "production_changed": false,
+  "limits": [
+    "One accessible chart does not establish coverage for 100 coins or dead pools.",
+    "Rendered historical market-cap candles are not historical liquidity, ownership, audience or executable fills.",
+    "Current sidebar OHLC legend, price line, liquidity, traders and holder count must not be copied as October 2024 values.",
+    "The displayed hourly range includes outcomes; it cannot serve as a blind pre-breakout signal packet.",
+    "No verified two-year universe or greatest-return ranking has been recovered."
+  ]
+}
