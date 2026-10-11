@@ -4,7 +4,7 @@
   "missing": [],
   "sha256": {
     ".gitignore": "be399efba81fec45218410e877c3d3935a920538dd15e3ea558a8d5a2bdf68ec",
-    "README.md": "9b4f849fe236a29a1b2b984322ae13398de9947302e43d3ee4fea0c4f98b73f2",
+    "README.md": "b2d597343523c08901866c25ca48a0b479c4906d28b11d65e76c0bd5b1b1db9c",
     "credentials.example.json": "c58950f6be306e8860e318b8d3bfdadd2c8f4142c92149a83ac52530be0f0ab5",
     "SIGNALS.md": "e6912005df13615138935c45b77756b23dee636891cb85faed9d273723117cc8",
     "CRYPTO_LEARNING_REVIEW_20261006.md": "a9703c5ff9c13e74234f195b85d73bb04731774753d27d7a00dbaaa918b0e625",
@@ -278,7 +278,19 @@
     "monitors/super-small-cap/AGENT_RULES.md": "6b094b2084f29a8a9e8d13c6693394e4d14c728e1b506cf5ebe250f3355ecaf4",
     "monitors/super-small-cap/README.md": "81d86f044c906c5cc35e70da2c7fc60769cc704685a675241177e03843b37447",
     "monitors/super-small-cap/vivameda-super-small-cap.timer": "98e4c182311baa9139d5c7784eb50bfcd9cfe2aa20f0e521f12479ea613e8b4b",
-    "monitors/super-small-cap/test_trigger.py": "88065f9ef3aa29125d8799469d30faf954219094b6ce2d6a636f3c38a6da0f8c"
+    "monitors/super-small-cap/test_trigger.py": "88065f9ef3aa29125d8799469d30faf954219094b6ce2d6a636f3c38a6da0f8c",
+    "monitors/super-small-cap/review-integration/collector_fixture.py": "7e225095d08bd0ecc5ea6bbd841de3d5c1b3c9723719e126b252657a55456aea",
+    "monitors/super-small-cap/review-integration/vivameda-super-small-cap-review.service": "df3f71d0c5bae583762867a10e1b94e1da50ceaa7755e96e1ae64649ec8c5629",
+    "monitors/super-small-cap/review-integration/AGENT_REVIEW_RULES.md": "ba6dbb80f1bc0be0eff0999cbd1a538df2df54b036def5241ce0497ed86e6c91",
+    "monitors/super-small-cap/review-integration/test_install_review.py": "a59832c677a96b9b2a0bfce01442dc2b10ee058a3ab5909cfb61afd40742cb12",
+    "monitors/super-small-cap/review-integration/helper_hashes.json": "c3672d9475909f8863155b0d8fe7172e8f8c697561c48b9b06aeb9ff97fe8f2a",
+    "monitors/super-small-cap/review-integration/test_review.py": "789102cfac427934e5a515820069b61d1bcc75663d7af6a01e7e94054dcf3cb5",
+    "monitors/super-small-cap/review-integration/classifier.py": "89d523e46c5a364ef3efb9aa97c76e78f294296d4e7b77d6a161b636c5a13129",
+    "monitors/super-small-cap/review-integration/README.md": "1ee2b4c0c48dd969c2f5bb194531362608a4c7a0d4da7fb83b02d5be2a793bbf",
+    "monitors/super-small-cap/review-integration/review_worker.py": "e048a31f25e21a7aeb93b24eadab7d0f235832074d79bcdfeda8e8c8f0f33273",
+    "monitors/super-small-cap/review-integration/vivameda-super-small-cap-review.timer": "370627d6942df8a6d924ff04befc0f92fb39a32184aab3713f343e7c94068e7d",
+    "monitors/super-small-cap/review-integration/install_review.py": "a54a42887f8d12074c8a9d3c3b255d8343472c9df67fa2c4bae411e72b6d398f",
+    "monitors/super-small-cap/review-integration/probe_model.py": "7bf87f5c13719ccf0e7263b1f865e34f64a458d7fea0619612790845866cfb92"
   },
   "model_publication_approved": "2026-10-03",
   "diagnostics_extension": {
@@ -1020,6 +1032,35 @@
       "existing_trigger_sources_unchanged": true,
       "evidence_source": "owner terminal receipt; no independent production re-read",
       "ongoing_service_health_independently_verified": false
+    },
+    "review_integration": {
+      "status": "implemented and validated; owner activation pending",
+      "path": "monitors/super-small-cap/review-integration/README.md",
+      "bundle_sha256": "5a43bb7cef70edb22ee8dc3709591f43f194eb225e3baecac918610740dae87f",
+      "tests_passed": 33,
+      "server_python": "3.12",
+      "systemd_units_verified": true,
+      "installed": false,
+      "mode_after_activation": "REVIEW_ALERT",
+      "independent_review_producer_enabled": false,
+      "telegram_delivery_enabled": false,
+      "local_model_schema_probe": {
+        "passed": true,
+        "initial_elapsed_seconds": 19.113,
+        "warm_elapsed_seconds": 8.768,
+        "decision": "PROMISING_SETUP",
+        "synthetic": true,
+        "telegram_messages_sent": 0,
+        "selection_quality_validated": false
+      },
+      "same_existing_bot_and_chat_after_activation": true,
+      "first_real_candidate_delivery_verified": false,
+      "protected_outcomes_read": false,
+      "weights_updated": false,
+      "live_execution": false,
+      "existing_trigger_sources_changed": false,
+      "deadline_ts": null,
+      "source_commit": "4eddb6d"
     }
   }
 }
