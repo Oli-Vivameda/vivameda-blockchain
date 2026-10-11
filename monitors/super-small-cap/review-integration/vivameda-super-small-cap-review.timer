@@ -1,0 +1,11 @@
+[Unit]
+Description=Bounded independent super-small-cap reviews
+
+[Timer]
+OnBootSec=60
+OnUnitInactiveSec=60
+AccuracySec=5
+Unit=vivameda-super-small-cap-review.service
+
+[Install]
+WantedBy=timers.target
