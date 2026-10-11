@@ -19,5 +19,15 @@
     "No original early social metrics or matched failure chart packets.",
     "Current chart connector exposes start/end times only; point timestamps absent."
   ],
-  "ranked_records": []
+  "ranked_records": [],
+  "knowledge_integration": {
+    "implemented": true,
+    "production_loaded": false,
+    "consumers": [
+      "conversational_agent_SYSTEM",
+      "third_trigger_model_request"
+    ],
+    "tests_passed": 21,
+    "activation_required": "hash-pinned owner installer"
+  }
 }

@@ -43,3 +43,13 @@ CoinGecko's official guide documents six months for free on-chain OHLCV and full
 MELT (formerly MemeTrans) supplies a researcher-curated Solana launch dataset with pre/post-migration traces. It is not the full requested two-year top-100 universe. Its repository states CC BY-NC 4.0; no code or dataset was imported into the commercial agent. Untrusted pickle files must not be deserialized as a download convenience.
 
 Required unblock: an existing licensed archive export or an authorized archive service providing complete mint/pool discovery, timestamped trade/OHLCV history and supply/liquidity provenance for this window. Archive pricing and eligibility need verification before any purchase. Existing public case facts and provisional knowledge can be retained while archive access remains blocked.
+
+## Additional access audit — 11 October 2026, 21:25 request
+
+The current pricing table at https://www.coingecko.com/en/api/pricing distinguishes spot history from on-chain history: Basic has two years of spot history but six months of pool OHLCV. Analyst ($129 monthly before taxes) and higher show token/pool OHLCV from 2021. This is a candidate chart source, not proof of complete historical discovery, original bonding-curve coverage, inactive pool availability or historical supply/liquidity. Obtain a coverage pilot for verified mints and venues before buying on an assumption of completeness. No paid calls or purchases have occurred.
+
+MemeChain (https://arxiv.org/html/2601.22185v1) describes October 2024 market/web snapshots and lifecycle observations through January 2025. Its CC-BY-4.0 data could support separately scoped forensic research, but it is not the requested two-year early-price chart archive. Single-time websites cannot establish audience-growth histories. No raw dataset was imported or promoted to a predictive rule.
+
+Coin-Meme (https://arxiv.org/abs/2412.04913) is a multimodal Pump.fun research dataset; its abstract does not establish full requested-period timestamped chart coverage. Its linked repository could not be resolved through the web retrieval call. Do not impute a complete two-year runner universe from its presence.
+
+RED-2400 v2 (https://arxiv.org/abs/2610.00005) covers 57 days in May–July 2026 and oracle, basis, liquidation, spread and bridge-flow observations. It is useful microstructure context, not a launch-runner universe. No chart completeness or selection edge is inferred from it.
