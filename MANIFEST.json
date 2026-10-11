@@ -4,7 +4,7 @@
   "missing": [],
   "sha256": {
     ".gitignore": "be399efba81fec45218410e877c3d3935a920538dd15e3ea558a8d5a2bdf68ec",
-    "README.md": "b5db7ef8ed143e94f349e15fe6f497193705122eef29e82cfd35f00fa4ab0ffb",
+    "README.md": "3fe8aff00d1f3a8ee58c89850232ebb1bdb78296c1efffecc1d4a87f025634e1",
     "credentials.example.json": "c58950f6be306e8860e318b8d3bfdadd2c8f4142c92149a83ac52530be0f0ab5",
     "SIGNALS.md": "e6912005df13615138935c45b77756b23dee636891cb85faed9d273723117cc8",
     "CRYPTO_LEARNING_REVIEW_20261006.md": "a9703c5ff9c13e74234f195b85d73bb04731774753d27d7a00dbaaa918b0e625",
@@ -254,7 +254,22 @@
     "monitors/100x-watchlist/remove_expiry.py": "a0951f1f2b4dd0bdcd9e584663add9be547b3546dfbda5c7763440ee170cfb56",
     "monitors/100x-watchlist/update_research.py": "fd12f4a19f42e4d2a8340cd4902acbceb67bf7d9562af96ac7c39ccc93e8cb66",
     "monitors/100x-watchlist/update_classification.py": "8678eb2c49ac6f40d325268fad9cfef4e6483bdc690089e44671fbbbc30a3b31",
-    "monitors/100x-watchlist/research.py": "7f1dbd8731d6d06e7aceb7a6f0eae6bb2dfe1c06812884943474e5225954dbcf"
+    "monitors/100x-watchlist/research.py": "7f1dbd8731d6d06e7aceb7a6f0eae6bb2dfe1c06812884943474e5225954dbcf",
+    "learning/chart-audit-20261011/audit.py": "a6be3b3fcf8af373ef13a06da1eb60a78f7cba14fa952693f7d60ea4b9a98bd5",
+    "learning/chart-audit-20261011/test_audit.py": "59dbee8d79c42abb5bdc3bfbfe65ce532f5de8a846375d506c5986b30bb7e42f",
+    "learning/chart-audit-20261011/README.md": "12ceaac50dab9f36ec638894477382d07ab361c4f6e154bb2bd8e68bd0c3adc8",
+    "learning/chart-audit-20261011/recover_charts.py": "d03f529545d09ee7e9ff0c170d9e0f77a3f72ea7914a42e8de62d70bd0e65d7b",
+    "learning/chart-audit-20261011/test_recover_charts.py": "a2e29c6c416c5dcb8b0270e3695078c18691e640dc626c0000898b7b16e3e45d",
+    "learning/chart-audit-20261011/FINDINGS_20261011.md": "d37ab965fba2fdb777ac2e8761300a093ad3e823d9d47dbdd58b87431e9476bf",
+    "learning/chart-audit-20261011/study.py": "520fa65b3cb67e3025f4b602818cb9c87b13dbebf7680822cc541d8ff5d3658e",
+    "learning/chart-audit-20261011/test_study.py": "8ddc3564ba31863b5d9c451957a9ed6107c30d7c610525c56c03fa1137ea0a72",
+    "learning/chart-audit-20261011/RECOVERED_CHART_STUDY_20261011.md": "a2eb57de497c5955f8288a509eb04040c66953a4b8037edafdb3cb2bf58a8230",
+    "agent/coin-classification-v1/AGENT_RULES.md": "cb7166ebbb7c03b04cf480244253868687f590d893c562ac4c6deec133520e7f",
+    "agent/coin-classification-v1/classification.py": "3b0ed9207b96b6eaedb43715fc5f58b9e08ac5af9a37077f3fc60391a454bf0f",
+    "agent/coin-classification-v1/test_classification.py": "b650a7221fa01e6f6049e8957023043d5eb51f0d71929bda1e950c3bed5325c0",
+    "agent/coin-classification-v1/install_agent_rules.py": "d7784767ce52b0b7ba7021b8db4bbdb6a4d4c3fe4ea93ca39ac64c9030d65b75",
+    "agent/coin-classification-v1/test_install_agent_rules.py": "13448f49b2d29ccdf874c9bfe536278543b3b7c93e7b951da931df5d634a4a13",
+    "agent/coin-classification-v1/README.md": "c4875f0273e8bf3b79b9bdca384442c32c13ad86448e8e3d9213d6a756e76dc3"
   },
   "model_publication_approved": "2026-10-03",
   "diagnostics_extension": {
@@ -919,5 +934,44 @@
       "first_researched_delivery_verified": false,
       "evidence_source": "owner terminal receipt; no independent production re-read"
     }
+  },
+  "crypto_chart_audit_20261011": {
+    "status": "owner audit and recovery completed; fixed-window retrospective study completed",
+    "first_call_tokens": 139,
+    "retained_non_holdout_alert_events": 159,
+    "repeat_events": 20,
+    "protected_events_excluded": 97,
+    "usable_fixed_10_minute_charts": 132,
+    "complete_chart_and_24h_outcomes": 74,
+    "tests_passed": 20,
+    "outcomes": "market-cap proxies; executable returns and historical pool/supply continuity unverified",
+    "protected_outcomes_read": false,
+    "private_case_records_published": false,
+    "scanner_changed": false,
+    "weights_updated": false,
+    "source_commits": [
+      "ab126a1",
+      "f8749eb",
+      "556093c"
+    ],
+    "findings": "learning/chart-audit-20261011/RECOVERED_CHART_STUDY_20261011.md"
+  },
+  "crypto_coin_classification_20261011": {
+    "policy": "crypto-coin-classification-v1",
+    "status": "owner-installed instructions and validator; independent review and dispatch integration pending",
+    "tests_passed": 14,
+    "source_commit": "6f8b003",
+    "bundle_sha256": "8bdfaff77426b1f4ee33a36702f8ad0361c6fe4a379df6bc643252a55eee388e",
+    "agent_source_sha256": "68f7891f089a35c25e284c78d2ca7475b888d21c24ab1afb3cf3b3e98d9c1cec",
+    "installed": true,
+    "fresh_agent_processes_load_instructions": true,
+    "classifier_dispatch_integration_enabled": false,
+    "telegram_relay_changed": false,
+    "scanner_changed": false,
+    "paper_policy_changed": false,
+    "weights_updated": false,
+    "live_execution": false,
+    "evidence_source": "owner installation receipt; source postflight reported; real classification dispatch unverified",
+    "rules": "agent/coin-classification-v1/AGENT_RULES.md"
   }
 }

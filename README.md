@@ -83,3 +83,9 @@ Owner decision, Directive 2 continuation: keep the frozen journal population. Th
 Release interpreter: Python 3.12. Other versions are explicitly refused before the release check; frozen AST scorer hashes and pilot bindings are unchanged. Directive 2 availability analysis and next protocol: [control availability](research/forward_capture/CONTROL_AVAILABILITY_20261008.md), [V2 draft](research/forward_capture/PROTOCOL_V2_DRAFT.md). Incident/alarm logging is owner-installed with source/service postflights; normal health status reports audit logging available. Live factual acceptance and control-availability aggregates are verified. Three current stale trades were diagnosed using existing feeds; historical identity continuity and real alarm latency remain unverified.
 
 Corrected logging bundle: `7afa8275f9d2d8c2ffce2eaa0bac99cffb359e69a2a41c62060caf044282ae5a`; nine focused tests passed. Both owner installs preserved policy, cadence, units, permissions and the pilot. See the existing [TradingView handover](docs/TRADINGVIEW_HANDOVER_20261008.md) for hashes, backups and remaining gates.
+
+## Chart learning and classification — 11 October 2026
+
+[Historical chart audit and recovered-chart study](learning/chart-audit-20261011/README.md): 139 retained first-call tokens, 132 usable fixed ten-minute price histories, 74 complete 24-hour observed outcomes. Twenty tests passed. Protected evaluation outcomes and private token-level records are excluded; findings are retrospective and outcomes use market-cap proxies.
+
+[Coin classification rules](agent/coin-classification-v1/README.md): five evidence-based research labels and a guarded fire-transition validator; fourteen tests passed. The owner installed the instructions into the dedicated Crypto Lab agent. Independent review production, classifier command dispatch and Telegram relay integration remain disabled. No model weights, scanner thresholds, frozen paper policy or live execution changed.
