@@ -1,0 +1,11 @@
+[Unit]
+Description=Observe the third super-small-cap trigger without expiry
+
+[Timer]
+OnBootSec=30
+OnUnitInactiveSec=15
+AccuracySec=1
+Unit=vivameda-super-small-cap.service
+
+[Install]
+WantedBy=timers.target

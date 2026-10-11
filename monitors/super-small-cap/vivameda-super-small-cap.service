@@ -1,0 +1,19 @@
+[Unit]
+Description=Vivameda third super-small-cap shadow trigger
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=vivameda-scout
+Group=vivameda-scout
+ExecStart=/usr/bin/python3 /opt/vivameda-super-small-cap/collector.py --once
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/vivameda-super-small-cap
+TimeoutStartSec=25
+MemoryMax=128M
+CPUQuota=20%
+
