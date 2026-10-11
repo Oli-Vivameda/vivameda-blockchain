@@ -98,6 +98,11 @@ Installation evidence is the owner's terminal receipt (first run timestamp 17917
 
 ## Reviewed third-trigger dispatch — prepared 11 October 2026
 
-[Super-small-cap review-to-alert integration](monitors/super-small-cap/review-integration/README.md) is implemented and validated: 33 tests passed on server Python 3.12; both unit files verified; the installed local-model schema probe completed in 19.113 seconds initially and 8.768 seconds warm. A separate worker reviews saved chart evidence, uses supported core screening and sends only independently validated FIRE_REVIEWED classifications through the existing bot/chat. It persists assessment and delivery history and rechecks freshness before sending. Ordinary discovery cannot automatically generate a fire call.
+[Super-small-cap review-to-alert integration](monitors/super-small-cap/review-integration/README.md) is implemented and validated: 35 tests passed on server Python 3.12; both unit files verified; the installed local-model schema probe completed in 19.113 seconds initially and 8.768 seconds warm. A separate worker reviews saved chart evidence, uses supported core screening and sends only independently validated FIRE_REVIEWED classifications through the existing bot/chat. It persists assessment and delivery history and rechecks freshness before sending. Ordinary discovery cannot automatically generate a fire call.
 
 Owner activation of the review worker remains pending. The existing third collector continues SHADOW capture; current production review/Telegram flags remain disabled until the reviewed installer is run. Unsupported bonding curves or missing comparable winner/failure cases can correctly prevent fire promotion. Partial discovery, experimental judgment and unverified first real delivery are explicit; no trading, paid feeds, weights or existing-trigger policies change.
+
+## Third-trigger activation repair — 11 October 2026
+
+The first activation stopped at the service-user probe because the installer created its code directory with mode 700 under its private umask. Server inspection confirmed this permission error. The corrected installer explicitly sets code-directory mode 755 and permits a hash-verified retry of the exact disabled previous bundle. Private state and credentials stay restricted. All 35 server tests pass; corrected activation remains pending. Existing scout services remain healthy and their source hashes are unchanged.
+
