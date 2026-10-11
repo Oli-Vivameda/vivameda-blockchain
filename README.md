@@ -117,3 +117,9 @@ The owner successfully installed the corrected review bundle `b6a4d41071748ebd48
 
 [Research and provisional agent knowledge](research/runner-study-20261011/README.md): eleven sourced case cards and temporal-integrity checks (13 tests passed). The requested 24-month top-100 ranking is **not complete**: 0 verified ranked runners and 0 audited early charts. A timestamped historical archive and contemporaneous audience evidence are still required. Knowledge is staged for the agent, not loaded into the production prompt; no weights or alert eligibility changed. The original automatic 100x relay is paused per owner STOP-command receipt; its independent review integration remains unfinished.
 
+
+
+## Runner knowledge prompt integration — 11 October 2026
+
+The [runner knowledge installer](research/runner-study-20261011/README.md) now connects the same compact judgment rules to both the conversational Crypto Lab agent and the third-trigger review request. The prior review worker extracted only the third-trigger section, so appending knowledge elsewhere would not have reached it. Twenty-one integration/integrity tests and 35 existing review regression tests passed. A production-source-bound dry run validated both candidate hashes. Owner activation is pending; the complete top-100 chart study remains blocked by archive coverage. No model weights, alert eligibility or relay STOP state changes. Reviewed bundle: `e1ed98fef62b683a03ce45bc9a58fa2d97b3a2e68a8e503a3da6e522ee456fa7`.
+
