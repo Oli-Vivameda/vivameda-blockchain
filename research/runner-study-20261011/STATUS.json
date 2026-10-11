@@ -27,7 +27,7 @@
       "conversational_agent_SYSTEM",
       "third_trigger_model_request"
     ],
-    "tests_passed": 21,
+    "tests_passed": 25,
     "activation_required": "hash-pinned owner installer"
   }
 }

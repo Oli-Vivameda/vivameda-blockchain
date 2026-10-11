@@ -9,6 +9,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+import time
 
 HERE = Path(__file__).resolve().parent
 AGENT = Path('/opt/vivameda-crypto-runtime/crypto_agent.py')
@@ -113,6 +114,23 @@ def apply_transaction(changes, writer=replace):
         raise
 
 
+
+def acquire_review_lock(lock, timeout=150, *, clock=time.monotonic, sleep=time.sleep, flock=fcntl.flock):
+    """Wait on the existing inode; never replace the lock or interrupt its holder."""
+    if not 0 <= timeout <= 150:
+        raise ValueError('Lock timeout must be between 0 and 150 seconds')
+    started = clock()
+    while True:
+        try:
+            flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return True, round(clock()-started, 3)
+        except BlockingIOError:
+            remaining = timeout-(clock()-started)
+            if remaining <= 0:
+                return False, round(clock()-started, 3)
+            sleep(min(0.5, remaining))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--hash', action='store_true')
@@ -151,7 +169,12 @@ def main():
     # Existing worker lock prevents an in-flight review across the two-code swap.
     # Do not create a root-owned lock or change private state/config permissions.
     with safe(LOCK).open('r+') as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        acquired, waited = acquire_review_lock(lock)
+        report['lock_wait_seconds'] = waited
+        if not acquired:
+            report.update(status='review_busy_retry', production_changed=False)
+            print(json.dumps(report, sort_keys=True))
+            raise SystemExit(2)
         if AGENT.read_bytes()!=agent_old or WORKER.read_bytes()!=worker_old: raise ValueError('Source changed during validation')
         backup = Path(tempfile.mkdtemp(prefix='runner-knowledge-', dir='/opt/vivameda-operations'))
         backup.chmod(0o700)

@@ -1,10 +1,11 @@
 import ast
+import fcntl
 import json
 from pathlib import Path
 import tempfile
 import unittest
 import urllib.request
-from install_knowledge import BEGIN, END, HERE, apply_transaction, patch_agent, patch_worker, system_value, unpatch_agent
+from install_knowledge import BEGIN, END, HERE, apply_transaction, patch_agent, patch_worker, system_value, unpatch_agent, acquire_review_lock
 
 
 class KnowledgeIntegrationTests(unittest.TestCase):
@@ -90,6 +91,40 @@ class KnowledgeIntegrationTests(unittest.TestCase):
                 apply_transaction([(a,b'new-a'),(b,b'new-b')],writer)
             self.assertEqual(a.read_bytes(),b'old-a')
             self.assertEqual(b.read_bytes(),b'old-b')
+
+
+class ReviewLockTests(unittest.TestCase):
+    def fake_clock(self):
+        now = [0.0]
+        return now, lambda: now[0], lambda seconds: now.__setitem__(0, now[0]+seconds)
+
+    def test_busy_then_idle_acquires(self):
+        now, clock, sleep = self.fake_clock()
+        def flock(lock, mode):
+            if now[0] < 1: raise BlockingIOError()
+        self.assertEqual(acquire_review_lock(object(), 2, clock=clock, sleep=sleep, flock=flock), (True, 1.0))
+
+    def test_permanent_busy_times_out_at_bound(self):
+        now, clock, sleep = self.fake_clock()
+        def flock(lock, mode): raise BlockingIOError()
+        self.assertEqual(acquire_review_lock(object(), 1.2, clock=clock, sleep=sleep, flock=flock), (False, 1.2))
+
+    def test_invalid_timeout_refused_before_locking(self):
+        for timeout in (-1, 151):
+            with self.assertRaises(ValueError): acquire_review_lock(object(), timeout)
+
+    def test_real_lock_inode_and_contents_preserved(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'review.lock'
+            path.write_text('existing state')
+            inode=path.stat().st_ino
+            with path.open('r+') as holder, path.open('r+') as contender:
+                fcntl.flock(holder, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                self.assertEqual(acquire_review_lock(contender, 0)[0], False)
+                fcntl.flock(holder, fcntl.LOCK_UN)
+                self.assertEqual(acquire_review_lock(contender, 0)[0], True)
+            self.assertEqual(path.stat().st_ino, inode)
+            self.assertEqual(path.read_text(), 'existing state')
 
 
 if __name__ == '__main__':
