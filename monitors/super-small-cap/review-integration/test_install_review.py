@@ -1,4 +1,4 @@
-import tempfile,unittest
+import os,tempfile,unittest
 from pathlib import Path
 import install_review as i
 
@@ -12,4 +12,17 @@ class InstallTests(unittest.TestCase):
     def test_symlink_target_refused(self):
         with tempfile.TemporaryDirectory() as d:
             p=Path(d)/'alias';p.symlink_to(Path(d)/'missing');self.assertRaises(ValueError,i.safe,p)
+    def test_runtime_directory_under_private_umask(self):
+        with tempfile.TemporaryDirectory() as d:
+            previous=os.umask(0o077)
+            try:
+                p=Path(d)/'runtime';i.runtime_directory(p)
+                self.assertEqual(p.stat().st_mode&0o777,0o755)
+                p.chmod(0o700);i.runtime_directory(p)
+                self.assertEqual(p.stat().st_mode&0o777,0o755)
+            finally:os.umask(previous)
+    def test_previous_failed_bundle_only(self):
+        self.assertEqual(i.installed_source_hashes(i.PREVIOUS_BUNDLE,False),i.PREVIOUS_FILES)
+        for enabled in (True,None):self.assertRaises(ValueError,i.installed_source_hashes,i.PREVIOUS_BUNDLE,enabled)
+        self.assertRaises(ValueError,i.installed_source_hashes,'unknown',False)
 if __name__=='__main__':unittest.main()

@@ -15,7 +15,7 @@ No end date, paid feed, trading, model-weight update or automatic threshold prom
 
 ## Verification
 
-33 tests passed locally and on server Python 3.12 (0.537 seconds). Installer validation passed with the exact bundle hash; both systemd units verified. Production activation is pending. Tests cover discovery versus reviewed promotion, exact identity, missing comparators, screening UNKNOWN/REJECT, unsupported review facts, stale/changed evidence, current band, stop markers, Telegram-disabled mode, persistent duplicate suppression, ambiguous delivery, protected-mint exclusion, query budgets across inference waits, and both full synthetic workflow branches with a simulated sender.
+35 tests passed locally and on server Python 3.12 (0.537 seconds). Installer validation passed with the exact bundle hash; both systemd units verified. Production activation is pending. Tests cover discovery versus reviewed promotion, exact identity, missing comparators, screening UNKNOWN/REJECT, unsupported review facts, stale/changed evidence, current band, stop markers, Telegram-disabled mode, persistent duplicate suppression, ambiguous delivery, protected-mint exclusion, query budgets across inference waits, and both full synthetic workflow branches with a simulated sender.
 
 Actual installed local model schema probe: initial 19.113 seconds, warm 8.768 seconds; PROMISING_SETUP on synthetic incomplete-comparator evidence. No Telegram messages sent. This verifies the model interface and that example's safe classification, not real-world chart judgment or profitability. An earlier longer response format exceeded the 25-second timeout; the final compact schema resolved the probe. Runtime inference retains a 25-second limit, and stale reviews cannot send.
 
@@ -23,12 +23,16 @@ Actual installed local model schema probe: initial 19.113 seconds, warm 8.768 se
 
 The connected engineering tool runs as vivameda-engineer and cannot install root-owned systemd units. The activation script checks the exact reviewed bundle, installed agent hash, pinned screening helper hashes, service-user access and the local model schema. It copies screening helpers into its own runtime; it never edits their source or queues. It starts a first real review with Telegram disabled, verifies protected source/unit hashes, then enables reviewed delivery and only its own timer. If activation fails, it disables its review timer and delivery while preserving evidence and the existing collector. Re-running a completed installation verifies the reviewed source and timer rather than reinstalling.
 
-Reviewed bundle SHA-256: `5a43bb7cef70edb22ee8dc3709591f43f194eb225e3baecac918610740dae87f`.
+Reviewed bundle SHA-256: `b6a4d41071748ebd48fdf64fe43d1596bf8bfde7041b1ad64fdcd7e9d959521a`.
 
 ```sh
-ssh -i ~/.ssh/vivameda_chatgpt_ed25519 -o IdentitiesOnly=yes root@77.42.42.75 'python3 /var/lib/vivameda-engineering/repo/client_learning/crypto_super_small_cap_review_20261011/install_review.py --install --expected-sha256 5a43bb7cef70edb22ee8dc3709591f43f194eb225e3baecac918610740dae87f'
+ssh -i ~/.ssh/vivameda_chatgpt_ed25519 -o IdentitiesOnly=yes root@77.42.42.75 'python3 /var/lib/vivameda-engineering/repo/client_learning/crypto_super_small_cap_review_20261011/install_review.py --install --expected-sha256 b6a4d41071748ebd48fdf64fe43d1596bf8bfde7041b1ad64fdcd7e9d959521a'
 ```
 
 Runtime: /opt/vivameda-super-small-cap-review. State and private screening: /var/lib/vivameda-super-small-cap. Own units: vivameda-super-small-cap-review.service and .timer. REVIEW_STOP pauses review only; STOP pauses collector and review. review_config.json can disable Telegram while continuing assessments. Installation receipt and first genuine candidate delivery remain pending. No synthetic candidate is sent during installation.
 
 Ollama structured output reference: https://ollama.com/blog/structured-outputs . Mint-level evidence, live credentials and raw model responses remain private; only implementation source and aggregate validation are published.
+
+## Interrupted activation repair — 11 October 2026
+
+The first owner activation failed before delivery enablement: the installer’s private umask created its runtime directory with mode 700, preventing the service account from opening the probe script (Python exit 2). The directory mode was independently confirmed on the server. The corrected installer explicitly sets mode 755 on this code-only directory; private state and credentials remain restricted. It accepts the exact previous bundle only when delivery is disabled and every copied source matches its pinned previous hash, then retries the normal service-user probe and delivery-disabled postflight. Two regression tests cover restrictive-umask permissions and rejected migration from active or unknown bundles. Activation and first genuine delivery remain unverified.
