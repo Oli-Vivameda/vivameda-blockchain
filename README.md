@@ -111,3 +111,9 @@ The first activation stopped at the service-user probe because the installer cre
 
 The owner successfully installed the corrected review bundle `b6a4d41071748ebd48fdf64fe43d1596bf8bfde7041b1ad64fdcd7e9d959521a`. Independent review and reviewed-only Telegram delivery are enabled, using the same bot/chat with no expiry. Both collector and review timers were independently confirmed active; the last review service exited successfully. The installation probe passed (48.692 seconds initially, 7.603 seconds warm), but the first real review hit an inference timeout, remained EARLY_WATCH and sent no message. Activation is complete; real-candidate judgment and first genuine delivery are unverified. The earlier pending-activation paragraphs describe preparation history. Private latest-review state is not readable by the engineering account; a successful service exit alone does not prove an individual model review succeeded.
 
+
+
+## Runner research — 11 October 2026
+
+[Research and provisional agent knowledge](research/runner-study-20261011/README.md): eleven sourced case cards and temporal-integrity checks (13 tests passed). The requested 24-month top-100 ranking is **not complete**: 0 verified ranked runners and 0 audited early charts. A timestamped historical archive and contemporaneous audience evidence are still required. Knowledge is staged for the agent, not loaded into the production prompt; no weights or alert eligibility changed. The original automatic 100x relay is paused per owner STOP-command receipt; its independent review integration remains unfinished.
+

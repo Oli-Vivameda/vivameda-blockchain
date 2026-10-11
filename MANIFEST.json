@@ -4,7 +4,7 @@
   "missing": [],
   "sha256": {
     ".gitignore": "be399efba81fec45218410e877c3d3935a920538dd15e3ea558a8d5a2bdf68ec",
-    "README.md": "8614d9bac64f52d0f667e694bd6f509b4cfc13ebade64b3f2ae65b5532daeabf",
+    "README.md": "66bc670792a39a5e42e812463a2170d757489b947a2c5b98a71f8c9d7bcd468b",
     "credentials.example.json": "c58950f6be306e8860e318b8d3bfdadd2c8f4142c92149a83ac52530be0f0ab5",
     "SIGNALS.md": "e6912005df13615138935c45b77756b23dee636891cb85faed9d273723117cc8",
     "CRYPTO_LEARNING_REVIEW_20261006.md": "a9703c5ff9c13e74234f195b85d73bb04731774753d27d7a00dbaaa918b0e625",
@@ -290,7 +290,15 @@
     "monitors/super-small-cap/review-integration/review_worker.py": "e048a31f25e21a7aeb93b24eadab7d0f235832074d79bcdfeda8e8c8f0f33273",
     "monitors/super-small-cap/review-integration/vivameda-super-small-cap-review.timer": "370627d6942df8a6d924ff04befc0f92fb39a32184aab3713f343e7c94068e7d",
     "monitors/super-small-cap/review-integration/install_review.py": "b35c25a88faf664ab0ffadc5751fb5822a9389554346aef261af705f1dfb94f3",
-    "monitors/super-small-cap/review-integration/probe_model.py": "7bf87f5c13719ccf0e7263b1f865e34f64a458d7fea0619612790845866cfb92"
+    "monitors/super-small-cap/review-integration/probe_model.py": "7bf87f5c13719ccf0e7263b1f865e34f64a458d7fea0619612790845866cfb92",
+    "research/runner-study-20261011/STATUS.json": "bd27a2c6f3437b83979adeb82e16a49614747999e0547525da5346cb070553a4",
+    "research/runner-study-20261011/PROTOCOL.md": "4333360430346f7667b19e10fa156d6c2dfa379c8929b06e5063900e7c680777",
+    "research/runner-study-20261011/sources.json": "f082b42cb0fc663819d1dcec441e7ff7a8023fe380e43e1bcb624ebc189c9bd3",
+    "research/runner-study-20261011/AGENT_KNOWLEDGE.md": "71b111425e64e9430a65f269d27afa37c7190ea03a82d2ec40464be3f39da9f4",
+    "research/runner-study-20261011/README.md": "07a0ffd74d76b9f91478d804034c68e5b224ad9c3e9d8266b21634ec59a7b1dc",
+    "research/runner-study-20261011/cases.json": "4ecd950959956a1e39284d4d2339087183e0c30c283826403250d34972c1f977",
+    "research/runner-study-20261011/test_validate.py": "48b8b320f6ddca048a9f5cac02d7426b45ea5ea476e58a28000b99d680aef2ec",
+    "research/runner-study-20261011/validate.py": "2649cf08e7e55b7596c86754dbb5386caec9f9d1321e0ca1266428f9307f5f46"
   },
   "model_publication_approved": "2026-10-03",
   "diagnostics_extension": {
@@ -926,7 +934,7 @@
     "pilot_modified": false
   },
   "fire_watchlist": {
-    "existing_relay": "owner-installed, indefinite, latest screening classification enabled",
+    "existing_relay": "owner paused via STOP file; source unchanged; independent review integration pending",
     "public_research_update": "owner-installed; updater first run healthy and waiting; first researched Telegram delivery unverified",
     "tests_passed": 50,
     "python": "3.12",
@@ -954,7 +962,8 @@
       "independent_developer_research": false,
       "first_researched_delivery_verified": false,
       "evidence_source": "owner terminal receipt; no independent production re-read"
-    }
+    },
+    "pause_evidence": "Owner terminal receipt: touch /var/lib/vivameda-100x-watchlist/STOP returned without error; STOP handling verified in notifier source; private state not independently readable."
   },
   "crypto_chart_audit_20261011": {
     "status": "owner audit and recovery completed; fixed-window retrospective study completed",
@@ -1099,5 +1108,17 @@
       },
       "same_existing_bot_and_chat": true
     }
+  },
+  "crypto_runner_research_20261011": {
+    "path": "research/runner-study-20261011/README.md",
+    "status": "provisional knowledge created; full top-100 study blocked by archive coverage",
+    "goal_ranked_runners": 100,
+    "verified_ranked_runners": 0,
+    "audited_early_charts": 0,
+    "source_case_cards": 11,
+    "tests_passed": 13,
+    "complete": false,
+    "production_loaded": false,
+    "weights_updated": false
   }
 }
