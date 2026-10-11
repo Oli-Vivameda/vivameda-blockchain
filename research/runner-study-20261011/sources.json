@@ -1,0 +1,119 @@
+[
+  {
+    "id": "goat_listing",
+    "url": "https://www.binance.com/en/support/announcement/detail/ff1a4c64f1aa4fef870adc7ef802d700",
+    "type": "exchange_announcement",
+    "published_date": "2024-10-24",
+    "retrieved_on": "2026-10-11",
+    "note": "GOAT perpetual launch scheduled 2024-10-24 13:30 UTC; mint stated. Publication clock zone not independently archived.",
+    "original_archive_verified": false
+  },
+  {
+    "id": "fartcoin_listing",
+    "url": "https://www.binance.com/en/support/announcement/detail/804bea6cf51a4edc9079962ff77bb3b1",
+    "type": "exchange_announcement",
+    "published_date": "2024-12-20",
+    "retrieved_on": "2026-10-11",
+    "note": "FARTCOIN perpetual launch scheduled 2024-12-20 18:45 UTC; mint stated.",
+    "original_archive_verified": false
+  },
+  {
+    "id": "fartcoin_audience",
+    "url": "https://www.binance.com/en/academy/articles/what-is-fartcoin-fartcoin",
+    "type": "retrospective_exchange_education",
+    "published_date": null,
+    "retrieved_on": "2026-10-11",
+    "note": "Describes October 2024 Pump.fun launch, humor/content participation and AI-linked origins. Not a launch-time audience archive.",
+    "original_archive_verified": false
+  },
+  {
+    "id": "act_pnut_listing",
+    "url": "https://www.binance.com/en/support/announcement/detail/d16d96c136154680a6373225d592bca1",
+    "type": "exchange_announcement",
+    "published_date": "2024-11-11",
+    "retrieved_on": "2026-10-11",
+    "note": "Search-indexed official spot listing scheduled 2024-11-11 10:00 UTC. Direct English open redirected; source verification is partial.",
+    "original_archive_verified": false
+  },
+  {
+    "id": "chillguy_listing",
+    "url": "https://www.binance.com/en/support/announcement/detail/7700345477ea4c0fb89b1ddce0d28979",
+    "type": "exchange_announcement",
+    "published_date": "2024-11-27",
+    "retrieved_on": "2026-10-11",
+    "note": "CHILLGUY perpetual launch scheduled 2024-11-27 14:45 UTC; mint stated; futures does not imply spot listing.",
+    "original_archive_verified": false
+  },
+  {
+    "id": "moodeng_listing",
+    "url": "https://www.binance.com/en/support/announcement/detail/5e93f7cd3f9a47e194085f969ac57b85",
+    "type": "exchange_announcement",
+    "published_date": "2024-10-25",
+    "retrieved_on": "2026-10-11",
+    "note": "Official MOODENG perpetual launch scheduled 2024-10-25 10:00 UTC; repeat read redirected.",
+    "original_archive_verified": false
+  },
+  {
+    "id": "trump_listing",
+    "url": "https://www.binance.com/en-AU/support/announcement/detail/098d3a7afe5244b5ba6ea728f933817f",
+    "type": "exchange_announcement",
+    "published_date": "2025-01-19",
+    "retrieved_on": "2026-10-11",
+    "note": "TRUMP spot listing scheduled 2025-01-19 08:30 UTC; Solana mint stated.",
+    "original_archive_verified": false
+  },
+  {
+    "id": "melania_listing",
+    "url": "https://www.binance.com/en-BH/support/announcement/detail/4587fb07ff3d42af85f5ccfa94c2e97c",
+    "type": "exchange_announcement",
+    "published_date": "2025-01-20",
+    "retrieved_on": "2026-10-11",
+    "note": "MELANIA perpetual launch scheduled 2025-01-20 09:30 UTC; mint stated; vesting link supplied.",
+    "original_archive_verified": false
+  },
+  {
+    "id": "libra_investigation",
+    "url": "https://blog.bubblemaps.io/the-libra-playbook-how-one-cluster-drained-87-million-in-a-single-hour/",
+    "type": "retrospective_investigator_report",
+    "published_date": "2026-06-30",
+    "retrieved_on": "2026-10-11",
+    "note": "Investigator reports February 2025 political promotion, linked concentration and quote-side liquidity extraction; claims original early warnings, but their decision-time archive is not independently replayed here.",
+    "original_archive_verified": false
+  },
+  {
+    "id": "failure_catalog",
+    "url": "https://bubblemaps.io/case-studies/",
+    "type": "retrospective_investigator_catalog",
+    "published_date": null,
+    "retrieved_on": "2026-10-11",
+    "note": "Investigator describes insider/extraction caution cases for HAWK, LIBRA, MELANIA, TRUMP and YZY. Not a timestamped matched-control dataset.",
+    "original_archive_verified": false
+  },
+  {
+    "id": "coingecko_coverage",
+    "url": "https://www.coingecko.com/learn/coingecko-api-troubleshooting-guide-and-solutions",
+    "type": "provider_documentation",
+    "published_date": null,
+    "retrieved_on": "2026-10-11",
+    "note": "Free on-chain OHLCV covers six months; paid on-chain plans list history from 2021. Spot endpoint limits differ.",
+    "original_archive_verified": false
+  },
+  {
+    "id": "bitquery_coverage",
+    "url": "https://docs.bitquery.io/docs/blockchain/Solana/historical-aggregate-data/",
+    "type": "provider_documentation",
+    "published_date": null,
+    "retrieved_on": "2026-10-11",
+    "note": "Solana aggregate archive starts June 2024; archive queries require archive pack. Documentation warns of missing trades and unfiltered extreme prints.",
+    "original_archive_verified": false
+  },
+  {
+    "id": "melt_coverage",
+    "url": "https://github.com/git-disl/MELT",
+    "type": "dataset_author_documentation",
+    "published_date": null,
+    "retrieved_on": "2026-10-11",
+    "note": "Curated Solana launch traces and code; CC BY-NC 4.0; commercial permission required. Data/code not imported.",
+    "original_archive_verified": false
+  }
+]

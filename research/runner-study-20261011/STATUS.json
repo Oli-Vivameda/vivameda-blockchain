@@ -1,0 +1,23 @@
+{
+  "schema": "runner-study-status-v1",
+  "goal_ranked_runners": 100,
+  "window_start": "2024-10-10T21:00:00Z",
+  "window_end": "2026-10-11T18:09:07Z",
+  "population": "Solana small-cap bands; not a global cross-chain top-100 claim",
+  "source_case_cards": 11,
+  "verified_ranked_runners": 0,
+  "audited_early_charts": 0,
+  "matched_failures": 0,
+  "complete": false,
+  "agent_knowledge_created": true,
+  "production_loaded": false,
+  "weights_updated": false,
+  "telegram_sent": false,
+  "paid_service_enabled": false,
+  "blockers": [
+    "No complete licensed two-year timestamped mint/pool/trade universe available through connected tools.",
+    "No original early social metrics or matched failure chart packets.",
+    "Current chart connector exposes start/end times only; point timestamps absent."
+  ],
+  "ranked_records": []
+}
