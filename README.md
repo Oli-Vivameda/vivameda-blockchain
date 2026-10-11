@@ -89,3 +89,7 @@ Corrected logging bundle: `7afa8275f9d2d8c2ffce2eaa0bac99cffb359e69a2a41c62060ca
 [Historical chart audit and recovered-chart study](learning/chart-audit-20261011/README.md): 139 retained first-call tokens, 132 usable fixed ten-minute price histories, 74 complete 24-hour observed outcomes. Twenty tests passed. Protected evaluation outcomes and private token-level records are excluded; findings are retrospective and outcomes use market-cap proxies.
 
 [Coin classification rules](agent/coin-classification-v1/README.md): five evidence-based research labels and a guarded fire-transition validator; fourteen tests passed. The owner installed the instructions into the dedicated Crypto Lab agent. Independent review production, classifier command dispatch and Telegram relay integration remain disabled. No model weights, scanner thresholds, frozen paper policy or live execution changed.
+
+## Third trigger: super-small-cap research — 11 October 2026
+
+[Independent $10k–$20k trigger](monitors/super-small-cap/README.md) and [additional agent rules](monitors/super-small-cap/AGENT_RULES.md) are prepared and tested: 16 tests passed, both units verified and the free profile feed reached. Owner activation is pending. This is a separate SHADOW collector with no expiry; it samples profiled Solana tokens, saves immutable first band entries and subsequent observations, and preserves the other triggers. A short-window independent-review validator is included; autonomous review and Telegram delivery remain disabled. No paid stream, model training or live trading is enabled.

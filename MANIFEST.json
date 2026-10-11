@@ -4,7 +4,7 @@
   "missing": [],
   "sha256": {
     ".gitignore": "be399efba81fec45218410e877c3d3935a920538dd15e3ea558a8d5a2bdf68ec",
-    "README.md": "3fe8aff00d1f3a8ee58c89850232ebb1bdb78296c1efffecc1d4a87f025634e1",
+    "README.md": "3cd9175c82cb821b9206de0eac5157431d6416b14b104a69b234821829b700fc",
     "credentials.example.json": "c58950f6be306e8860e318b8d3bfdadd2c8f4142c92149a83ac52530be0f0ab5",
     "SIGNALS.md": "e6912005df13615138935c45b77756b23dee636891cb85faed9d273723117cc8",
     "CRYPTO_LEARNING_REVIEW_20261006.md": "a9703c5ff9c13e74234f195b85d73bb04731774753d27d7a00dbaaa918b0e625",
@@ -269,7 +269,16 @@
     "agent/coin-classification-v1/test_classification.py": "b650a7221fa01e6f6049e8957023043d5eb51f0d71929bda1e950c3bed5325c0",
     "agent/coin-classification-v1/install_agent_rules.py": "d7784767ce52b0b7ba7021b8db4bbdb6a4d4c3fe4ea93ca39ac64c9030d65b75",
     "agent/coin-classification-v1/test_install_agent_rules.py": "13448f49b2d29ccdf874c9bfe536278543b3b7c93e7b951da931df5d634a4a13",
-    "agent/coin-classification-v1/README.md": "c4875f0273e8bf3b79b9bdca384442c32c13ad86448e8e3d9213d6a756e76dc3"
+    "agent/coin-classification-v1/README.md": "c4875f0273e8bf3b79b9bdca384442c32c13ad86448e8e3d9213d6a756e76dc3",
+    "monitors/super-small-cap/install.py": "105f8da80080b74de01dd296a1a0c4d2154da5da0f8a6bde5a29e211ce401f8c",
+    "monitors/super-small-cap/test_install.py": "ebc532905355907aed975d63e7c40308600d3a26463f71a4aa481c8d596809ef",
+    "monitors/super-small-cap/collector.py": "7e225095d08bd0ecc5ea6bbd841de3d5c1b3c9723719e126b252657a55456aea",
+    "monitors/super-small-cap/classifier.py": "89d523e46c5a364ef3efb9aa97c76e78f294296d4e7b77d6a161b636c5a13129",
+    "monitors/super-small-cap/vivameda-super-small-cap.service": "7441e146f33d46084bde0737eb3c281d418f3732a8cb8033db35357605826c86",
+    "monitors/super-small-cap/AGENT_RULES.md": "6b094b2084f29a8a9e8d13c6693394e4d14c728e1b506cf5ebe250f3355ecaf4",
+    "monitors/super-small-cap/README.md": "a254de84a63fb6d3c62154732fcc933b9e646ef62876dadf5dd1a806744edeaf",
+    "monitors/super-small-cap/vivameda-super-small-cap.timer": "98e4c182311baa9139d5c7784eb50bfcd9cfe2aa20f0e521f12479ea613e8b4b",
+    "monitors/super-small-cap/test_trigger.py": "88065f9ef3aa29125d8799469d30faf954219094b6ce2d6a636f3c38a6da0f8c"
   },
   "model_publication_approved": "2026-10-03",
   "diagnostics_extension": {
@@ -973,5 +982,26 @@
     "live_execution": false,
     "evidence_source": "owner installation receipt; source postflight reported; real classification dispatch unverified",
     "rules": "agent/coin-classification-v1/AGENT_RULES.md"
+  },
+  "super_small_cap_trigger": {
+    "status": "prepared and tested; owner activation pending",
+    "trigger": "SUPER_SMALL_CAP",
+    "policy": "crypto-super-small-cap-v1",
+    "mode": "SHADOW",
+    "min_market_cap": 10000,
+    "max_market_cap": 20000,
+    "deadline_ts": null,
+    "tests_passed": 16,
+    "unit_files_verified": true,
+    "free_profile_feed_verified": true,
+    "source_commit": "28fc4d9",
+    "bundle_sha256": "371e55050a77d27a222764d5365968fae013528f5dbfc116aacaa1dac320137d",
+    "coverage": "profiled Solana tokens; partial discovery and bounded polling",
+    "paid_stream_enabled": false,
+    "telegram_delivery_enabled": false,
+    "independent_review_producer_enabled": false,
+    "weights_updated": false,
+    "live_execution": false,
+    "existing_triggers_changed": false
   }
 }
