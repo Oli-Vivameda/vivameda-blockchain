@@ -1,6 +1,6 @@
 # Separate 🔥 research watchlist — 11 October 2026
 
-The existing bot and chat remain in use, with a separate 🔥 message per candidate. The owner installed indefinite operation and the latest-screen classification update. **This public-research update is tested and staged; owner activation is pending.**
+The existing bot and chat remain in use, with a separate 🔥 message per candidate. The owner installed indefinite operation and the latest-screen classification update. **The owner installed this public-research update on 11 October 2026. The installation first run was healthy and waiting for a fresh candidate; the first researched Telegram delivery remains unverified.**
 
 An alert used to explain only scanner admission. The new step gathers evidence tied to the exact mint and pool, assesses recent activity, reads a provider-linked project website and explains why attention is weak or supported.
 
@@ -42,3 +42,9 @@ The updater binds exact source/test hashes, requires root/server Python 3.12 and
 Fresh installations must use the current install.py --bundle output; historic hashes are not valid for this source. Historical remove_expiry.py and update_classification.py are retained only for audit, not applied after this update.
 
 Inspect: /var/lib/vivameda-100x-watchlist/status.json and its private research/<mint>.json. Stop only this relay with systemctl disable --now vivameda-100x-watchlist.timer, then systemctl stop vivameda-100x-watchlist.service.
+
+## Owner installation receipt — 11 October 2026
+
+The owner returned the hash-bound updater receipt: updated=true; public_research_enabled=true; deadline_ts=null; activation timestamp and delivery history preserved; scanner_changed=false; pilot_modified=false; independent_developer_research=false. Installed notifier SHA-256: e0f7e8905b6e1a97bcd0a43d63247b814786666bfb2cc296bed2dc371d5d1556. Installed research SHA-256: 7f1dbd8731d6d06e7aceb7a6f0eae6bb2dfe1c06812884943474e5225954dbcf.
+
+The updater's first run at 2026-10-11T09:28:39Z reported waiting, zero market-provider requests and zero candidate messages. This confirms installation postflight, not a completed candidate research or Telegram delivery. Independent developer investigation remains unavailable. Production behavior was not independently re-read in this documentation update.
