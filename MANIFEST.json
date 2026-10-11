@@ -4,7 +4,7 @@
   "missing": [],
   "sha256": {
     ".gitignore": "be399efba81fec45218410e877c3d3935a920538dd15e3ea558a8d5a2bdf68ec",
-    "README.md": "52d3b379371e1e017625ee35c8cd796e135f79f0047c809a34242d22fe019cc5",
+    "README.md": "469ca7eaa8973fe12b41961544b89af5f42d707e0911a7d3dcb31e35ae7ac142",
     "credentials.example.json": "c58950f6be306e8860e318b8d3bfdadd2c8f4142c92149a83ac52530be0f0ab5",
     "SIGNALS.md": "e6912005df13615138935c45b77756b23dee636891cb85faed9d273723117cc8",
     "CRYPTO_LEARNING_REVIEW_20261006.md": "a9703c5ff9c13e74234f195b85d73bb04731774753d27d7a00dbaaa918b0e625",
@@ -291,18 +291,18 @@
     "monitors/super-small-cap/review-integration/vivameda-super-small-cap-review.timer": "370627d6942df8a6d924ff04befc0f92fb39a32184aab3713f343e7c94068e7d",
     "monitors/super-small-cap/review-integration/install_review.py": "b35c25a88faf664ab0ffadc5751fb5822a9389554346aef261af705f1dfb94f3",
     "monitors/super-small-cap/review-integration/probe_model.py": "7bf87f5c13719ccf0e7263b1f865e34f64a458d7fea0619612790845866cfb92",
-    "research/runner-study-20261011/STATUS.json": "ad70b38586d5c8d1435d57958808b1d373b634b3af4b60c2bf5688574fb01d1a",
+    "research/runner-study-20261011/STATUS.json": "a164b83dfaf7224fd0ec50964bf9177bd13794b9d8247a1454279622cfac39f3",
     "research/runner-study-20261011/PROTOCOL.md": "ca65c9fa17c9f377c7f5617fe0cafad81c3d77a936eb0922fd0387998ed24b9d",
     "research/runner-study-20261011/sources.json": "f082b42cb0fc663819d1dcec441e7ff7a8023fe380e43e1bcb624ebc189c9bd3",
     "research/runner-study-20261011/AGENT_KNOWLEDGE.md": "71b111425e64e9430a65f269d27afa37c7190ea03a82d2ec40464be3f39da9f4",
-    "research/runner-study-20261011/README.md": "feb5d42bc0f8c136f1c05b8f6ed802f7570ad5e83257a5e6ac383e73e2632a2d",
+    "research/runner-study-20261011/README.md": "45aaafa985edb16b78d91b57008f5111f346227d17f988e0d9796f9b0af1cfe6",
     "research/runner-study-20261011/cases.json": "4ecd950959956a1e39284d4d2339087183e0c30c283826403250d34972c1f977",
     "research/runner-study-20261011/test_validate.py": "48b8b320f6ddca048a9f5cac02d7426b45ea5ea476e58a28000b99d680aef2ec",
     "research/runner-study-20261011/validate.py": "2649cf08e7e55b7596c86754dbb5386caec9f9d1321e0ca1266428f9307f5f46",
     "research/runner-study-20261011/COMPACT_RULES.md": "457db4e6c708d108dfaad3f3f465e51255317c4ca6942a4123a027ee595855d1",
-    "research/runner-study-20261011/test_install_knowledge.py": "86f13b912c5798702aaf5ab3e784078d7fca553ebb477470da6f716f93aebccd",
+    "research/runner-study-20261011/test_install_knowledge.py": "bc03773b71707213123ec00bad0f578932f8ae7bddaf94af134f297d63db739f",
     "research/runner-study-20261011/review_worker.py": "919130a17e0e600a2ce1505f3b97e5a9ca10620b9dac66c006036cc9a5abdb0d",
-    "research/runner-study-20261011/install_knowledge.py": "46e05afbee7e64d0aac6f329aa040895a18b47185f3ccfc23a848228e8745677"
+    "research/runner-study-20261011/install_knowledge.py": "e9850f9b14fd1def63fddb89dc501c32aac2e0c97c4965de30e74cd0a06d2f79"
   },
   "model_publication_approved": "2026-10-03",
   "diagnostics_extension": {
@@ -1120,7 +1120,7 @@
     "verified_ranked_runners": 0,
     "audited_early_charts": 0,
     "source_case_cards": 11,
-    "tests_passed": 21,
+    "tests_passed": 25,
     "complete": false,
     "production_loaded": false,
     "weights_updated": false,
@@ -1131,13 +1131,15 @@
         "conversational_agent_SYSTEM",
         "third_trigger_model_request"
       ],
-      "tests_passed": 21,
+      "tests_passed": 25,
       "existing_review_regressions_passed": 35,
-      "server_commit": "8dd032c",
-      "bundle_sha256": "e1ed98fef62b683a03ce45bc9a58fa2d97b3a2e68a8e503a3da6e522ee456fa7",
+      "server_commit": "cc7dc08",
+      "bundle_sha256": "5e5c860c39c18d9dfddcb652e0c592194409cfc878d4daf33e4669e55f5af49c",
       "dry_run_validated_against_current_production": true,
       "agent_candidate_sha256": "67eb398891379f77dcd14dc089fc198309846cb1bbca619b12892c0d90d27942",
-      "worker_candidate_sha256": "a889f192803e14e374f9183070f7370527182d73bf089b157ecd421f00f50715"
+      "worker_candidate_sha256": "a889f192803e14e374f9183070f7370527182d73bf089b157ecd421f00f50715",
+      "lock_wait_limit_seconds": 150,
+      "activation_failure": "Previous attempt encountered busy review lock before production writes; repaired installer awaits owner activation."
     }
   }
 }
