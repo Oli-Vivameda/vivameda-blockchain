@@ -106,3 +106,8 @@ Owner activation of the review worker remains pending. The existing third collec
 
 The first activation stopped at the service-user probe because the installer created its code directory with mode 700 under its private umask. Server inspection confirmed this permission error. The corrected installer explicitly sets code-directory mode 755 and permits a hash-verified retry of the exact disabled previous bundle. Private state and credentials stay restricted. All 35 server tests pass; corrected activation remains pending. Existing scout services remain healthy and their source hashes are unchanged.
 
+
+## Third-trigger review activated — 11 October 2026
+
+The owner successfully installed the corrected review bundle `b6a4d41071748ebd48fdf64fe43d1596bf8bfde7041b1ad64fdcd7e9d959521a`. Independent review and reviewed-only Telegram delivery are enabled, using the same bot/chat with no expiry. Both collector and review timers were independently confirmed active; the last review service exited successfully. The installation probe passed (48.692 seconds initially, 7.603 seconds warm), but the first real review hit an inference timeout, remained EARLY_WATCH and sent no message. Activation is complete; real-candidate judgment and first genuine delivery are unverified. The earlier pending-activation paragraphs describe preparation history. Private latest-review state is not readable by the engineering account; a successful service exit alone does not prove an individual model review succeeded.
+

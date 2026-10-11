@@ -4,7 +4,7 @@
   "missing": [],
   "sha256": {
     ".gitignore": "be399efba81fec45218410e877c3d3935a920538dd15e3ea558a8d5a2bdf68ec",
-    "README.md": "406b7fc7e97eeef9c6b6b4faeae2ea3d0625d7d37a851dae72032ce13b887a88",
+    "README.md": "8614d9bac64f52d0f667e694bd6f509b4cfc13ebade64b3f2ae65b5532daeabf",
     "credentials.example.json": "c58950f6be306e8860e318b8d3bfdadd2c8f4142c92149a83ac52530be0f0ab5",
     "SIGNALS.md": "e6912005df13615138935c45b77756b23dee636891cb85faed9d273723117cc8",
     "CRYPTO_LEARNING_REVIEW_20261006.md": "a9703c5ff9c13e74234f195b85d73bb04731774753d27d7a00dbaaa918b0e625",
@@ -286,7 +286,7 @@
     "monitors/super-small-cap/review-integration/helper_hashes.json": "c3672d9475909f8863155b0d8fe7172e8f8c697561c48b9b06aeb9ff97fe8f2a",
     "monitors/super-small-cap/review-integration/test_review.py": "789102cfac427934e5a515820069b61d1bcc75663d7af6a01e7e94054dcf3cb5",
     "monitors/super-small-cap/review-integration/classifier.py": "89d523e46c5a364ef3efb9aa97c76e78f294296d4e7b77d6a161b636c5a13129",
-    "monitors/super-small-cap/review-integration/README.md": "718516a1e994500fd7a29822465cff9002db7f64ee3f460271a4ddf3d8621f20",
+    "monitors/super-small-cap/review-integration/README.md": "69a40fcc42c54a3ce9cdd2f0205d52a30ad188cff1cbb60f079d31a34e87b347",
     "monitors/super-small-cap/review-integration/review_worker.py": "e048a31f25e21a7aeb93b24eadab7d0f235832074d79bcdfeda8e8c8f0f33273",
     "monitors/super-small-cap/review-integration/vivameda-super-small-cap-review.timer": "370627d6942df8a6d924ff04befc0f92fb39a32184aab3713f343e7c94068e7d",
     "monitors/super-small-cap/review-integration/install_review.py": "b35c25a88faf664ab0ffadc5751fb5822a9389554346aef261af705f1dfb94f3",
@@ -1034,20 +1034,20 @@
       "ongoing_service_health_independently_verified": false
     },
     "review_integration": {
-      "status": "permission failure diagnosed and repaired; corrected owner activation pending",
+      "status": "owner installed; review and delivery enabled; first real review timed out and remained EARLY_WATCH",
       "path": "monitors/super-small-cap/review-integration/README.md",
       "bundle_sha256": "b6a4d41071748ebd48fdf64fe43d1596bf8bfde7041b1ad64fdcd7e9d959521a",
       "tests_passed": 35,
       "server_python": "3.12",
       "systemd_units_verified": true,
-      "installed": false,
+      "installed": true,
       "mode_after_activation": "REVIEW_ALERT",
-      "independent_review_producer_enabled": false,
-      "telegram_delivery_enabled": false,
+      "independent_review_producer_enabled": true,
+      "telegram_delivery_enabled": true,
       "local_model_schema_probe": {
         "passed": true,
-        "initial_elapsed_seconds": 19.113,
-        "warm_elapsed_seconds": 8.768,
+        "initial_elapsed_seconds": 48.692,
+        "warm_elapsed_seconds": 7.603,
         "decision": "PROMISING_SETUP",
         "synthetic": true,
         "telegram_messages_sent": 0,
@@ -1070,7 +1070,34 @@
         "explicit_code_directory_mode": "0755",
         "previous_bundle_verified_before_retry": true,
         "private_state_permissions_unchanged": true
-      }
+      },
+      "mode": "REVIEW_ALERT",
+      "backup": "/opt/vivameda-operations/super-small-cap-review-c587oh1z",
+      "installation_evidence": "owner terminal receipt, independently confirmed active collector and review timers; last review service exited 0",
+      "first_dry_delivery_run": {
+        "checked_at": 1791741335,
+        "classification": "EARLY_WATCH",
+        "delivery_status": "not_eligible",
+        "due_candidates": 1,
+        "errors": [
+          "TimeoutError"
+        ],
+        "live_execution": false,
+        "mode": "REVIEW_ALERT",
+        "reviewed": 1,
+        "status": "assessed",
+        "telegram_messages_sent": 0,
+        "trigger": "SUPER_SMALL_CAP",
+        "weights_updated": false
+      },
+      "runtime_health": {
+        "review_timer": "active/waiting",
+        "collector_timer": "active/waiting",
+        "review_service_last_result": "success",
+        "review_service_last_exit_code": 0,
+        "private_status_readable_by_engineering": false
+      },
+      "same_existing_bot_and_chat": true
     }
   }
 }
