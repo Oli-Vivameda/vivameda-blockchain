@@ -1,0 +1,126 @@
+# Vivameda Crypto Lab
+
+A continuously running Solana small-cap observation and research system on Hetzner: early-breakout discovery, on-chain wallet screening, Telegram notifications, wallet maps and forward outcome tracking.
+
+**Start here:** [Full setup showcase](../../docs/FULL_SETUP.md). This repository is the public source and documentation of the crypto setup. It describes live components, offline experiments and unfinished integrations separately. It is a dated reference, not a live dashboard or a guarantee of profitable trading.
+
+## The system at a glance
+
+| Layer | What it does | Current status |
+|---|---|---|
+| Discovery and scoring | Collect launches and snapshots; score 11 signals; thresholds 8 / 10 | Live |
+| Wallet intelligence | Authenticate pools/creators/holdings; index histories; draw wallet-link maps; seven screening checks | Live; cluster/age/history coverage incomplete |
+| Notifications | Scanner admissions plus separate configured-token watchlist and pool/developer observations | Existing server components; source published |
+| Forward learning | ALERT/SHADOW cases, timed outcomes, regimes and horizon statistics | Live V2 tracker |
+| Prediction ledger | Freeze shadow predictions and later eligible labels for a prospective baseline comparison | Activated; no completed validation claim |
+| Numerical model | Seven-feature logistic baseline, published coefficients and evaluation | Experimental; underperformed baseline; does not drive alerts |
+| Daily case learning | Matched first-call reviews, fresh agent memory and prospective paper journal | Daily review live; journal dormant by design until the prediction ledger closes (200 eligible or 2026-11-03T06:45:43Z); population frozen |
+| Dedicated Crypto Lab agent | Separate conversations, crypto-only read tools and local evidence interpretation | Isolated runtime active; generation completes, factual acceptance failed on 6 October; constrained guard installed 8 October; evidence-table postflight verified; owner live 10-question factual acceptance passed 10/10 in 3.24 seconds; table fallback only; interpretation/selection quality unverified; separate queue, storage and permissions |
+| Agent context | Select dated crypto knowledge and limitations for an agent session | Public extraction; private conversational runtime excluded |
+| Trading-agent layer | Paper proposal records, owner feedback and versioned playbook | Scaffold; no continuous agent or live execution |
+| Transaction-decoder experiments | Offline DFlow/Pump endpoint reconciliation | Not promoted into production |
+| TradingView and market movements | Account/watchlist sync plus independent BTC/SOL measurements | Watchlists verified; TradingView quotes/candles blocked; exchange adapter installed; partial fresh-price coverage; BTC/SOL windows and fresh sync verified; other spot/perpetual windows verified in owner aggregate; two real sent records; SOL absent from that export; latency and 24-hour refresh pending ([handover](../../docs/TRADINGVIEW_HANDOVER_20261008.md)) |
+| Broad survivor discovery / live trading | Universe-wide survivor discovery and broker/wallet execution | Not implemented |
+
+## How it fits together
+
+```mermaid
+flowchart TD
+    A[Public launch and market feeds] --> B[Scanner: candidates and 11 signals]
+    B --> C[Wallet queue and evidence collection]
+    C --> D[Seven-check policy and wallet maps]
+    D --> E[Scanner admission and Telegram]
+    B --> F[V2 ALERT and SHADOW tracking]
+    F --> G[Timed outcomes and research]
+    B --> H[Frozen shadow prediction ledger]
+    H --> G
+```
+
+The watchlist and pool monitor run separate observation rules; their messages do not inherit scanner screening. The trading scaffold is separate and is not connected to this alert loop.
+
+## Explore the setup
+
+| Guide | Contents |
+|---|---|
+| [Full setup](../../docs/FULL_SETUP.md) | Purpose, component inventory, schedules, agents/models, live snapshot and boundaries |
+| [Signals](../../SIGNALS.md) | All 11 score conditions, eligibility gates, regimes and outcome labels |
+| [Screening](../../scout/SCREENING_V2.md) | Seven decisions, freshness and admission policy |
+| [Wallet operations](../../scout/WALLET_INTELLIGENCE.md) | Queue, RPC budgets, coverage and storage guardrails |
+| [Monitor signals](../../docs/MONITORS.md) | Watchlist, pool levels, activity, controls, account and vesting observations |
+| [Architecture](../../docs/ARCHITECTURE.md) | Source entry points, data flow and external effects |
+| [Research](../../research/README.md) | Baseline result, training schema and evaluation limits |
+| [Daily case learning](../../learning/README.md) | Matching rules, paper journal, agent integration, daily schedules and activation |
+| [Dedicated Crypto Lab agent](../../agent/CRYPTO_LAB.md) / [Earlier activation](../../agent/CRYPTO_AGENT_ACTIVATION_20261005.md) / [Runtime separation](../../agent/runtime/RUNTIME_SEPARATION.md) / [Runtime activation](../../agent/runtime/RUNTIME_ACTIVATION_20261005.md) / [Interpretation repair](../../agent/interpretation/README.md) | Domain boundary, dedicated queue/services, installation status and model limitations |
+| [Trading scaffold](../../agent_trader/README.md) | Paper proposals, feedback and execution integration requirements |
+| [Setup](../../docs/SETUP.md) | Dependencies, installation, health checks and rollback |
+| [Coverage](../../docs/COMPLETENESS.md) / [Validation](../../docs/VALIDATION.md) | Included source, tests and unresolved gaps |
+| [TradingView handover](../../docs/TRADINGVIEW_HANDOVER_20261008.md) | Verified watchlist inventory, market-data errors, BTC/SOL status and agreed exchange-feed next step |
+| [Update policy](../../docs/REPOSITORY_POLICY.md) | Required GitHub synchronization for crypto changes |
+| [Security](../../SECURITY.md) | Public/private boundary |
+
+## Verify the source
+
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt -r research/requirements.txt
+.venv/bin/python -m unittest discover -s scout -p 'test_*.py'
+.venv/bin/python -m unittest discover -s research -p 'test_*.py'
+.venv/bin/python -m unittest discover -s agent -p 'test_*.py'
+.venv/bin/python -m unittest discover -s agent_trader -p 'test_*.py'
+python3 -m unittest discover -s learning -p 'test_*.py'
+python3.12 scripts/verify_release.py
+```
+
+A score is not a probability. Activity age is a lower bound, not a creation date. Transfer links do not establish common ownership. Peak multiples are not realized profit. Missing evidence remains missing.
+
+The experimental model used 42 training and 18 test tokens: Brier 0.11047 versus baseline 0.10034 (lower is better). No profitable strategy, completed prospective validation, Qwen weight training or automated trade execution is claimed.
+
+Credentials, private live configuration, databases, messages, client material and the separate workforce stack remain server-side. Source templates do not reproduce private runtime state. Fresh-host installation remains unverified. No license grant has yet been selected.
+
+
+Owner decision, Directive 2 continuation: keep the frozen journal population. The journal is **dormant by design until the prediction ledger closes (200 eligible or 2026-11-03T06:45:43Z)**. No amendment is authorized. After closure, re-check ALERT-to-writer admission under the frozen rules and publish the first non-zero aggregate; future non-zero volume is not guaranteed.
+
+Release interpreter: Python 3.12. Other versions are explicitly refused before the release check; frozen AST scorer hashes and pilot bindings are unchanged. Directive 2 availability analysis and next protocol: [control availability](../../research/forward_capture/CONTROL_AVAILABILITY_20261008.md), [V2 draft](../../research/forward_capture/PROTOCOL_V2_DRAFT.md). Incident/alarm logging is owner-installed with source/service postflights; normal health status reports audit logging available. Live factual acceptance and control-availability aggregates are verified. Three current stale trades were diagnosed using existing feeds; historical identity continuity and real alarm latency remain unverified.
+
+Corrected logging bundle: `7afa8275f9d2d8c2ffce2eaa0bac99cffb359e69a2a41c62060caf044282ae5a`; nine focused tests passed. Both owner installs preserved policy, cadence, units, permissions and the pilot. See the existing [TradingView handover](../../docs/TRADINGVIEW_HANDOVER_20261008.md) for hashes, backups and remaining gates.
+
+## Chart learning and classification — 11 October 2026
+
+[Historical chart audit and recovered-chart study](../../learning/chart-audit-20261011/README.md): 139 retained first-call tokens, 132 usable fixed ten-minute price histories, 74 complete 24-hour observed outcomes. Twenty tests passed. Protected evaluation outcomes and private token-level records are excluded; findings are retrospective and outcomes use market-cap proxies.
+
+[Coin classification rules](../../agent/coin-classification-v1/README.md): five evidence-based research labels and a guarded fire-transition validator; fourteen tests passed. The owner installed the instructions into the dedicated Crypto Lab agent. Independent review production, classifier command dispatch and Telegram relay integration remain disabled. No model weights, scanner thresholds, frozen paper policy or live execution changed.
+
+## Third trigger: super-small-cap research — 11 October 2026
+
+[Independent $10k–$20k trigger](../../monitors/super-small-cap/README.md) and [additional agent rules](../../monitors/super-small-cap/AGENT_RULES.md) are owner-installed: 16 tests passed and the separate timer was enabled. The first SHADOW run observed 22 tokens, saved 22 samples and recorded four $10k–$20k band entries with two completed provider requests and no errors. Those entries are discovery records, not reviewed runner calls. This is a separate SHADOW collector with no expiry; it samples profiled Solana tokens, saves immutable first band entries and subsequent observations, and preserves the other triggers. A short-window independent-review validator is included; autonomous review and Telegram delivery remain disabled. No paid stream, model training or live trading is enabled.
+
+Installation evidence is the owner's terminal receipt (first run timestamp 1791738657); ongoing service health has not been independently re-read.
+
+## Reviewed third-trigger dispatch — prepared 11 October 2026
+
+[Super-small-cap review-to-alert integration](../../monitors/super-small-cap/review-integration/README.md) is implemented and validated: 35 tests passed on server Python 3.12; both unit files verified; the installed local-model schema probe completed in 19.113 seconds initially and 8.768 seconds warm. A separate worker reviews saved chart evidence, uses supported core screening and sends only independently validated FIRE_REVIEWED classifications through the existing bot/chat. It persists assessment and delivery history and rechecks freshness before sending. Ordinary discovery cannot automatically generate a fire call.
+
+Owner activation of the review worker remains pending. The existing third collector continues SHADOW capture; current production review/Telegram flags remain disabled until the reviewed installer is run. Unsupported bonding curves or missing comparable winner/failure cases can correctly prevent fire promotion. Partial discovery, experimental judgment and unverified first real delivery are explicit; no trading, paid feeds, weights or existing-trigger policies change.
+
+## Third-trigger activation repair — 11 October 2026
+
+The first activation stopped at the service-user probe because the installer created its code directory with mode 700 under its private umask. Server inspection confirmed this permission error. The corrected installer explicitly sets code-directory mode 755 and permits a hash-verified retry of the exact disabled previous bundle. Private state and credentials stay restricted. All 35 server tests pass; corrected activation remains pending. Existing scout services remain healthy and their source hashes are unchanged.
+
+
+## Third-trigger review activated — 11 October 2026
+
+The owner successfully installed the corrected review bundle `b6a4d41071748ebd48fdf64fe43d1596bf8bfde7041b1ad64fdcd7e9d959521a`. Independent review and reviewed-only Telegram delivery are enabled, using the same bot/chat with no expiry. Both collector and review timers were independently confirmed active; the last review service exited successfully. The installation probe passed (48.692 seconds initially, 7.603 seconds warm), but the first real review hit an inference timeout, remained EARLY_WATCH and sent no message. Activation is complete; real-candidate judgment and first genuine delivery are unverified. The earlier pending-activation paragraphs describe preparation history. Private latest-review state is not readable by the engineering account; a successful service exit alone does not prove an individual model review succeeded.
+
+
+
+## Runner research — 11 October 2026
+
+[Research and provisional agent knowledge](../../research/runner-study-20261011/README.md): eleven sourced case cards and temporal-integrity checks (13 tests passed). The requested 24-month top-100 ranking is **not complete**: 0 verified ranked runners and 0 audited early charts. A timestamped historical archive and contemporaneous audience evidence are still required. Knowledge is staged for the agent, not loaded into the production prompt; no weights or alert eligibility changed. The original automatic 100x relay is paused per owner STOP-command receipt; its independent review integration remains unfinished.
+
+
+
+## Runner knowledge prompt integration — 11 October 2026
+
+The [runner knowledge installer](../../research/runner-study-20261011/README.md) now connects the same compact judgment rules to both the conversational Crypto Lab agent and the third-trigger review request. The prior review worker extracted only the third-trigger section, so appending knowledge elsewhere would not have reached it. Twenty-five integration/integrity tests and 35 existing review regression tests passed. A production-source-bound dry run validated both candidate hashes. Owner activation is pending; the complete top-100 chart study remains blocked by archive coverage. No model weights, alert eligibility or relay STOP state changes. Reviewed bundle: `5e5c860c39c18d9dfddcb652e0c592194409cfc878d4daf33e4669e55f5af49c`.
+
+The first knowledge activation met an active review lock and made no production changes. The repaired installer waits up to 150 seconds on the existing lock, then reports `review_busy_retry` and exits 2 without production writes if still busy. Lock contention, bounded timeout and inode preservation tests pass. Owner activation remains pending.

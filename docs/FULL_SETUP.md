@@ -2,6 +2,10 @@
 
 Operational status reference: 8 October 2026, with separately dated snapshots below. The 5 October snapshot is historical. TradingView/market-monitoring addendum: 8 October 2026; see the dated handover below. Maintained alongside crypto changes. For an introduction, read the repository README; for exact thresholds, follow the linked source guides. This is the Crypto Lab lane, separate from Vivameda's workforce intelligence and client delivery stack.
 
+## Latest scanner update — 16 October 2026
+
+[Discovery safeguards](DISCOVERY_SAFEGUARDS.md) and [release evidence](releases/2026-10-16-discovery.md) describe the deployed scanner update. Other component snapshots below retain their own dates; this is not a new whole-system audit.
+
 ## Purpose and scope
 
 The system observes early Solana small-cap launches, measures price/liquidity/activity, applies bounded on-chain risk screening and records subsequent outcomes. Telegram notifications support review. The learning layer captures both ALERT and SHADOW candidates so failed alerts and observed missed opportunities can be studied without rewriting their history. An opportunity score and an observed multiple are not a trade return.

@@ -1,4 +1,4 @@
-import ast, copy, hashlib, json, logging, pathlib, re, sqlite3, time, unittest
+import ast, copy, hashlib, json, logging, math, pathlib, re, sqlite3, time, unittest
 from unittest.mock import Mock
 P=pathlib.Path(__file__).with_name("early_scout.py")
 class PrealertTests(unittest.TestCase):
@@ -6,7 +6,7 @@ class PrealertTests(unittest.TestCase):
   tree=ast.parse(P.read_text())
   body=[n for n in tree.body if isinstance(n,ast.FunctionDef) or
         (isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id.startswith("PREALERT_") for t in n.targets))]
-  self.ns=dict(json=json,logging=logging,time=time,hashlib=hashlib,re=re,Path=pathlib.Path)
+  self.ns=dict(json=json,logging=logging,time=time,hashlib=hashlib,re=re,math=math,Path=pathlib.Path)
   exec(compile(ast.Module(body=body,type_ignores=[]),"scout_functions","exec"),self.ns)
   self.sec={"mint_authority":"REVOKED","freeze_authority":"REVOKED"}
   self.review={"policy":"crypto-prealert-v1","chain":"solana","mint":"mint","pair":"pair","checked_at":1000,

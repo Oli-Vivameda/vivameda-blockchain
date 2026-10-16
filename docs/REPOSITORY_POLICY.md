@@ -14,3 +14,9 @@ For each crypto change:
 Production changes preserve reviewed deployment hashes, backups and alert gates. Newly built or tested components stay experimental until integration and deployment are verified. Retain dated experiment results, including negative findings. This policy does not authorize publishing private runtime data or activating live trading.
 
 Daily learning updates publish only dated aggregate review counts and verified operational/test receipts. Keep case identities, detailed traces, raw snapshots, runtime databases and frozen outcomes private. Publish reviewed code alongside any behavior changes; label case-memory updates separately from weight training and keep activation status explicit.
+
+## Canonical placement — 16 October 2026
+
+Crypto source, tests and public releases belong here; follow REPOSITORY_MAP.md. Keep one current scanner. The company stack carries a cross-reference rather than duplicate scanner baselines, candidates and deployment bundles. Server archives retain operational receipts and private runtime material. Preserve historical studies and prior Git commits.
+
+Both repositories currently report public visibility. Check actual visibility before transferring non-public material.

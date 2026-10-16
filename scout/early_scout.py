@@ -43,11 +43,46 @@ def db():
     con.commit()
     return con
 
-def pump_rows(sort):
-    p = {"offset": 0, "limit": 100, "sort": sort,
+def pump_rows(sort, offset=0):
+    # PUMP_HTTP_TRANSPORT_V1: same public endpoint, sort, limit and screening inputs.
+    # Standard-library transport verified separately; no alternate identities/proxies.
+    import urllib.request, urllib.parse, urllib.error
+    if sort not in ("created_timestamp", "last_trade_timestamp"):
+        raise ValueError("unsupported discovery sort")
+    if type(offset) is not int or not 0 <= offset <= 10000 or (offset and sort != "created_timestamp"):
+        raise ValueError("invalid discovery offset")
+    p = {"offset": offset, "limit": 100, "sort": sort,
          "order": "DESC", "includeNsfw": "false"}
-    d = get_json(PUMP_URL, p)
-    return d if isinstance(d, list) else []
+    url = PUMP_URL + "?" + urllib.parse.urlencode(p)
+    try:
+        request = urllib.request.Request(url, headers={
+            "User-Agent": "Vivameda-Early-Scout/1.0", "Accept": "application/json"})
+        with urllib.request.urlopen(request, timeout=12) as response:
+            raw = response.read(2_000_001)
+            if len(raw) > 2_000_000:
+                raise ValueError("discovery response too large")
+            d = json.loads(raw)
+    except urllib.error.HTTPError as error:
+        # Keep the existing main-loop HTTP status cooldown.
+        reply = requests.Response()
+        reply.status_code = error.code
+        raise requests.HTTPError("public discovery HTTP failure", response=reply) from None
+    except (urllib.error.URLError, TimeoutError) as error:
+        raise requests.RequestException("public discovery transport failure") from None
+    if not isinstance(d, list) or len(d) > 100 or any(not isinstance(x, dict) for x in d):
+        raise ValueError("invalid discovery schema")
+    now_ms = int(time.time() * 1000)
+    def valid_ts(v):
+        return type(v) in (int, float) and math.isfinite(v) and 0 < v <= now_ms
+    if d and not any(valid_ts(x.get("created_timestamp")) for x in d):
+        raise ValueError("missing discovery creation times")
+    valid_trades = [x["last_trade_timestamp"] for x in d
+                    if valid_ts(x.get("last_trade_timestamp"))]
+    if sort == "last_trade_timestamp" and (not valid_trades or max(valid_trades) < now_ms - 180_000):
+        raise ValueError("missing or stale discovery trade times")
+    logging.info("DISCOVERY_HTTP_OK sort=%s rows=%s timestamped_trades=%s",
+                 sort, len(d), len(valid_trades))
+    return d
 
 def upsert_pump(con, rows):
     now = int(time.time() * 1000)
@@ -572,6 +607,88 @@ def telegram(text):
               "disable_web_page_preview":"true"}, timeout=12)
     r.raise_for_status()
 
+
+# NO_SOCIALS_PATTERN_V1_BEGIN
+def no_socials_category(pair, mint, now, review=None):
+    """Descriptive source-bounded category; never an admission or ownership verdict."""
+    from urllib.parse import urlsplit
+    info = pair.get('info') if isinstance(pair, dict) else None
+    if not isinstance(info, dict):
+        info = {}
+    def valid_url(value):
+        try:
+            u = urlsplit(value)
+            return u.scheme in ('http', 'https') and bool(u.hostname)
+        except (TypeError, ValueError):
+            return False
+    websites = info.get('websites', [])
+    socials = info.get('socials', [])
+    website = any(isinstance(x, dict) and valid_url(x.get('url'))
+                  for x in websites) if isinstance(websites, list) else False
+    twitter = any(isinstance(x, dict) and valid_url(x.get('url')) and
+                  (urlsplit(x['url']).hostname or '').lower().removeprefix('www.') in
+                  ('x.com', 'twitter.com', 'mobile.twitter.com')
+                  for x in socials) if isinstance(socials, list) else False
+    if website or twitter:
+        return {'category': 'OTHER', 'website_listed': website, 'twitter_listed': twitter}
+    if pair.get('_metadata_observed') is not True:
+        return {'category': 'UNKNOWN', 'reason': 'metadata_not_observed'}
+    pcts = []
+    reasons = []
+    try:
+        path = Path('/var/lib/vivameda-wallet-intelligence/data') / (mint + '.json')
+        if not re.fullmatch(r'[1-9A-HJ-NP-Za-km-z]{32,44}', mint):
+            raise ValueError('mint')
+        if path.is_symlink() or path.stat().st_size > 8*1024*1024:
+            raise ValueError('report')
+        report = json.loads(path.read_bytes())
+        ts = report.get('generated_at')
+        packet = report.get('screening_packet', {})
+        own = packet.get('ownership', {})
+        if (report.get('mint') != mint or packet.get('mint') != mint or
+            packet.get('pair') != pair.get('pairAddress') or own.get('mint') != mint or
+            own.get('authenticated') is not True or type(ts) not in (int, float) or
+            not math.isfinite(ts) or not 0 <= now-ts <= 300 or
+            type(own.get('observed_at')) not in (int,float) or
+            not 0 <= now-own['observed_at'] <= 300):
+            raise ValueError('identity_or_freshness')
+        merged = {}
+        for x in own.get('owners', [])[:10000]:
+            a, v = x.get('owner'), x.get('pct')
+            if (isinstance(a,str) and a != pair.get('pairAddress') and
+                type(v) in (int,float) and math.isfinite(v) and 0 < v <= 100):
+                merged[a] = merged.get(a,0) + v
+        pcts = sorted(merged.values(), reverse=True)[:40]
+        # Exploratory resemblance threshold, NOT a learned risk or trading threshold.
+        best = max((sum(v/1.2 <= x <= v for x in pcts) for v in pcts), default=0)
+        if best >= 10:
+            reasons.append('at least 10 of the top 40 sampled non-pool owners hold amounts within 20% of one another')
+    except (OSError, ValueError, TypeError, KeyError, AttributeError):
+        pass
+    checks = review.get('checks', {}) if isinstance(review, dict) else {}
+    item = checks.get('wallet_clusters', {})
+    ts = item.get('observed_at')
+    if (type(ts) in (int,float) and math.isfinite(ts) and 0 <= now-ts <= 300 and
+        item.get('evidence_refs') and isinstance(item.get('details'),dict)):
+        groups = item['details'].get('clusters', [])
+        if any(isinstance(g,dict) and len(g.get('wallets',[])) >= 3 for g in groups):
+            reasons.append('fresh screening reports a transfer-linked group of at least three wallets; common control unproven')
+    return {'category': 'NO_SOCIALS_PATTERN' if reasons else 'NO_SOCIALS_UNVERIFIED',
+            'website_listed': False, 'twitter_listed': False,
+            'reasons': reasons, 'holder_pattern': 'observed' if reasons else 'UNKNOWN',
+            'scope': 'No website or X/Twitter link listed in this exact-pair DEX Screener response. Other sources not checked; suspected coordination is unproven.',
+            'thresholds': 'Exploratory resemblance only; no profitability validation.'}
+
+def no_socials_message(category):
+    kind = category.get('category')
+    if kind not in ('NO_SOCIALS_PATTERN', 'NO_SOCIALS_UNVERIFIED'):
+        return ''
+    title = ('⚠️ CATEGORY: NO SOCIALS — COORDINATED-PATTERN WATCH' if kind == 'NO_SOCIALS_PATTERN'
+             else '⚠️ CATEGORY: NO SOCIALS — HOLDER SETUP UNVERIFIED')
+    reason = '; '.join(category.get('reasons', [])) or 'Comparable holder structure is UNKNOWN.'
+    return title + '\nWebsite / X: not listed on DEX Screener.\n' + reason + '\nCommon ownership, self-buying and scam status are NOT established. Exit liquidity can deteriorate before an alert or stop executes.\n'
+# NO_SOCIALS_PATTERN_V1_END
+
 def alert(con, row, pair, score, m, level, ledger_rows=None, ledger_captured_ns=None, fc_cycle_id=None):
     mint, created, creator, _, _, _ = row
     age = (int(time.time()*1000)-created)/3600000
@@ -584,6 +701,7 @@ def alert(con, row, pair, score, m, level, ledger_rows=None, ledger_captured_ns=
     except Exception:
         review = {"policy": PREALERT_POLICY, "mint": mint, "error": "review_failed"}
         verdict, reasons = "HOLD", ["review_failed"]
+    review["coin_category"] = no_socials_category(dict(pair, _metadata_observed=True), mint, int(time.time()), review)
     review["admission_policy"] = PREALERT_ADMISSION_POLICY
     persist_prealert_review(con, mint, level, review, verdict, reasons, now)
     if verdict != "PASS":
@@ -604,6 +722,7 @@ def alert(con, row, pair, score, m, level, ledger_rows=None, ledger_captured_ns=
       + f"30m band {m['band']:.0%} | net {m['net']:+.0%} | score {score}/11\n"
       + f"Mint/freeze: {sec['mint_authority']} / {sec['freeze_authority']}\n"
       + f"Creator holding: {sec['creator_pct']}% | top10 sampled owners: {sec['top10_raw_pct']}%\n"
+      + no_socials_message(review["coin_category"])
       + screening_summary(review, int(time.time()))
       + f"Mint: {mint}\nPool: {pair.get('pairAddress')} ({pair.get('dexId')}/{qsym})\n"
       + f"https://dexscreener.com/solana/{pair.get('pairAddress')}"
@@ -865,6 +984,350 @@ def ledger_health(c):
         'head_seq':head[0],'head_sha256':head[1],'excluded_mints':a['excluded_count']}
 
 
+"""Embedded discovery safeguards. No module import or production execution in tests."""
+DISCOVERY_GUARD_VERSION = "independent-discovery-v1"
+DISCOVERY_SORTS = ("created_timestamp", "last_trade_timestamp")
+DISCOVERY_MAX_OFFSET = 10000
+DISCOVERY_STALE_SECONDS = 180
+DISCOVERY_WARNING_REPEAT_SECONDS = 3600
+
+def discovery_number(v, low=0, high=1e16):
+    return type(v) in (int, float) and math.isfinite(v) and low <= v <= high
+
+def discovery_new(now):
+    return {"version": DISCOVERY_GUARD_VERSION, "started_at": now,
+            "checked_at": now, "host_retry_at": 0, "catchup_retry_at": 0,
+            "scan_watermark_ms": 0, "pending": None,
+            "coverage_gap": None, "unresolved_gap_count": 0, "recovery_count": 0,
+            "bootstrap_at": 0, "historical_coverage_asserted": False,
+            "last_notice_attempt": 0, "last_warning_sent": 0, "warning_open": False,
+            "health_persist_failed": False,
+            "feeds": {s: {"next_due": 0, "last_success": 0, "last_nonempty": 0,
+                          "last_failure": 0, "error": None, "rows": 0,
+                          "partial_since": 0, "last_rejected_rows": 0, "rejected_total": 0,
+                          "inserted_total": 0, "late_over_6h_total": 0,
+                          "delay_max_seconds": None, "within_30m_total": 0, "within_6h_total": 0,
+                          "last_page_oldest_ms": None,
+                          "last_page_newest_ms": None} for s in DISCOVERY_SORTS}}
+
+def discovery_path():
+    return BASE / "data" / "discovery_health.json"
+
+def discovery_load(now=None):
+    now = time.time() if now is None else now
+    state = discovery_new(now)
+    path = discovery_path()
+    try:
+        raw = path.read_bytes()
+        if len(raw) > 32000:
+            raise ValueError("oversize discovery health")
+        old = json.loads(raw)
+        if old.get("version") != DISCOVERY_GUARD_VERSION:
+            raise ValueError("unknown discovery health")
+        # Only whitelisted numeric/bool fields are restored. No identities or free text.
+        for key in ("started_at", "host_retry_at", "catchup_retry_at",
+                    "last_notice_attempt", "last_warning_sent", "scan_watermark_ms",
+                    "recovery_count", "unresolved_gap_count", "bootstrap_at"):
+            v = old.get(key)
+            cap = now * 1000 if key.endswith("_ms") else now + 3600
+            if discovery_number(v, 0, cap):
+                state[key] = v
+        state["warning_open"] = old.get("warning_open") is True
+        for sort in DISCOVERY_SORTS:
+            previous = old.get("feeds", {}).get(sort, {})
+            for key in state["feeds"][sort]:
+                v = previous.get(key)
+                if key == "error":
+                    if v in ("HTTP_401", "HTTP_403", "HTTP_429", "HTTP_OTHER",
+                             "TRANSPORT_OR_SCHEMA", "INGESTION_ERROR"):
+                        state["feeds"][sort][key] = v
+                elif v is None and key.startswith(("delay_", "last_page_")):
+                    pass
+                elif discovery_number(v, 0, now * 1000):
+                    if key == "next_due":
+                        state["feeds"][sort][key] = min(v, now + 300)
+                    elif key in ("last_success", "last_nonempty", "last_failure", "partial_since"):
+                        if v <= now:
+                            state["feeds"][sort][key] = v
+                    else:
+                        state["feeds"][sort][key] = v
+        pending = old.get("pending")
+        if isinstance(pending, dict):
+            keys = ("target_ms", "anchor_ms", "oldest_ms", "offset", "started_at")
+            if (all(discovery_number(pending.get(k)) for k in keys)
+                and pending["target_ms"] <= pending["anchor_ms"] <= now * 1000
+                and pending["oldest_ms"] <= pending["anchor_ms"]
+                and type(pending["offset"]) is int
+                and 0 <= pending["offset"] <= DISCOVERY_MAX_OFFSET
+                and pending["started_at"] <= now):
+                state["pending"] = {k: pending[k] for k in keys}
+            else:
+                state["coverage_gap"] = "invalid_saved_cursor"
+        gap = old.get("coverage_gap")
+        if gap in ("offset_bound", "outside_6h_window", "catchup_time_bound", "invalid_creation_rows", "invalid_catchup_rows", "pagination_no_progress",
+                   "empty_catchup_page", "invalid_saved_cursor", "state_unreadable"):
+            state["coverage_gap"] = gap
+    except FileNotFoundError:
+        pass
+    except (OSError, ValueError, TypeError, AttributeError):
+        state["coverage_gap"] = "state_unreadable"
+    return state
+
+def discovery_save(state):
+    import os
+    path = discovery_path()
+    tmp = path.with_suffix(".tmp")
+    try:
+        state["health_persist_failed"] = False
+        body = json.dumps(state, sort_keys=True, allow_nan=False)
+        fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        with os.fdopen(fd, "w") as f:
+            f.write(body)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, path)
+        return True
+    except (OSError, ValueError, TypeError):
+        state["health_persist_failed"] = True
+        logging.error("DISCOVERY_HEALTH_WRITE_FAILED")
+        return False
+
+def discovery_validate_page(rows, sort, now):
+    if not isinstance(rows, list) or len(rows) > 100:
+        raise ValueError("invalid discovery page")
+    stamps = []
+    for row in rows:
+        if not isinstance(row, dict):
+            raise ValueError("invalid discovery row")
+        mint, stamp = row.get("mint"), row.get("created_timestamp")
+        if (not isinstance(mint, str) or not re.fullmatch(r"[1-9A-HJ-NP-Za-km-z]{32,44}", mint)
+            or not discovery_number(stamp, 1, now * 1000) or int(stamp) != stamp):
+            raise ValueError("invalid discovery identity/time")
+        for field in ("market_cap_usd", "ath_market_cap"):
+            if row.get(field) is not None and not discovery_number(row[field]):
+                raise ValueError("invalid discovery market field")
+        trade = row.get("last_trade_timestamp")
+        if trade is not None and (not discovery_number(trade, 0, now * 1000) or int(trade) != trade):
+            raise ValueError("invalid discovery trade time")
+        stamps.append(stamp)
+    if sort == "created_timestamp" and any(a < b for a, b in zip(stamps, stamps[1:])):
+        raise ValueError("creation page unordered")
+    return stamps
+
+def discovery_partition(rows, sort, state, now):
+    if not isinstance(rows, list) or len(rows) > 100:
+        raise ValueError("invalid discovery page")
+    accepted, rejected = [], 0
+    for row in rows:
+        try:
+            discovery_validate_page([row], sort, now)
+            accepted.append(row)
+        except ValueError:
+            rejected += 1
+    discovery_validate_page(accepted, sort, now)
+    feed = state["feeds"][sort]
+    feed["last_rejected_rows"] = rejected
+    feed["rejected_total"] += rejected
+    if rejected:
+        feed["partial_since"] = feed["partial_since"] or now
+        logging.warning("DISCOVERY_ROWS_QUARANTINED sort=%s rows=%s", sort, rejected)
+    else:
+        feed["partial_since"] = 0
+    if rows and not accepted:
+        raise ValueError("no valid discovery rows")
+    return accepted
+
+def discovery_ingest(con, rows, sort, state, now):
+    stamps = discovery_validate_page(rows, sort, now)
+    # Operational registry only: never reads protected predictions or outcomes.
+    unique = {r["mint"]: r for r in rows}
+    new = [r for mint, r in unique.items()
+           if not con.execute("SELECT 1 FROM launches WHERE mint=?", (mint,)).fetchone()]
+    try:
+        upsert_pump(con, list(unique.values()))
+    except Exception:
+        con.rollback()
+        raise
+    feed = state["feeds"][sort]
+    feed["inserted_total"] += len(new)
+    delays = [max(0, now - r["created_timestamp"] / 1000) for r in new]
+    feed["late_over_6h_total"] += sum(d > 21600 for d in delays)
+    feed["within_30m_total"] += sum(d <= 1800 for d in delays)
+    feed["within_6h_total"] += sum(1800 < d <= 21600 for d in delays)
+    if delays:
+        feed["delay_max_seconds"] = max([feed["delay_max_seconds"] or 0] + delays)
+    logging.info("DISCOVERY_PAGE_SAVED sort=%s rows=%s inserted=%s late_over_6h=%s",
+                 sort, len(rows), len(new), sum(d > 21600 for d in delays))
+    return stamps
+
+def discovery_error(state, sort, error, now, catchup=False):
+    status = getattr(getattr(error, "response", None), "status_code", None)
+    blocked = status in (401, 403, 429)
+    retry = now + (300 if blocked else 60)
+    if blocked:
+        state["host_retry_at"] = retry
+    if catchup:
+        state["catchup_retry_at"] = retry
+        logging.warning("DISCOVERY_CATCHUP_FAILED class=%s status=%s", type(error).__name__, status)
+        return
+    feed = state["feeds"][sort]
+    feed["next_due"], feed["last_failure"] = retry, now
+    feed["error"] = ("HTTP_" + str(status)) if blocked else (
+        "HTTP_OTHER" if isinstance(error, requests.HTTPError) else
+        "INGESTION_ERROR" if isinstance(error, sqlite3.Error) else "TRANSPORT_OR_SCHEMA")
+    logging.warning("DISCOVERY_FEED_FAILED sort=%s class=%s status=%s",
+                    sort, type(error).__name__, status)
+
+def discovery_creation_head(state, stamps, now):
+    if not stamps:
+        return
+    newest, oldest = max(stamps), min(stamps)
+    if state["pending"]:
+        return
+    watermark = state["scan_watermark_ms"]
+    # First activation establishes a forward anchor; it does not assert past coverage.
+    if not watermark:
+        state["scan_watermark_ms"] = newest
+        state["bootstrap_at"] = now
+        return
+    if watermark and watermark < (now - 21600) * 1000:
+        state["coverage_gap"] = "outside_6h_window"
+        state["unresolved_gap_count"] += 1
+    target = max(watermark - 120000, (now - 21600) * 1000)
+    if watermark and oldest <= target:
+        state["scan_watermark_ms"] = max(watermark, newest)
+        return
+    state["pending"] = {"target_ms": target, "anchor_ms": newest, "oldest_ms": oldest,
+                        "offset": max(1, len(stamps) - 10), "started_at": now}
+
+def discovery_abandon_gap(state, reason):
+    state["coverage_gap"] = reason
+    state["unresolved_gap_count"] += 1
+    if state["pending"]:
+        # Advance the scan frontier only; the unresolved gap stays visible.
+        state["scan_watermark_ms"] = max(state["scan_watermark_ms"], state["pending"]["anchor_ms"])
+    state["pending"] = None
+
+def discovery_catchup(con, state, now):
+    pending = state["pending"]
+    if (not pending or now < state["host_retry_at"]
+        or now < state["catchup_retry_at"]):
+        return
+    if pending["offset"] > DISCOVERY_MAX_OFFSET:
+        discovery_abandon_gap(state, "offset_bound")
+        return
+    if now - pending["started_at"] > 3600:
+        discovery_abandon_gap(state, "catchup_time_bound")
+        return
+    # One extra page per pass; at least 30 seconds between page attempts.
+    state["catchup_retry_at"] = now + 30
+    try:
+        rows = pump_rows("created_timestamp", offset=pending["offset"])
+        received = time.time()
+        rows = discovery_partition(rows, "created_timestamp", state, received)
+        stamps = discovery_validate_page(rows, "created_timestamp", received)
+        if not stamps:
+            discovery_abandon_gap(state, "empty_catchup_page")
+            return
+        oldest = min(stamps)
+        if oldest >= pending["oldest_ms"]:
+            discovery_abandon_gap(state, "pagination_no_progress")
+            return
+        discovery_ingest(con, rows, "created_timestamp", state, received)
+        if state["feeds"]["created_timestamp"]["last_rejected_rows"]:
+            discovery_abandon_gap(state, "invalid_catchup_rows")
+            return
+        pending["oldest_ms"] = oldest
+        if oldest <= pending["target_ms"]:
+            # Do not jump to a later head: intervening gaps need their own scan.
+            state["scan_watermark_ms"] = max(state["scan_watermark_ms"], pending["anchor_ms"])
+            state["pending"] = None
+            state["recovery_count"] += 1
+            logging.info("DISCOVERY_CATCHUP_COMPLETE")
+        else:
+            pending["offset"] += max(1, len(rows) - 10)
+    except Exception as error:
+        discovery_error(state, "created_timestamp", error, time.time(), catchup=True)
+
+def discovery_problems(state, now):
+    problems = []
+    for sort in DISCOVERY_SORTS:
+        feed = state["feeds"][sort]
+        reference = feed["last_nonempty"] or state["started_at"]
+        if feed["partial_since"] and now - feed["partial_since"] >= DISCOVERY_STALE_SECONDS:
+            problems.append(sort + ": malformed provider rows quarantined; valid rows continue")
+        if now - reference >= DISCOVERY_STALE_SECONDS:
+            problems.append(sort + ": no fresh nonempty ingestion for 3+ minutes")
+        elif feed["last_failure"] and feed["last_failure"] > feed["last_success"]:
+            if now - feed["last_success" if feed["last_success"] else "last_failure"] >= DISCOVERY_STALE_SECONDS:
+                problems.append(sort + ": persistent ingestion failure")
+    if state["pending"] and now - state["pending"]["started_at"] >= 300:
+        problems.append("bounded catch-up still running; coverage not yet reconciled")
+    if state["coverage_gap"]:
+        problems.append("catch-up incomplete (" + state["coverage_gap"] + ")")
+    if state["health_persist_failed"]:
+        problems.append("health record could not be saved")
+    return problems
+
+def discovery_notify(state, now):
+    problems = discovery_problems(state, now)
+    due = (now - state["last_notice_attempt"] >= 600)
+    if problems and due and (not state["warning_open"] or now - state["last_warning_sent"] >= DISCOVERY_WARNING_REPEAT_SECONDS):
+        text = ("VIVAMEDA DISCOVERY WARNING\n" + "\n".join(problems) +
+                "\nNew coin coverage may be incomplete. Market checks continue; no trading settings changed.")
+        recovery = False
+    elif not problems and not state["pending"] and state["warning_open"] and due:
+        text = ("VIVAMEDA DISCOVERY RECOVERY\nBoth feeds are ingesting fresh valid rows, with no active feed-quality warning or unresolved recorded catch-up gap. This is not a guarantee of complete market coverage.")
+        recovery = True
+    else:
+        return
+    state["last_notice_attempt"] = now
+    if not discovery_save(state):
+        return  # No notification flood across restarts if throttle cannot be persisted.
+    try:
+        telegram(text)
+    except Exception as error:
+        logging.warning("DISCOVERY_NOTICE_FAILED class=%s", type(error).__name__)
+        return
+    state["warning_open"] = not recovery
+    if not recovery:
+        state["last_warning_sent"] = now
+    discovery_save(state)
+
+def discovery_cycle(con, state):
+    now = time.time()
+    for sort in DISCOVERY_SORTS:
+        feed = state["feeds"][sort]
+        if now < state["host_retry_at"] or now < feed["next_due"]:
+            continue
+        try:
+            rows = pump_rows(sort)
+            received = time.time()
+            rows = discovery_partition(rows, sort, state, received)
+            if sort == "created_timestamp" and rows:
+                creation_stamps = discovery_validate_page(rows, sort, received)
+                if max(creation_stamps) < (received - 180) * 1000:
+                    raise ValueError("stale creation head")
+            stamps = discovery_ingest(con, rows, sort, state, received)
+            feed.update(next_due=received + 20, last_success=received, rows=len(rows), error=None)
+            if rows:
+                feed["last_nonempty"] = received
+                feed["last_page_oldest_ms"], feed["last_page_newest_ms"] = min(stamps), max(stamps)
+            if sort == "created_timestamp":
+                if feed["last_rejected_rows"]:
+                    state["coverage_gap"] = "invalid_creation_rows"
+                    state["unresolved_gap_count"] += 1
+                discovery_creation_head(state, stamps, received)
+            # Commit each successful feed before attempting any other request.
+            discovery_save(state)
+        except Exception as error:
+            discovery_error(state, sort, error, time.time())
+    discovery_catchup(con, state, time.time())
+    state["checked_at"] = time.time()
+    discovery_save(state)
+    discovery_notify(state, time.time())
+
+
 def main():
     con = db()
     try: ledger_initialize(con)
@@ -872,11 +1335,16 @@ def main():
         logging.exception("LEDGER_INITIALIZATION_FAILED")
         ledger_fail(con, "initialization_failed")
     last_score = 0
+    discovery = discovery_load()
+    logging.info("DISCOVERY_GUARD_ACTIVE version=%s", DISCOVERY_GUARD_VERSION)
     logging.info("early scout started; strict pre-alert screening active; incomplete evidence HOLD")
     while True:
         try:
-            rows = pump_rows("created_timestamp") + pump_rows("last_trade_timestamp")
-            upsert_pump(con, rows)
+            try:
+                discovery_cycle(con, discovery)
+            except Exception as discovery_error:
+                # Never let acquisition/health bookkeeping suppress market work.
+                logging.error("DISCOVERY_GUARD_ERROR class=%s", type(discovery_error).__name__)
             now = time.time()
             if now - last_score >= 60:
                 enrich_and_score(con)

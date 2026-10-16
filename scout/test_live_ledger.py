@@ -1,4 +1,4 @@
-import ast,hashlib,json,logging,math,pathlib,sqlite3,tempfile,types,unittest
+import ast,hashlib,json,logging,math,re,pathlib,sqlite3,tempfile,types,unittest
 from unittest.mock import Mock
 
 ROOT=pathlib.Path(__file__).parent
@@ -12,7 +12,7 @@ def load_functions(filename,ns,prefix=None):
 class LiveLedgerTests(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.clock=Mock(return_value=10000)
-        self.ns=dict(json=json,hashlib=hashlib,math=math,sqlite3=sqlite3,logging=logging,
+        self.ns=dict(json=json,hashlib=hashlib,math=math,re=re,sqlite3=sqlite3,logging=logging,
             time=types.SimpleNamespace(time=self.clock,time_ns=lambda:int(self.clock()*10**9)),Path=pathlib.Path)
         load_functions('early_scout.py',self.ns)
         self.v=load_functions('scout_learning_v2.py',dict(self.ns,DB=self.tmp.name+'/db',H=(1,5,15,30,60,120,180,360,720,1440)))
