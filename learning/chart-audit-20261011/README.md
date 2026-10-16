@@ -15,7 +15,7 @@ Before-call comparisons cover range width, buying share, volume, acceleration, l
 The connector's nonroot engineering account cannot read the production database or the delivery ledger. The following fixed-path, source-hash-checked command performs the already requested audit using the owner's existing SSH access. It changes no production source, permissions, services, relay configuration or history.
 
 ~~~sh
-ssh -i ~/.ssh/vivameda_chatgpt_ed25519 -o IdentitiesOnly=yes root@77.42.42.75 'python3 /var/lib/vivameda-engineering/repo/client_learning/crypto_chart_audit_20261011/audit.py --owner-audit --expected-sha256 a6be3b3fcf8af373ef13a06da1eb60a78f7cba14fa952693f7d60ea4b9a98bd5'
+ssh vivameda-server 'python3 /var/lib/vivameda-engineering/repo/client_learning/crypto_chart_audit_20261011/audit.py --owner-audit --expected-sha256 a6be3b3fcf8af373ef13a06da1eb60a78f7cba14fa952693f7d60ea4b9a98bd5'
 ~~~
 
 Outputs stay private in an engineering-owned 0700 timestamped results directory; files are 0600. The receipt reports coverage and outcome totals. The assistant can then read REPORT.md and audit.json through the server connection and inspect the charts. Manual conversational mentions or deleted Telegram messages are not claimed to be covered. The historical commands are retained for reproducibility; the owner already completed them. Private result files and token-level charts are excluded from this public folder.

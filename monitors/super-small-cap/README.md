@@ -25,7 +25,7 @@ Sources: https://docs.dexscreener.com/api/reference ; https://pumpportal.fun/dat
 Reviewed bundle SHA-256: 371e55050a77d27a222764d5365968fae013528f5dbfc116aacaa1dac320137d
 
 ```sh
-ssh -i ~/.ssh/vivameda_chatgpt_ed25519 -o IdentitiesOnly=yes root@77.42.42.75 'python3 /var/lib/vivameda-engineering/repo/client_learning/crypto_super_small_cap_20261011/install.py --install --expected-sha256 371e55050a77d27a222764d5365968fae013528f5dbfc116aacaa1dac320137d'
+ssh vivameda-server 'python3 /var/lib/vivameda-engineering/repo/client_learning/crypto_super_small_cap_20261011/install.py --install --expected-sha256 371e55050a77d27a222764d5365968fae013528f5dbfc116aacaa1dac320137d'
 ```
 
 Validation: all 16 tests passed on server Python 3.12; both unit files verified. A single live free profile request returned 30 profiles. No private production data, Telegram messages or paid requests were used in that feed check. Owner installation completed; the first collection reported no errors.

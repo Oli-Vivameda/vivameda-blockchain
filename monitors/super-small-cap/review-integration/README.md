@@ -26,7 +26,7 @@ The connected engineering tool runs as vivameda-engineer and cannot install root
 Reviewed bundle SHA-256: `b6a4d41071748ebd48fdf64fe43d1596bf8bfde7041b1ad64fdcd7e9d959521a`.
 
 ```sh
-ssh -i ~/.ssh/vivameda_chatgpt_ed25519 -o IdentitiesOnly=yes root@77.42.42.75 'python3 /var/lib/vivameda-engineering/repo/client_learning/crypto_super_small_cap_review_20261011/install_review.py --install --expected-sha256 b6a4d41071748ebd48fdf64fe43d1596bf8bfde7041b1ad64fdcd7e9d959521a'
+ssh vivameda-server 'python3 /var/lib/vivameda-engineering/repo/client_learning/crypto_super_small_cap_review_20261011/install_review.py --install --expected-sha256 b6a4d41071748ebd48fdf64fe43d1596bf8bfde7041b1ad64fdcd7e9d959521a'
 ```
 
 Runtime: /opt/vivameda-super-small-cap-review. State and private screening: /var/lib/vivameda-super-small-cap. Own units: vivameda-super-small-cap-review.service and .timer. REVIEW_STOP pauses review only; STOP pauses collector and review. review_config.json can disable Telegram while continuing assessments. Installation receipt confirmed. First genuine candidate delivery remains unverified. No synthetic candidate is sent during installation.

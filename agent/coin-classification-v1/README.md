@@ -11,7 +11,7 @@ Sources: the recovered chart study in ../../learning/chart-audit-20261011/RECOVE
 The connection writes the engineering checkout and cannot write the production Crypto Lab application. This owner command loads the rules into the existing dedicated agent's SYSTEM instructions and places classification.py beside it:
 
 ~~~sh
-ssh -i ~/.ssh/vivameda_chatgpt_ed25519 -o IdentitiesOnly=yes root@77.42.42.75 'python3 /var/lib/vivameda-engineering/repo/client_learning/crypto_coin_classification_20261011/install_agent_rules.py --install --expected-sha256 8bdfaff77426b1f4ee33a36702f8ad0361c6fe4a379df6bc643252a55eee388e'
+ssh vivameda-server 'python3 /var/lib/vivameda-engineering/repo/client_learning/crypto_coin_classification_20261011/install_agent_rules.py --install --expected-sha256 8bdfaff77426b1f4ee33a36702f8ad0361c6fe4a379df6bc643252a55eee388e'
 ~~~
 
 The installer verifies the known agent hash, backs up its source, preserves existing safeguards, copies only the reviewed instructions/validator, and checks the resulting SYSTEM text and file hashes. Fresh agent processes load the new instructions. It does not restart services, read outcomes, change scanner or frozen paper policies, train weights, or change the separate fire relay. Crypto rules can display the new SYSTEM text after activation. If the live agent source differs from the reviewed version, the installer refuses the patch.
