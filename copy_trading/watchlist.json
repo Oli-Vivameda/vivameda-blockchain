@@ -1,0 +1,39 @@
+{
+  "version": "watchlist-v1-20261016",
+  "frozen_at": "2026-10-16T19:41:40Z",
+  "status": "WAITING_FOR_VERIFIED_WALLETS",
+  "selection_criteria": [
+    "Full Solana address with primary public identity attribution",
+    "Evidence of actual public-market purchases rather than allocations or airdrops",
+    "Liquidity and holding periods compatible with delayed copying",
+    "No selection or removal based on this experiment's forward returns"
+  ],
+  "wallets": [],
+  "excluded_candidates": [
+    {
+      "handle": "pointfarmcap",
+      "reason": "Third-party page exposes a truncated address; primary full-address attribution and purchase provenance not established",
+      "source": "https://provadata.com/traders/pointfarmcap"
+    },
+    {
+      "handle": "unipcs",
+      "reason": "Primary profile located; no full verified trading wallet or purchase-history attribution established",
+      "source": "https://x.com/theunipcs"
+    },
+    {
+      "handle": "jxnwa",
+      "reason": "Third-party page explicitly withholds wallet addresses",
+      "source": "https://www.copyfomo.com/traders/jxnwa"
+    },
+    {
+      "handle": "looc",
+      "reason": "Third-party page explicitly withholds wallet addresses",
+      "source": "https://www.copyfomo.com/traders/looc"
+    },
+    {
+      "handle": "Ansem",
+      "reason": "Alternative lead rejected: reported address attribution was denied; no suitable verified substitute established",
+      "source": "https://ourcryptotalk.com/news/ansem-wallet-denial-ansem-token-frenzy"
+    }
+  ]
+}

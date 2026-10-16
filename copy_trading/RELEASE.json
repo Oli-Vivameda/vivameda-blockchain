@@ -1,0 +1,18 @@
+{
+  "paper_only": true,
+  "schema": 1,
+  "service": "vivameda-copy-paper.service",
+  "sha256": {
+    ".gitignore": "d07c9b74bd3db92ece3a3d3895e41a96557dc823345db6a5d50dfaa9b438c6f8",
+    "README.md": "3e722d2ce73437b28ebcc65286aaf087835e305a8475b9365e303979ec3619ca",
+    "VALIDATION.md": "872613d05b7cd86c4d19ba63f54973b0fc3ff0b568b27dd70c10d67d190e3bd3",
+    "config.json": "e89ab6b045c058a08835a60ab973d10e637bc57e5795bf430b4407050f3e6cec",
+    "core.py": "552097fc1839f86a9f526cca24bdc3a1930580246bbd010bce5ad33ecc6d8189",
+    "feed.py": "f3a79faa44d09fabb5fbfb63115f40ea6efb1d9bb78489558388aa5e33b5c85c",
+    "install.py": "bff06b440b407833bcd2fb0b5cfc378fb1ea2569c76475df205c9b43a2e27c9a",
+    "service.py": "28eaa441b9cb22a909c7e8de3d5eb2d71be683ee562a3b273f77e365d54b5f68",
+    "tests/test_paper.py": "599cbc4d7e1951da43be65a1243a0edb6a7053fe1d29b47b0fcc32be18f7c7a8",
+    "verify.py": "044aee75e5aa7ce65bc39313cde6b5b3a77b52f47c6792c7906577b0189d3e7a",
+    "watchlist.json": "4baa0e0c0100454f636b0d167d082829fce14e30b67dd69201a2ac9caded9eae"
+  }
+}

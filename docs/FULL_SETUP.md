@@ -131,3 +131,7 @@ The five tasks were processed in order, each with a published receipt before the
 Astra starts by checking the published main commit and MANIFEST hashes, then reads each receipt's evidence date and next gate. Reuse existing permissions and owner export paths; never chmod protected data or route around denied access. Owner installation is a gate, not a request to modify the pilot. On any changed source hash, stop that installation path and review the concurrent change. Publish only aggregate counts, fixed reason codes, hashes and receipts; keep exact unavailable symbols and all private rows in the owner's private view.
 
 Scanner thresholds remain 8/10; screening, eleven signals and weights stay frozen. The prediction ledger remains sealed until its stop rule; do not inspect predictions, probabilities or labels. Do not extend/restart/reactivate the pilot, alter its protocol or backfill endpoints. No paid calls, new providers, signing or live orders. These constraints carry into every continuation step.
+
+## Isolated Solana copy paper experiment — 16 October 2026
+
+The separate [copy-paper project](../copy_trading/README.md) contains its frozen empty watchlist, accounting, tests and dedicated installer. It is **WAITING_FOR_VERIFIED_WALLETS**. Source publication does not mean the service is installed: the engineering connector cannot create its dedicated system unit. Strategy B and quote-provider access remain disabled. See the [release receipt](releases/2026-10-16-copy-paper.md) for exact verification, limitations and the owner installation command.

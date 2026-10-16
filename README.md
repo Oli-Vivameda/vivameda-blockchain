@@ -39,3 +39,7 @@ Publication validation: **735 tests passed across 23 isolated suites**; see the 
 The verifier checks the file manifest and runs every test directory in isolated processes. Discovery tests extract scanner definitions without importing the production module or accessing providers, Telegram or production state.
 
 Scores are not calibrated probabilities; observed peak multiples are not realized profit. Complete discovery coverage, profitable execution and completed prospective model validation have not been established. The [published baseline result](research/README.md) remains experimental. Frozen study artifacts retain their dates and gates. Fresh-host installation remains unverified. No license grant has been selected.
+
+## Isolated Solana copy paper experiment — 16 October 2026
+
+The separate [copy-paper project](copy_trading/README.md) contains its frozen empty watchlist, accounting, tests and dedicated installer. It is **WAITING_FOR_VERIFIED_WALLETS**. Source publication does not mean the service is installed: the engineering connector cannot create its dedicated system unit. Strategy B and quote-provider access remain disabled. See the [release receipt](docs/releases/2026-10-16-copy-paper.md) for exact verification, limitations and the owner installation command.

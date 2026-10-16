@@ -27,3 +27,7 @@ Both GitHub repositories reported public visibility on 16 October 2026. A reposi
 The stack's former discovery folder becomes a redirect. Its historical Git commits remain available; current scanner fixtures and operational candidates are not duplicated between repositories. Existing frozen research source snapshots remain intact because they are provenance records.
 
 This cleanup covers the discovery release and navigation. It does not claim every later server component has been audited or synchronized.
+
+## Isolated Solana copy paper experiment — 16 October 2026
+
+The separate [copy-paper project](../copy_trading/README.md) contains its frozen empty watchlist, accounting, tests and dedicated installer. It is **WAITING_FOR_VERIFIED_WALLETS**. Source publication does not mean the service is installed: the engineering connector cannot create its dedicated system unit. Strategy B and quote-provider access remain disabled. See the [release receipt](releases/2026-10-16-copy-paper.md) for exact verification, limitations and the owner installation command.

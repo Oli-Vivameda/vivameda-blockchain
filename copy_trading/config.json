@@ -1,0 +1,43 @@
+{
+  "version": "copy-paper-v1-20261016",
+  "frozen_at": "2026-10-16T19:41:40Z",
+  "paper_only": true,
+  "starting_cash": "250",
+  "max_buy": "25",
+  "token_cap": "25",
+  "total_cap": "75",
+  "max_tokens": 3,
+  "max_signal_age_s": 30,
+  "max_chase": "0.05",
+  "drawdown_pause": "0.10",
+  "execution_delay_s": 2,
+  "quote_max_age_s": 5,
+  "risk_max_age_s": 30,
+  "poll_s": 5,
+  "slippage_bps": 100,
+  "network_priority_rent_usd": "0.10",
+  "max_price_impact": "0.05",
+  "usdc_usd_assumption": "1",
+  "rpc_url": "https://api.mainnet-beta.solana.com",
+  "quote_url": null,
+  "quote_access_authorized_free": false,
+  "strategy_b": {
+    "enabled": false,
+    "take_profit": null,
+    "stop_loss": null,
+    "max_hold_s": null
+  },
+  "blocking_risk_fields": [
+    "mint_authority_revoked",
+    "freeze_authority_revoked",
+    "classic_token_program",
+    "no_transfer_restrictions",
+    "no_scam_alerts"
+  ],
+  "informational_risk_fields": [
+    "holder_concentration",
+    "bundling",
+    "linked_wallets",
+    "creator_history"
+  ]
+}
