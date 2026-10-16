@@ -661,7 +661,7 @@
     "README.md": "e12bf6e0d2354d72d217bbccb839e4108f3b0f745ae4dbe2ae583de1f8d1ed92",
     "CHANGELOG.md": "2609f9847de4fa49c8122eee7ded945e62ee948a6ff99da9d6384152cc7594eb",
     "SECURITY.md": "fe6ff00dd33525fee4c4fdeff8eea567ee5801705fcad953880bf9f1d58a7a8c",
-    "AGENTS.md": "4aa3102082c432e1859a3a5be8050c0d4cc527f4db1b1db0fbb5419e2a9fc0f2",
+    "AGENTS.md": "dc334f4ceddce40cbe65c2a5cac1a5a236b4c797ec81ce8cc479cc1b4cb9ee14",
     "SIGNALS.md": "e6912005df13615138935c45b77756b23dee636891cb85faed9d273723117cc8",
     "requirements.txt": "0d0d2938e5443f318fc97363f42cffe3309df1b718cc2bf713263a68cb7bbee5",
     ".gitignore": "be399efba81fec45218410e877c3d3935a920538dd15e3ea558a8d5a2bdf68ec",
@@ -967,7 +967,8 @@
     "research/forward_capture/integration/early_scout.py": "3e73978a41e2e21e090a7eea92bbdc1a52dc190ce229ac262a3c6a2b0af6a043",
     "research/pilot_health/recovery_inactive/health.py": "611bb7f873f985af55b76bc29efe11a1ac88a56bf3048336be17ab736a089ddf",
     "research/pilot_health/recovery_inactive/test_inactive.py": "5b4d72bb19cc3e82448139255c493bb893e2516cabcbb25147bae9ce5834ae2e",
-    "research/pilot_health/recovery_inactive/install_inactive.py": "6089239d803fb811bf102dba11e531f38068839c725ccf8ec5be6a5dff2e669a"
+    "research/pilot_health/recovery_inactive/install_inactive.py": "6089239d803fb811bf102dba11e531f38068839c725ccf8ec5be6a5dff2e669a",
+    "docs/BUNDLE_REVIEW_PUBLICATION_PENDING_20261016.md": "6edd29f9b625ce00040d845a3dd5ec75666a305f649d6b3496e8d0fb303b95bb"
   },
   "showcase": {
     "entry_point": "docs/FULL_SETUP.md",

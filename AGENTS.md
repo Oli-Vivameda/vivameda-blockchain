@@ -10,3 +10,5 @@ This is the canonical public home of Vivameda's Crypto Lab. Read docs/REPOSITORY
 - Never regenerate scientific protocol hashes to make a check pass.
 - Distinguish publication, deployment and prospective validation. Publication does not authorize trading.
 - Avoid duplicate full operational baselines/candidates across repositories.
+
+Public operator commands must use the host alias `ssh vivameda-server`. Never publish the server address, SSH login identity or private-key filename in public documentation.
