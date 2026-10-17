@@ -181,6 +181,45 @@ class SharedChannelTests(unittest.TestCase):
                     engine.handle(value, owner_test=test); self.assertEqual(len(api.calls), 1)
                 finally: journal.close()
 
+class ExistingPrivateChatTests(unittest.TestCase):
+    def test_private_and_basic_group_ids_require_exact_shared_destination(self):
+        for destination in ('123456789', '-123456789'):
+            settings = dict(config(), channel=destination, reuse_scanner_channel=True)
+            with patch.object(sender, 'secure_json', side_effect=[settings, {'chat_id': int(destination), 'bot_token': TOKEN}]):
+                self.assertEqual(sender.authorize(destination), TOKEN)
+            with patch.object(sender, 'secure_json', side_effect=[settings, {'chat_id': 987654321, 'bot_token': TOKEN}]):
+                with self.assertRaises(sender.Refused): sender.authorize(destination)
+    def test_private_chat_remains_refused_without_explicit_opt_in(self):
+        for flag in (None, False, 'true'):
+            settings = dict(config(), channel='123456789', reuse_scanner_channel=flag)
+            with patch.object(sender, 'secure_json', return_value=settings):
+                with self.assertRaises(sender.Refused): sender.authorize('123456789')
+    def test_private_owner_test_reaches_telegram_adapter_once(self):
+        destination = '123456789'
+        with tempfile.TemporaryDirectory() as temp:
+            journal = sender.Journal(Path(temp) / 'state.sqlite'); api = API()
+            settings = dict(config(False), channel=destination, reuse_scanner_channel=True)
+            def read(path, **kwargs):
+                return settings if path == sender.CONFIG else {'chat_id': int(destination), 'bot_token': TOKEN}
+            try:
+                engine = sender.Engine(journal, api, sender.authorize)
+                value = dict(request('owner-channel-test-v1:' + destination, sender.TEST_TEXT), channel=destination)
+                with patch.object(sender, 'secure_json', side_effect=read), patch.object(sender.os, 'geteuid', return_value=0):
+                    first = engine.handle(value, owner_test=True); second = engine.handle(value, owner_test=True)
+                self.assertEqual(first['status'], 200); self.assertEqual(first, second)
+                self.assertEqual(api.calls[0][1], destination); self.assertTrue(api.calls[0][2].startswith('🌻 '))
+                self.assertEqual(len(api.calls), 1)
+            finally: journal.close()
+    def test_shared_preparation_accepts_private_chat_without_enabling(self):
+        # Reuse the real atomic-write regression with a positive Telegram chat ID.
+        with patch.dict(globals(), {'CHANNEL': '123456789'}):
+            result = unittest.TestResult()
+            SharedChannelTests('test_atomic_configuration_keeps_delivery_off_and_never_copies_token').run(result)
+            self.assertTrue(result.wasSuccessful(), result.errors + result.failures)
+        # Explicitly check the critical parser; owner preparation uses this mode.
+        self.assertEqual(sender.channel_id(123456789), '123456789')
+        with self.assertRaises(sender.Refused): sender.channel_id(123456789, new=True)
+
 class UpgradeTests(unittest.TestCase):
     def test_upgrade_validates_old_source_without_execution(self):
         import hashlib

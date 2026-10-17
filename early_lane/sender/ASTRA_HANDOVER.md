@@ -1,6 +1,6 @@
 # Astra handover — early-lane sender, shared channel 🌻 — 17 October 2026
 
-Owner-confirmed installed sender: 5ae872c9f5295ef58cc954d7f9eddac6319fecab2afebe6cf3f81d13b706518b,
+Owner-confirmed installed sender: 28ee6a4270f371c5718fb6e944b92f672268ee608ded27421df85f0dce15c724,
 stopped and disabled; credential unchanged. Owner then explicitly chose the scanner's
 existing channel and 🌻 prefix. This supersedes the earlier separate-channel/scanner-
 chat prohibition for this owner-selected destination only. Frozen eligibility rules
@@ -8,17 +8,17 @@ and the lane executable bundle remain unchanged. Meme desk stays paused.
 
 ## New files and hashes
 
-New independent BUNDLE.json SHA-256: `28ee6a4270f371c5718fb6e944b92f672268ee608ded27421df85f0dce15c724`.
+New independent BUNDLE.json SHA-256: `40c80bc0d7b6049507bf0be3ac6758f5aed714c32e18beb7ecab21f871d9e63f`.
 
 | Runtime/test file | SHA-256 |
 |---|---|
-| `sender.py` | `4d09c3e992d597486938f2da5b8469769f3f774fa79fa00b0662e4e4d0518d81` |
+| `sender.py` | `5069aaeb0be79212c29b0086777d8201a9e62c35f3fd50b17afbf2b5cfb14a1a` |
 | `install.py` | `9983e65df88f981a29d86f0a3d1ac57e63a30824a268fb3043683bc5cf625b8e` |
-| `owner.py` | `3c5d1d91438a39f919d10a2ef5cf94f282e7adc2340894ddf401adbe50f32232` |
-| `tests/test_sender.py` | `940f152add74d83f03ce79215e2953211e556485fca6d9bef3ef74b26659463e` |
+| `owner.py` | `c970b317957200b792006a5fe4ee40b3a8d31a22dd949c7aa7776b056880e9dd` |
+| `tests/test_sender.py` | `6438d682dfce75c0996e5c77c1ac4b8d16052cb0b972adcc82d8b3851f59a1e9` |
 
 Source: /var/lib/vivameda-engineering/repo/early_lane/sender/.
-Proposed installed release: /opt/vivameda-early-lane-sender/28ee6a4270f371c5718fb6e944b92f672268ee608ded27421df85f0dce15c724/.
+Proposed installed release: /opt/vivameda-early-lane-sender/40c80bc0d7b6049507bf0be3ac6758f5aed714c32e18beb7ecab21f871d9e63f/.
 Unit: vivameda-early-lane-sender.service. Existing dedicated root state is preserved:
 /var/lib/vivameda-early-lane-sender/ (0700), sender.sqlite plus WAL/SHM and sender.lock.
 The old unit is backed up there before a checked stopped upgrade. Socket remains
@@ -42,7 +42,7 @@ No test or command has been executed against Telegram by engineering.
 
 ## Verification and limits
 
-54 offline sender tests; full Python 3.12 gate 990 tests across 27 suites, 393 file
+58 offline sender tests; full Python 3.12 gate 994 tests across 27 suites, 393 file
 hashes; proposed unit syntax verified. New coverage: explicit shared-channel flag,
 unchanged destination/confirmation guards, atomic token-free config write, 🌻 prefix
 and test idempotency, old-bundle integrity, refusal of active/enabled units and state
@@ -63,3 +63,23 @@ tests. Owner startup evidence remains 129 fresh marks/627 watched, zero selectio
 Telegram false at the supplied snapshot. Expected finish around 12:21 Cyprus; inspect
 actual receipt. Review date remains observational activation+14 days, expected
 31 October only if journal confirms 17 October activation. No clock/reset/rule changes.
+
+## Owner-confirmed private destination diagnosis and correction
+
+Owner applied 28ee6a4270f371c5718fb6e944b92f672268ee608ded27421df85f0dce15c724:
+installed/stopped/disabled, state preserved. Its direct test returned failed_closed.
+Owner's safe diagnostic: delivery channel unset, confirmed false, shared flag absent;
+scanner destination type private_chat. No token or numeric ID was printed. The -100
+parser caused the refusal before config mutation or Telegram delivery. New release
+accepts private/basic-group numeric IDs only under explicit root shared mode and exact
+scanner-destination equality. Four new regressions cover private/basic-group IDs,
+no-flag denial, exact-match refusal and the full idempotent 🌻 private test path.
+58 sender tests / 994 repository tests / 27 suites / 393 file hashes verified.
+The owner command now upgrades from 28ee6a42, preserves state, prepares only lane
+routing and runs the direct test. Main failures print exception class only, never
+exception text or token URLs. Real Telegram result remains owner-run and pending.
+
+Important remaining integration issue: installed lane transport.configuration still
+requires -100 for enabled confirmation. No lane executable/source/bundle is changed
+here. Before continuous private-chat activation, separately review that compatibility
+update and actual log-only readiness; do not flip confirmation or start the lane.

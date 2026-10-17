@@ -1,3 +1,8 @@
+> Private-chat clarification, 17 October 2026: the scanner destination is a private
+> bot conversation. The sender correction supports that exact destination with 🌻;
+> a one-shot owner test is pending. Automatic delivery remains off, and the existing
+> lane client's -100 activation guard needs a separate compatibility review.
+
 > Latest owner routing choice, 17 October 2026: early lane shares the scanner's
 > existing Telegram channel, prefix 🌻. Checked stopped sender upgrade and one-shot
 > test are prepared; continuous delivery stays off. See

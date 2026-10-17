@@ -50,7 +50,7 @@ errors, response descriptions, token URLs and message bodies never enter logs.
 The root-only direct test uses a fixed message/key, unavailable through the socket.
 Repeating the owner command returns the saved receipt. Status 429 gives retry_after;
 status 409 means review the held event. No real Telegram call was made by engineering.
-54 offline tests use temporary files, synthetic credentials and fake HTTP only:
+58 offline tests use temporary files, synthetic credentials and fake HTTP only:
 
 ```bash
 python3.12 -B -m unittest discover -s early_lane/sender/tests -v
@@ -61,3 +61,15 @@ real channel test and later owner-authorized activation remain separate gates. T
 prove neither full screening, universal discovery nor profitable outcomes. References
 checked 17 October 2026: https://core.telegram.org/bots/api#sendmessage and
 https://core.telegram.org/bots/api#responseparameters.
+
+## Private scanner chat correction
+
+Owner's runtime diagnostic established that the existing scanner destination is a
+private bot conversation. Shared mode now accepts any valid numeric Telegram chat ID
+only when root config explicitly opts in and the value equals the existing scanner
+chat_id. Without that opt-in, -100 channel-only admission is unchanged. Other private
+chats and mismatched shared destinations refuse. The owner command upgrades from
+the installed 28ee6a42 bundle and sends the same fixed 🌻 test; no service starts.
+The unchanged lane client still requires a -100 ID when confirmation is enabled.
+Before continuous private-chat delivery, review that separate client compatibility
+change and the completed rollout result. This sender test does not enable delivery.

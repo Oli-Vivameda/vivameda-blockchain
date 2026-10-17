@@ -47,5 +47,13 @@ Owner confirmed the existing scanner channel with a 🌻 prefix. Sender old bund
 root-config shared-channel opt-in, 🌻 on every send, and a checked stopped upgrade
 plus one direct owner test. No channel ID or new bot/channel needed. The owner
 command writes only the lane delivery settings, keeps confirmation false, and never
-starts continuous services. It has not been run by engineering. 54 sender tests;
-990 repository tests / 27 suites / 393 verified files. See sender/OWNER_COMMANDS.md.
+starts continuous services. It has not been run by engineering. 58 sender tests;
+994 repository tests / 27 suites / 393 verified files. See sender/OWNER_COMMANDS.md.
+
+Owner's shared sender upgrade to 28ee6a42 succeeded, stopped/disabled, state preserved.
+The direct test refused before config/API because the existing scanner sends to a
+private chat rather than a -100 channel. New sender correction accepts only the exact
+scanner private chat under root opt-in, with 🌻 and unchanged idempotency. New upgrade/
+one-test command is pending. No service starts. 58 sender / 994 repository tests.
+The current lane transport's -100 confirmation guard remains a separate compatibility
+blocker before any continuous private-chat activation. See sender/ASTRA_HANDOVER.md.

@@ -1,25 +1,12 @@
-# Owner command — shared scanner channel + 🌻 — 17 October 2026
+# Owner command — existing private scanner chat + 🌻 — 17 October 2026
 
-Owner explicitly replaced the separate-channel requirement: reuse the scanner's
-existing Telegram channel, and prefix every early-lane message with 🌻.
-No new channel, bot, token or pasted channel ID is required.
+Owner selected the same destination as the scanner. Metadata-only owner diagnostics
+show this is a private bot chat, not a -100 channel. The previous shared-channel test
+refused that ID before changing delivery config or making an API call. No new channel,
+bot, token, manual ID lookup or scanner/credential permission changes are needed.
 
-Current owner receipt confirms sender bundle
-5ae872c9f5295ef58cc954d7f9eddac6319fecab2afebe6cf3f81d13b706518b
-installed, stopped, disabled; delivery config unchanged. Do not rerun initial install.
-
-From the existing ROOT server terminal, paste this entire command. It:
-
-1. Checks bootstrap and complete new source bundle.
-2. Requires sender and continuous lane units inactive and disabled, and unconfirmed
-   delivery config. Leaves the separate transient log-only observation untouched.
-3. Hash-verifies the old sender, preserves its state, backs up its unit, installs the
-   new root-owned release and updates its definition. Starts/enables no service.
-4. At runtime reads the existing scanner credential in place; copies only chat_id
-   into root-owned delivery.json and sets reuse_scanner_channel=true. The token is
-   never copied, printed, logged or stored. Scanner files/permissions are unchanged.
-5. Keeps new_channel_confirmed=false and confirmed_at=null. Runs a direct, fixed,
-   owner-only 🌻 channel test and saves its real receipt in sender state.
+Current installed bundle is 28ee6a4270f371c5718fb6e944b92f672268ee608ded27421df85f0dce15c724,
+owner-confirmed stopped/disabled. Run this from the existing ROOT server terminal:
 
 ```bash
 python3 - <<'PY'
@@ -27,27 +14,37 @@ from pathlib import Path
 import hashlib, sys
 p = Path('/var/lib/vivameda-engineering/repo/early_lane/sender/owner.py')
 b = p.read_bytes()
-assert hashlib.sha256(b).hexdigest() == '3c5d1d91438a39f919d10a2ef5cf94f282e7adc2340894ddf401adbe50f32232', 'sender owner.py hash mismatch'
-sys.argv = [str(p), '--expected-bundle', '28ee6a4270f371c5718fb6e944b92f672268ee608ded27421df85f0dce15c724', 'upgrade-scanner-test']
+assert hashlib.sha256(b).hexdigest() == 'c970b317957200b792006a5fe4ee40b3a8d31a22dd949c7aa7776b056880e9dd', 'sender owner.py hash mismatch'
+sys.argv = [str(p), '--expected-bundle', '40c80bc0d7b6049507bf0be3ac6758f5aed714c32e18beb7ecab21f871d9e63f', 'upgrade-scanner-test']
 exec(compile(b, str(p), 'exec'), {'__name__': '__main__', '__file__': str(p)})
 PY
 ```
 
-Success prints an install/upgrade receipt with started=false, enabled=false, followed
-by status=200 and a Telegram receipt (chat_id/message_id/date only). Look for one
-🌻 EARLY LANE CHANNEL TEST message in the existing scanner channel. Paste the final
-output back privately. This sends a test only; it does not start continuous alerts.
-Repeating the same command safely reuses the installed bundle and test event key.
-429: wait retry_after seconds and rerun it. 409: uncertain delivery is held; inspect
-the channel privately and report the result, without deleting state or changing keys.
-Other refusal: stop and report the fixed error. Do not change credential permissions.
+The command checks bootstrap/new bundle, requires sender and continuous lane inactive
+and disabled, verifies the installed old bundle/unit and preserves its private state.
+It installs only the new sender release and updates that stopped unit. It then runs
+a direct owner-only test: reads the existing credential at runtime, copies chat_id
+alone into root-owned lane delivery.json, sets reuse_scanner_channel=true, preserves
+file ownership/mode, and keeps new_channel_confirmed=false, confirmed_at=null.
+The bot token is never copied, logged, printed or stored. No service is started or
+enabled and the transient log-only observation is untouched.
 
-Root-only delivery.json remains an exact destination allowlist. Without its explicit
-reuse_scanner_channel=true flag, the sender still refuses the scanner chat. The
-legacy field new_channel_confirmed retains its wire-contract name but stays false
-for this test. A later, separately authorized activation is required for continuous
-traffic. No start/enable command is supplied here. No Telegram is ever sent by tests.
+Success: an install receipt with started=false, enabled=false, then status=200 with
+real chat_id/message_id/date receipt. Check for one 🌻 EARLY LANE CHANNEL TEST in your
+existing bot conversation. Paste the final receipt back privately. Repeating the
+same command returns the saved test receipt. On 429, wait retry_after and rerun.
+On 409, inspect the held uncertain event privately; never delete state or change keys.
+Other refusal: stop and report it. No Telegram calls are made by offline tests.
 
-Bundle SHA-256: 28ee6a4270f371c5718fb6e944b92f672268ee608ded27421df85f0dce15c724
+Only the exact destination in root-owned config is allowed. With shared mode true,
+it must also exactly match scanner chat_id, whether private chat, basic group or
+-100 channel/supergroup. Without shared mode, the original -100-only admission stays.
+All early-lane messages begin with 🌻. The command sends one test; automatic delivery
+remains off. The unchanged lane client still has its original -100 confirmation
+check; private-chat activation needs a separate reviewed client compatibility update,
+the actual completed log-only report and later explicit owner activation. This
+command does not change the installed lane runtime or start that process.
 
-Bootstrap SHA-256: 3c5d1d91438a39f919d10a2ef5cf94f282e7adc2340894ddf401adbe50f32232
+Bundle SHA-256: 40c80bc0d7b6049507bf0be3ac6758f5aed714c32e18beb7ecab21f871d9e63f
+
+Bootstrap SHA-256: c970b317957200b792006a5fe4ee40b3a8d31a22dd949c7aa7776b056880e9dd

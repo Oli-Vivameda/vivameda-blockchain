@@ -48,6 +48,18 @@ reuse_scanner_channel=true flag. The owner command hash-checks a stopped upgrade
 preserves state, prepares lane-only routing and sends one fixed direct 🌻 test;
 new_channel_confirmed remains false, confirmed_at null, no services start/enable.
 The scanner credential/source/permissions and frozen rules remain unchanged.
-54 sender tests; complete Python 3.12 gate 990 tests / 27 suites / 393 hashes;
+58 sender tests; complete Python 3.12 gate 994 tests / 27 suites / 393 hashes;
 proposed unit syntax passes. Engineering sent no Telegram. See superseding
 sender/ASTRA_HANDOVER.md for hashes and sender/OWNER_COMMANDS.md for the exact command.
+
+## Private bot-chat correction
+
+Owner metadata-only diagnostic established private_chat destination; delivery unset,
+confirmation false. Installed 28ee6a42's test refused its -100-only parser before any
+config mutation/API send. Corrected sender permits private/basic-group numeric IDs
+only under explicit root-config shared opt-in and exact scanner chat_id match. The
+new owner command upgrades the stopped 28ee6a42 install and runs one idempotent 🌻
+test, leaving continuous confirmation off. Four new regressions, 58 sender tests,
+994 full tests / 27 suites / 393 hashes; proposed unit syntax verified. No Telegram
+sent by engineering. Current lane transport still requires -100 on activation;
+separate client compatibility and rollout readiness review remain explicit blockers.

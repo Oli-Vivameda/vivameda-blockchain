@@ -115,3 +115,9 @@ installed/stopped/disabled per owner receipt. Separate sender/ASTRA_HANDOVER.md 
 sender/OWNER_COMMANDS.md supersede the earlier new-channel requirement, bundle
 hashes and commands for this routing choice. New stopped upgrade/direct test pending;
 continuous delivery remains off. Frozen rules and existing scanner are untouched.
+
+Latest diagnosis: scanner destination is a private bot chat; 28ee6a42 installed/stopped
+but one-off test refused the -100-only parser before config/API. Sender fix and
+superseding owner command are in sender/ASTRA_HANDOVER.md and OWNER_COMMANDS.md.
+Private-chat client compatibility remains open before automatic activation; no lane
+runtime changes, service starts or confirmation changes were performed by engineering.

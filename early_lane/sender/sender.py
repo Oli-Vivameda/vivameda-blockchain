@@ -59,8 +59,9 @@ def channel_id(value, new=False):
 
 def authorize(channel, *, owner_test=False):
     config = secure_json(CONFIG)
-    wanted = channel_id(config.get('channel'), new=True)
-    if channel_id(channel, new=True) != wanted:
+    shared = config.get('reuse_scanner_channel') is True
+    wanted = channel_id(config.get('channel'), new=not shared)
+    if channel_id(channel) != wanted:
         raise Refused('wrong_chat')
     if not owner_test:
         confirmed = config.get('confirmed_at')
@@ -71,7 +72,10 @@ def authorize(channel, *, owner_test=False):
     elif os.geteuid() != 0:
         raise Refused('owner_required')
     credential = secure_json(CREDENTIAL, private=True)  # Runtime only; never copied to state.
-    if wanted == channel_id(credential.get('chat_id')) and config.get('reuse_scanner_channel') is not True:
+    scanner = channel_id(credential.get('chat_id'))
+    if shared and wanted != scanner:
+        raise Refused('scanner_destination_mismatch')
+    if wanted == scanner and not shared:
         raise Refused('scanner_chat_forbidden')
     token = credential.get('bot_token')
     if not isinstance(token, str) or not re.fullmatch(r'[0-9]{5,}:[A-Za-z0-9_-]{20,}', token):
@@ -83,7 +87,7 @@ def validate(request):
         raise Refused('invalid_request')
     if request['protocol'] != PROTOCOL or request['parse_mode'] != 'HTML':
         raise Refused('invalid_protocol')
-    channel_id(request['channel'], new=True)
+    channel_id(request['channel'])
     text = request['text']; key = request['idempotency_key']
     if (not isinstance(text, str) or not 1 <= len(text) <= 4096 or '\x00' in text or
             any(0xd800 <= ord(c) <= 0xdfff for c in text) or SECRET.search(text)):
@@ -176,7 +180,7 @@ class Engine:
     def handle(self, request, *, owner_test=False):
         try:
             validate(request)
-            channel = channel_id(request['channel'], new=True)
+            channel = channel_id(request['channel'])
             if owner_test and (request['text'] != TEST_TEXT or request['idempotency_key'] != 'owner-channel-test-v1:' + channel):
                 raise Refused('fixed_owner_test_required')
             if not owner_test and request['idempotency_key'].startswith('owner-channel-test-'):
@@ -275,7 +279,7 @@ def prepare_scanner_test():
     if config.get('new_channel_confirmed') is not False or config.get('confirmed_at') is not None:
         raise Refused('delivery_must_remain_disabled')
     credential = secure_json(CREDENTIAL, private=True)
-    channel = channel_id(credential.get('chat_id'), new=True)
+    channel = channel_id(credential.get('chat_id'))
     if config.get('channel') is not None and str(config['channel']) != channel:
         raise Refused('different_destination_already_configured')
     parent = CONFIG.parent.lstat(); original = CONFIG.lstat()
@@ -307,7 +311,7 @@ def main():
             try:
                 engine = Engine(journal)
                 if args.command in ('test-channel', 'scanner-channel-test'):
-                    channel = prepare_scanner_test() if args.command == 'scanner-channel-test' else channel_id(args.expected_channel, new=True)
+                    channel = prepare_scanner_test() if args.command == 'scanner-channel-test' else channel_id(args.expected_channel)
                     request = {'protocol': PROTOCOL, 'channel': channel, 'parse_mode': 'HTML',
                                'text': TEST_TEXT, 'idempotency_key': 'owner-channel-test-v1:' + channel}
                     result = engine.handle(request, owner_test=True)
@@ -330,8 +334,8 @@ def main():
                         with conn: serve_connection(conn, engine, user.pw_uid)
             finally:
                 journal.close()
-    except Exception:
-        print('early_lane_sender_failed_closed', flush=True)
+    except Exception as error:
+        print(json.dumps({'status': 500, 'error': 'early_lane_sender_failed_closed', 'error_type': type(error).__name__}), flush=True)
         return 1
 
 if __name__ == '__main__': raise SystemExit(main())

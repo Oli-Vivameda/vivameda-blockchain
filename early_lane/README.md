@@ -8,7 +8,7 @@
 Experimental read-only Pump.fun observer, separate from the scanner. The owner
 applied the RPC pricing repair and started a new two-hour log-only run. Supplied
 startup logs show fresh input/prices and no selected alerts. Final validation is
-pending. Owner selected the existing scanner channel with 🌻. The separate sender is built with 54 offline
+pending. Owner selected the existing scanner private bot chat with 🌻. The separate sender is built with 58 offline
 tests; its previous bundle is installed and stopped; the shared-channel update and owner test are pending. No trading code, wallet connection,
 signup or paid fallback. Meme desk remains paused.
 

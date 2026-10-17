@@ -57,3 +57,8 @@ and [exact install-only/test commands](../early_lane/sender/OWNER_COMMANDS.md).
 Latest sender state: owner installed the corrected sender and kept it disabled.
 Owner then selected shared scanner channel + 🌻. Superseding stopped upgrade/test
 command is in early_lane/sender/OWNER_COMMANDS.md; continuous delivery remains off.
+
+Owner diagnostic clarified scanner destination is a private chat. Sender exact-match
+private-chat correction/test is prepared; automatic activation is still blocked by
+the unchanged lane client confirmation guard and pending rollout review. See sender
+handover and current owner command; no service was started by engineering.

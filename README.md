@@ -13,7 +13,7 @@ Status as of 17 October 2026.
 | [Monitors](docs/MONITORS.md) | Pool liquidity and watchlist observation alerts | Running |
 | [Crypto agent](agent/) | Interprets alerts with a [runner knowledge pack](research/runner-study-20261011/AGENT_KNOWLEDGE.md): phase, audience, demand, exhaustion | Running |
 | [Prediction ledger](research/) | Frozen prospective cohort; closes at 200 eligible tokens or 3 November 2026 | Collecting |
-| [Early lane v1](early_lane/STATUS.md) | Alerts for Pump.fun tokens at $8k to $25k with fail-closed holder and buyer checks, plus 24-hour outcome tracking. Rules frozen for 14 days before the first alert. | RPC repair applied; running log-only; two-hour validation pending. [Sender built](early_lane/sender/README.md), previous bundle installed/stopped; shared scanner channel + 🌻 update/test pending. |
+| [Early lane v1](early_lane/STATUS.md) | Alerts for Pump.fun tokens at $8k to $25k with fail-closed holder and buyer checks, plus 24-hour outcome tracking. Rules frozen for 14 days before the first alert. | RPC repair applied; running log-only; two-hour validation pending. [Sender built](early_lane/sender/README.md), previous bundle installed/stopped; same scanner private chat + 🌻 correction/test pending; automatic delivery off. |
 | [Meme desk v1](meme_desk/STATUS.md) | Trade tickets and exit-rule replay for human-executed flips | Paused |
 | [Copy paper experiment](copy_trading/README.md) | Delayed copying of verified wallets, on paper | Waiting for verified wallets |
 

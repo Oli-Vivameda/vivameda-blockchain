@@ -39,7 +39,7 @@ def main():
         (snap / 'BUNDLE.json').write_bytes(raw)
         args = a.args[1:] if a.args[:1] == ['--'] else a.args
         if a.command == 'upgrade-scanner-test':
-            update = [str(snap / 'install.py'), '--expected-bundle', a.expected_bundle, '--from-bundle', '5ae872c9f5295ef58cc954d7f9eddac6319fecab2afebe6cf3f81d13b706518b']
+            update = [str(snap / 'install.py'), '--expected-bundle', a.expected_bundle, '--from-bundle', '28ee6a4270f371c5718fb6e944b92f672268ee608ded27421df85f0dce15c724']
             result = subprocess.run(snapshot_command(snap, update), cwd=snap)
             if result.returncode: raise SystemExit(result.returncode)
             command = [str(snap / 'sender.py'), 'scanner-channel-test']
