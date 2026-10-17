@@ -38,3 +38,16 @@ regression tests pass: 46 sender tests, 982 full repository tests across 27 suit
 393 file hashes and proposed unit syntax verified. No service installed/started or
 Telegram message sent by engineering. The first failed attempt requires no cleanup;
 use the corrected bundle command linked above.
+
+## Owner amendment: existing scanner channel with 🌻
+
+Owner confirmed the corrected sender installed, stopped, disabled, with delivery
+config untouched. Owner subsequently chose the scanner's existing chat and 🌻 prefix.
+New source permits that one exact root-config destination only with an explicit
+reuse_scanner_channel=true flag. The owner command hash-checks a stopped upgrade,
+preserves state, prepares lane-only routing and sends one fixed direct 🌻 test;
+new_channel_confirmed remains false, confirmed_at null, no services start/enable.
+The scanner credential/source/permissions and frozen rules remain unchanged.
+54 sender tests; complete Python 3.12 gate 990 tests / 27 suites / 393 hashes;
+proposed unit syntax passes. Engineering sent no Telegram. See superseding
+sender/ASTRA_HANDOVER.md for hashes and sender/OWNER_COMMANDS.md for the exact command.

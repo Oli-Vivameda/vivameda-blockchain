@@ -109,3 +109,9 @@ for the existing credential; the initial sender installer refused before writes.
 The corrected independent sender preserves ownership/permissions, accepts the existing
 scanner owner and adds the bounded read capability. See sender/ASTRA_HANDOVER.md
 and its superseding install-only command. No credential/config/service mutation.
+
+Latest owner amendment: use the existing scanner channel with 🌻. Old sender is
+installed/stopped/disabled per owner receipt. Separate sender/ASTRA_HANDOVER.md and
+sender/OWNER_COMMANDS.md supersede the earlier new-channel requirement, bundle
+hashes and commands for this routing choice. New stopped upgrade/direct test pending;
+continuous delivery remains off. Frozen rules and existing scanner are untouched.

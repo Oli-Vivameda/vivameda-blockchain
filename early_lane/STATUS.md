@@ -39,3 +39,13 @@ Metadata confirms the existing scanner owns its 0600 credential. Corrected sende
 bundle accepts root or vivameda-scout owner-only files, preserves that file, and
 retains root-only delivery config checks. 46 sender tests / 982 repository tests.
 Sender installation and real channel test remain pending; nothing was started.
+
+## Shared-channel owner amendment — 17 October 2026
+
+Owner confirmed the existing scanner channel with a 🌻 prefix. Sender old bundle
+5ae872c9 is owner-confirmed installed, stopped, disabled. New source adds explicit
+root-config shared-channel opt-in, 🌻 on every send, and a checked stopped upgrade
+plus one direct owner test. No channel ID or new bot/channel needed. The owner
+command writes only the lane delivery settings, keeps confirmation false, and never
+starts continuous services. It has not been run by engineering. 54 sender tests;
+990 repository tests / 27 suites / 393 verified files. See sender/OWNER_COMMANDS.md.

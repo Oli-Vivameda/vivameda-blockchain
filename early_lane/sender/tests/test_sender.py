@@ -61,13 +61,13 @@ class EngineTests(unittest.TestCase):
         self.restart(); self.now += 30
         self.assertEqual(self.engine.handle(request())['retry_after'], 60); self.assertEqual(len(self.api.calls), 1)
         self.now += 60; self.assertEqual(self.engine.handle(request())['status'], 200)
-        self.assertTrue(self.api.calls[-1][2].startswith('LATE 90s'))
+        self.assertTrue(self.api.calls[-1][2].startswith('🌻 LATE 90s'))
     def test_cooldown_applies_to_other_events(self):
         self.api.outcomes = [('retry', None, 30)]; self.engine.handle(request())
         self.assertEqual(self.engine.handle(request('event:two'))['status'], 429); self.assertEqual(len(self.api.calls), 1)
     def test_original_payload_retained_during_retry(self):
         self.api.outcomes = [('retry', None, 5)]; self.engine.handle(request()); self.now += 5
-        self.engine.handle(request(text='changed')); self.assertEqual(self.api.calls[-1][2], 'A token alert')
+        self.engine.handle(request(text='changed')); self.assertEqual(self.api.calls[-1][2], '🌻 A token alert')
     def test_exception_token_never_logged_or_persisted(self):
         self.api.outcomes = [RuntimeError('https://api.telegram.org/bot' + TOKEN)]
         out = io.StringIO()
@@ -132,6 +132,77 @@ class AuthorizationTests(unittest.TestCase):
         with self.assertRaises(sender.Refused): self.authorize(c=dict(config(False), channel=None), owner=True)
     def test_token_invalid_refused(self):
         with self.assertRaises(sender.Refused): self.authorize(creds={'chat_id': SCANNER, 'bot_token': 'bad'})
+
+class SharedChannelTests(unittest.TestCase):
+    def test_scanner_channel_allowed_only_with_explicit_root_flag(self):
+        for value in (True, False, 'true', None):
+            settings = dict(config(), reuse_scanner_channel=value)
+            with patch.object(sender, 'secure_json', side_effect=[settings, {'chat_id': CHANNEL, 'bot_token': TOKEN}]):
+                if value is True: self.assertEqual(sender.authorize(CHANNEL), TOKEN)
+                else:
+                    with self.assertRaises(sender.Refused): sender.authorize(CHANNEL)
+    def test_shared_flag_does_not_bypass_confirmation_or_destination(self):
+        for settings, destination in ((dict(config(False), reuse_scanner_channel=True), CHANNEL),
+                                      (dict(config(), reuse_scanner_channel=True), SCANNER)):
+            with patch.object(sender, 'secure_json', return_value=settings):
+                with self.assertRaises(sender.Refused): sender.authorize(destination)
+    def test_atomic_configuration_keeps_delivery_off_and_never_copies_token(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'delivery.json'; path.write_text(json.dumps(config(False))); path.chmod(0o640)
+            base = dict(config(False), channel=None, confirmed_at=None)
+            original_lstat = Path.lstat
+            def root_metadata(p):
+                actual = original_lstat(p)
+                if p == path or p == path.parent:
+                    return Mock(st_mode=actual.st_mode, st_uid=0, st_gid=actual.st_gid)
+                return actual
+            with patch.object(sender, 'CONFIG', path), patch.object(sender.os, 'geteuid', return_value=0), patch.object(sender, 'secure_json', side_effect=[base, {'chat_id': CHANNEL, 'bot_token': TOKEN}]), patch.object(Path, 'lstat', root_metadata), patch.object(sender.os, 'fchown'):
+                self.assertEqual(sender.prepare_scanner_test(), CHANNEL)
+            saved = json.loads(path.read_text())
+            self.assertEqual(saved['channel'], CHANNEL); self.assertTrue(saved['reuse_scanner_channel'])
+            self.assertIs(saved['new_channel_confirmed'], False); self.assertIsNone(saved['confirmed_at'])
+            self.assertNotIn(TOKEN, path.read_text()); self.assertEqual(path.stat().st_mode & 0o777, 0o640)
+    def test_shared_prepare_requires_root_and_disabled_config(self):
+        with patch.object(sender.os, 'geteuid', return_value=994), patch.object(sender, 'secure_json') as reader:
+            with self.assertRaises(sender.Refused): sender.prepare_scanner_test()
+            reader.assert_not_called()
+        for value in (config(True), dict(config(False), confirmed_at=123), dict(config(False), channel=SCANNER, confirmed_at=None)):
+            with patch.object(sender.os, 'geteuid', return_value=0), patch.object(sender, 'secure_json', side_effect=[value, {'chat_id': CHANNEL, 'bot_token': TOKEN}]):
+                with self.assertRaises(sender.Refused): sender.prepare_scanner_test()
+    def test_sunflower_prefix_on_test_and_alert(self):
+        for test in (False, True):
+            with tempfile.TemporaryDirectory() as temp:
+                journal = sender.Journal(Path(temp) / 'state.sqlite'); api = API()
+                try:
+                    engine = sender.Engine(journal, api, lambda *a, **k: TOKEN)
+                    value = request('owner-channel-test-v1:' + CHANNEL, sender.TEST_TEXT) if test else request()
+                    self.assertEqual(engine.handle(value, owner_test=test)['status'], 200)
+                    self.assertTrue(api.calls[0][2].startswith('🌻 '))
+                    engine.handle(value, owner_test=test); self.assertEqual(len(api.calls), 1)
+                finally: journal.close()
+
+class UpgradeTests(unittest.TestCase):
+    def test_upgrade_validates_old_source_without_execution(self):
+        import hashlib
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp); source = root / 'fixture.py'; source.write_text('raise RuntimeError("must not execute")')
+            raw = json.dumps({'sha256': {'fixture.py': hashlib.sha256(source.read_bytes()).hexdigest()}}).encode()
+            (root / 'BUNDLE.json').write_bytes(raw); expected = hashlib.sha256(raw).hexdigest()
+            install.verify_release(root, expected)
+            source.write_text('tampered')
+            with self.assertRaises(SystemExit): install.verify_release(root, expected)
+    def test_upgrade_refuses_active_or_enabled_units(self):
+        for output in ('ActiveState=active\nUnitFileState=disabled\n', 'ActiveState=inactive\nUnitFileState=enabled\n'):
+            with patch.object(install.subprocess, 'run', return_value=Mock(stdout=output)):
+                with self.assertRaises(SystemExit): install.stopped_units()
+        with patch.object(install.subprocess, 'run', return_value=Mock(stdout='ActiveState=inactive\nUnitFileState=disabled\n')) as run:
+            install.stopped_units(); self.assertEqual(run.call_count, 2)
+    def test_upgrade_never_deletes_state_or_starts_services(self):
+        source = Path(install.__file__).read_text()
+        for forbidden in ("'start'", "'enable'", 'rmtree', 'STATE.unlink', 'CREDENTIAL.read'):
+            self.assertNotIn(forbidden, source)
+        self.assertIn("if not upgrading:\n            STATE.mkdir", source)
+        self.assertIn('verify_release(previous, a.from_bundle)', source)
 
 class FileTests(unittest.TestCase):
     def test_root_file_security_dummy_only(self):

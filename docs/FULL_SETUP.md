@@ -1,3 +1,8 @@
+> Latest owner routing choice, 17 October 2026: early lane shares the scanner's
+> existing Telegram channel, prefix 🌻. Checked stopped sender upgrade and one-shot
+> test are prepared; continuous delivery stays off. See
+> [sender owner command](../early_lane/sender/OWNER_COMMANDS.md).
+
 # Full crypto setup showcase
 
 > Sender update, 17 October 2026: [early_lane/sender](../early_lane/sender/README.md)

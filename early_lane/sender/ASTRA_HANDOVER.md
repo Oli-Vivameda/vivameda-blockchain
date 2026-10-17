@@ -1,94 +1,65 @@
-# Astra handover — early-lane sender — 17 October 2026
+# Astra handover — early-lane sender, shared channel 🌻 — 17 October 2026
 
-BUILT AND OFFLINE TESTED. NOT INSTALLED, STARTED OR ENABLED BY ENGINEERING.
-No Telegram message sent. No delivery.json or credential contents read by engineering.
-No scanner, frozen rule, lane executable-bundle or running-service changes.
+Owner-confirmed installed sender: 5ae872c9f5295ef58cc954d7f9eddac6319fecab2afebe6cf3f81d13b706518b,
+stopped and disabled; credential unchanged. Owner then explicitly chose the scanner's
+existing channel and 🌻 prefix. This supersedes the earlier separate-channel/scanner-
+chat prohibition for this owner-selected destination only. Frozen eligibility rules
+and the lane executable bundle remain unchanged. Meme desk stays paused.
 
-The lane source baseline is main 37190d5693fa3d62aff1fe2b1e4e3fa2e540cddf,
-which includes the owner's RPC repair and log-only startup evidence after b0b4d375.
-New source lives only in early_lane/sender/. Documentation/navigation and root
-MANIFEST.json also change. The existing 41b453fb lane installation remains intact.
+## New files and hashes
 
-## Files and hashes
+New independent BUNDLE.json SHA-256: `28ee6a4270f371c5718fb6e944b92f672268ee608ded27421df85f0dce15c724`.
 
-Independent sender BUNDLE.json SHA-256: `5ae872c9f5295ef58cc954d7f9eddac6319fecab2afebe6cf3f81d13b706518b`.
-
-| Executable/test file | SHA-256 |
+| Runtime/test file | SHA-256 |
 |---|---|
-| `sender.py` | `2a6c816f6fb2a06bd25840a0738ea79b9276b0570bef333ed4161e673a0c8f8b` |
-| `install.py` | `df98008fc6a55791889102c345d60de465874d0e12bcdadeb10dcc9ed437845c` |
-| `owner.py` | `4f49e1ed7cd166527c2df008e4231fdf15bc2e2ecb040c973e6949209d2a3274` |
-| `tests/test_sender.py` | `7a7439a5210f5117fe162449a7aaaf1344ae81fd13b54e23fcb63aa358335a4a` |
+| `sender.py` | `4d09c3e992d597486938f2da5b8469769f3f774fa79fa00b0662e4e4d0518d81` |
+| `install.py` | `9983e65df88f981a29d86f0a3d1ac57e63a30824a268fb3043683bc5cf625b8e` |
+| `owner.py` | `3c5d1d91438a39f919d10a2ef5cf94f282e7adc2340894ddf401adbe50f32232` |
+| `tests/test_sender.py` | `940f152add74d83f03ce79215e2953211e556485fca6d9bef3ef74b26659463e` |
 
-README.md, OWNER_COMMANDS.md and this handover are pinned by root MANIFEST.json,
-not the executable bundle. Owner commands check bootstrap and bundle before imports.
-No duplicate scanner or credential source is distributed.
+Source: /var/lib/vivameda-engineering/repo/early_lane/sender/.
+Proposed installed release: /opt/vivameda-early-lane-sender/28ee6a4270f371c5718fb6e944b92f672268ee608ded27421df85f0dce15c724/.
+Unit: vivameda-early-lane-sender.service. Existing dedicated root state is preserved:
+/var/lib/vivameda-early-lane-sender/ (0700), sender.sqlite plus WAL/SHM and sender.lock.
+The old unit is backed up there before a checked stopped upgrade. Socket remains
+/run/vivameda-early-lane-sender/sender.sock (root:lane 0660, directory 0750).
+Runtime credential remains /opt/vivameda-crypto-early-scout/credentials.json;
+owner metadata: vivameda-scout UID 996, regular file, 0600. Never copied/changed.
+Root service has CAP_DAC_READ_SEARCH only; scanner data is inaccessible.
 
-## State and commands
+## Owner action
 
-Engineering source: /var/lib/vivameda-engineering/repo/early_lane/sender/.
-Owner-only installed source: /opt/vivameda-early-lane-sender/5ae872c9f5295ef58cc954d7f9eddac6319fecab2afebe6cf3f81d13b706518b/.
-Unit: vivameda-early-lane-sender.service, root process with existing lane group.
-Socket: /run/vivameda-early-lane-sender/sender.sock, root:lane 0660, parent 0750.
-State: /var/lib/vivameda-early-lane-sender/ (root 0700), sender.sqlite plus WAL/SHM
-and sender.lock. State is private; it includes outgoing message text and receipts.
-Do not publish or erase it. No raw token is stored in it.
-Existing configuration: /etc/vivameda-early-lane/delivery.json, never written here.
-Existing runtime credential: /opt/vivameda-crypto-early-scout/credentials.json,
-owned by root or vivameda-scout with owner-only permissions; read only at runtime
-and never copied or logged. Root-owned delivery configuration remains required.
+[Exact one-command stopped upgrade + direct test](OWNER_COMMANDS.md). Starts/enables
+no service. Requires inactive/disabled sender and continuous lane, verifies the old
+bundle/unit, preserves sender state, leaves the transient log-only rollout alone.
+Only the runtime test reads the credential contents. It copies chat_id alone into
+/etc/vivameda-early-lane/delivery.json, adds reuse_scanner_channel=true, exact socket,
+and keeps new_channel_confirmed=false, confirmed_at=null. Other destinations remain
+refused, and the scanner chat is still refused without that explicit root flag.
+The legacy confirmation field name is retained for the unchanged transport contract.
+Every early-lane send now starts with 🌻. Test event/key are fixed and idempotent.
+No test or command has been executed against Telegram by engineering.
 
-Exact install-without-start and owner-only single-test commands:
-[OWNER_COMMANDS.md](OWNER_COMMANDS.md). Run in the owner's existing root terminal.
-No continuous-service start/enable instructions are part of this task.
+## Verification and limits
 
-## Results, limits and open issues
+54 offline sender tests; full Python 3.12 gate 990 tests across 27 suites, 393 file
+hashes; proposed unit syntax verified. New coverage: explicit shared-channel flag,
+unchanged destination/confirmation guards, atomic token-free config write, 🌻 prefix
+and test idempotency, old-bundle integrity, refusal of active/enabled units and state
+preservation. Existing Retry-After, real whitelisted receipts, credential ownership,
+private snapshot imports and uncertain/crash holds remain tested. No live root
+upgrade/sandbox/channel delivery result is claimed for the new release.
 
-46 offline sender tests passed locally and on server Python 3.12. Coverage includes
-Unix peer checks and complete wire round-trip, receipt persistence across restart,
-changed retry text, Retry-After/global cooldown persistence, wrong/scanner-chat refusal,
-owner-test isolation, uncertain/crash holds and secret redaction in logs/receipts/state.
-Fake HTTP only; no Telegram calls from tests. The repository release gate and syntax
-check are recorded in the dated sender release evidence.
+Telegram has no atomic sendMessage idempotency guarantee. Uncertain network sends
+stay held for manual review, never automatically resent. Definite rate limits stay
+queued and caller-driven. The owner's command can be repeated for the same test;
+it does not create another event or enable delivery. Shared bot/channel limits can
+affect both feeds; scanner operation is not coordinated or changed.
 
-Telegram cannot provide an atomic idempotency guarantee for sendMessage. The sender
-commits inflight before HTTP; crashes/timeouts/uncertain responses are held rather
-than automatically repeated. This can require manual delivery reconciliation and
-is an explicit availability limit. Definite rate limits stay queued. Retries need
-a caller; the sender never drains autonomously. Shared-bot throttles can affect both
-feeds; scanner operation is untouched. No bot polling or webhook changes are made.
-
-Owner still needs to provide the NEW numeric -100... channel ID, arrange its value
-in delivery.json separately, run the install-only command and then the one-shot test.
-Owner metadata now confirms credential owner vivameda-scout and permissions 0600;
-contents/runtime format and real bot channel permissions are not verified. Current configuration is unconfirmed/TBD; the test refuses
-until a channel exists in that file. A scanner chat represented by an alias instead
-of a number fails closed; do not bypass this by changing scanner configuration.
-No live end-to-end delivery or service-sandbox runtime result is claimed.
-
-Existing two-hour log-only rollout continues independently. Last owner evidence:
-10 valid polls, 129 fresh marks/627 watched, zero selected/suppressed, Telegram false.
-This is startup evidence, not a completed rollout or a full-screening pass. Inspect
-its actual receipt around 12:21 Cyprus. Review stays activation+14 days (expected
-31 October if the journal confirms 17 October activation); final maturity +15 days
-+120 seconds. Sender construction does not restart that clock. Meme desk stays paused.
-
-Next: collect the actual log-only aggregate report and channel ID; owner-install/test
-only. Later separately authorize delivery configuration/activation after checking
-coverage and readiness. No rule changes, trading, signing, paid calls or new accounts.
-
-## Credential ownership correction — 17 October 2026
-
-Owner's metadata-only stat showed a regular file owned by vivameda-scout (UID 996),
-mode 0600. The first installer stopped before any writes because it required root.
-Corrected installer/runtime accept root or the existing scanner UID, with owner-only
-access and no symlinks. Delivery config, state and socket still require root ownership.
-CAP_DAC_READ_SEARCH permits the sandboxed root process to read that private file;
-no write-bypass capability is granted and scanner data stays inaccessible. Seven new
-offline regressions cover owner acceptance/refusal, unchanged root-config protection,
-metadata-only installer checks and the bounded read capability. No credential file
-or running service was changed. Rerun only the corrected install command.
-
-The isolated child bootstrap explicitly adds only its private hash-verified snapshot
-to the import path before running reviewed modules. A new offline subprocess test
-checks local helper loading and argument forwarding without touching production files.
+Open: owner must run the checked command and confirm the single 🌻 test message.
+Continuous delivery remains off. The final 7200s log-only result and screening/
+coverage limits still need review; no success/outcome rates are inferred from source
+tests. Owner startup evidence remains 129 fresh marks/627 watched, zero selections,
+Telegram false at the supplied snapshot. Expected finish around 12:21 Cyprus; inspect
+actual receipt. Review date remains observational activation+14 days, expected
+31 October only if journal confirms 17 October activation. No clock/reset/rule changes.

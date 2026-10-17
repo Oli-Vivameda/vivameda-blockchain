@@ -53,3 +53,7 @@ now implements the existing Unix protocol, durable event keys, real receipts,
 Retry-After and configured-channel/scanner-chat checks. It is NOT installed,
 started or enabled; channel TBD. See [dated release](releases/2026-10-17-early-lane-sender.md)
 and [exact install-only/test commands](../early_lane/sender/OWNER_COMMANDS.md).
+
+Latest sender state: owner installed the corrected sender and kept it disabled.
+Owner then selected shared scanner channel + 🌻. Superseding stopped upgrade/test
+command is in early_lane/sender/OWNER_COMMANDS.md; continuous delivery remains off.

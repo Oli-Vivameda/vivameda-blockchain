@@ -1,6 +1,6 @@
 > Current status: owner applied the RPC repair and began the new log-only run.
 > Startup data/prices were observed; the completed two-hour result is pending.
-> Sender source is built and tested, but is not installed or started. See
+> Sender's previous bundle is installed and stopped; shared-channel update/test pending. See
 > [sender handover](sender/ASTRA_HANDOVER.md) and [install-only commands](sender/OWNER_COMMANDS.md).
 
 # Early lane v1
@@ -8,8 +8,8 @@
 Experimental read-only Pump.fun observer, separate from the scanner. The owner
 applied the RPC pricing repair and started a new two-hour log-only run. Supplied
 startup logs show fresh input/prices and no selected alerts. Final validation is
-pending. Telegram channel remains TBD. The separate sender is built with 46 offline
-tests; it is not installed, started or enabled. No trading code, wallet connection,
+pending. Owner selected the existing scanner channel with 🌻. The separate sender is built with 54 offline
+tests; its previous bundle is installed and stopped; the shared-channel update and owner test are pending. No trading code, wallet connection,
 signup or paid fallback. Meme desk remains paused.
 
 Read [frozen rules](RULES.md), [source/terms check](SOURCE_TERMS.md),

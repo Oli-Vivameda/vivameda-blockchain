@@ -18,7 +18,7 @@ def snapshot_command(snapshot, command):
 
 def main():
     p = argparse.ArgumentParser(); p.add_argument('--expected-bundle', required=True)
-    p.add_argument('command', choices=['install', 'serve', 'test-channel'])
+    p.add_argument('command', choices=['install', 'serve', 'test-channel', 'scanner-channel-test', 'upgrade-scanner-test'])
     p.add_argument('args', nargs=argparse.REMAINDER); a = p.parse_args()
     root = Path(__file__).resolve().parent
     raw = (root / 'BUNDLE.json').read_bytes()
@@ -38,7 +38,12 @@ def main():
             dest = snap / name; dest.parent.mkdir(parents=True, exist_ok=True); dest.write_bytes(data)
         (snap / 'BUNDLE.json').write_bytes(raw)
         args = a.args[1:] if a.args[:1] == ['--'] else a.args
-        if a.command == 'install': command = [str(snap / 'install.py'), '--expected-bundle', a.expected_bundle] + args
+        if a.command == 'upgrade-scanner-test':
+            update = [str(snap / 'install.py'), '--expected-bundle', a.expected_bundle, '--from-bundle', '5ae872c9f5295ef58cc954d7f9eddac6319fecab2afebe6cf3f81d13b706518b']
+            result = subprocess.run(snapshot_command(snap, update), cwd=snap)
+            if result.returncode: raise SystemExit(result.returncode)
+            command = [str(snap / 'sender.py'), 'scanner-channel-test']
+        elif a.command == 'install': command = [str(snap / 'install.py'), '--expected-bundle', a.expected_bundle] + args
         else: command = [str(snap / 'sender.py'), a.command] + args
         # Snapshot contains only reviewed files; safe path first for imports.
         raise SystemExit(subprocess.run(snapshot_command(snap, command), cwd=snap).returncode)

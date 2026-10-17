@@ -16,6 +16,7 @@ import ssl
 import stat
 import struct
 import time
+import tempfile
 
 PROTOCOL = 'vivameda-early-lane-send-v1'
 CONFIG = Path('/etc/vivameda-early-lane/delivery.json')
@@ -70,7 +71,7 @@ def authorize(channel, *, owner_test=False):
     elif os.geteuid() != 0:
         raise Refused('owner_required')
     credential = secure_json(CREDENTIAL, private=True)  # Runtime only; never copied to state.
-    if wanted == channel_id(credential.get('chat_id')):
+    if wanted == channel_id(credential.get('chat_id')) and config.get('reuse_scanner_channel') is not True:
         raise Refused('scanner_chat_forbidden')
     token = credential.get('bot_token')
     if not isinstance(token, str) or not re.fullmatch(r'[0-9]{5,}:[A-Za-z0-9_-]{20,}', token):
@@ -204,6 +205,7 @@ class Engine:
                 text = 'LATE ' + str(int(match[1]) + age) + 's' + text[match.end():]
             else:
                 text = 'LATE ' + str(age) + 's — queued delivery; refresh current data\n' + text
+        text = '🌻 ' + text
         try:
             status, receipt, delay = self.api.send(token, channel, text)
         except Exception:
@@ -266,8 +268,37 @@ def state_lock():
     finally:
         os.close(fd)
 
+def prepare_scanner_test():
+    """Owner-selected shared destination. No token enters config or output."""
+    if os.geteuid() != 0: raise Refused('owner_required')
+    config = secure_json(CONFIG)
+    if config.get('new_channel_confirmed') is not False or config.get('confirmed_at') is not None:
+        raise Refused('delivery_must_remain_disabled')
+    credential = secure_json(CREDENTIAL, private=True)
+    channel = channel_id(credential.get('chat_id'), new=True)
+    if config.get('channel') is not None and str(config['channel']) != channel:
+        raise Refused('different_destination_already_configured')
+    parent = CONFIG.parent.lstat(); original = CONFIG.lstat()
+    if not stat.S_ISDIR(parent.st_mode) or parent.st_uid != 0 or parent.st_mode & 0o022:
+        raise Refused('unsafe_config_parent')
+    config.update(channel=channel, socket=str(SOCKET), reuse_scanner_channel=True,
+                  new_channel_confirmed=False, confirmed_at=None)
+    fd, name = tempfile.mkstemp(prefix='.delivery-', dir=CONFIG.parent)
+    try:
+        with os.fdopen(fd, 'w') as stream:
+            os.fchown(stream.fileno(), 0, original.st_gid)
+            os.fchmod(stream.fileno(), stat.S_IMODE(original.st_mode))
+            stream.write(json.dumps(config, sort_keys=True) + '\n'); stream.flush(); os.fsync(stream.fileno())
+        os.replace(name, CONFIG)
+        directory = os.open(CONFIG.parent, os.O_RDONLY | os.O_DIRECTORY)
+        try: os.fsync(directory)
+        finally: os.close(directory)
+    finally:
+        with contextlib.suppress(FileNotFoundError): os.unlink(name)
+    return channel
+
 def main():
-    p = argparse.ArgumentParser(); p.add_argument('command', choices=['serve', 'test-channel'])
+    p = argparse.ArgumentParser(); p.add_argument('command', choices=['serve', 'test-channel', 'scanner-channel-test'])
     p.add_argument('--expected-channel'); args = p.parse_args()
     os.umask(0o077)
     try:
@@ -275,8 +306,8 @@ def main():
             journal = Journal(STATE / 'sender.sqlite')
             try:
                 engine = Engine(journal)
-                if args.command == 'test-channel':
-                    channel = channel_id(args.expected_channel, new=True)
+                if args.command in ('test-channel', 'scanner-channel-test'):
+                    channel = prepare_scanner_test() if args.command == 'scanner-channel-test' else channel_id(args.expected_channel, new=True)
                     request = {'protocol': PROTOCOL, 'channel': channel, 'parse_mode': 'HTML',
                                'text': TEST_TEXT, 'idempotency_key': 'owner-channel-test-v1:' + channel}
                     result = engine.handle(request, owner_test=True)

@@ -1,69 +1,63 @@
-# Early-lane Telegram sender — built, not installed or started
+# Early-lane Telegram sender — existing scanner channel, 🌻
 
-Separate Python 3.12 standard-library transport for the unchanged
-`early_lane/transport.py` contract. No autonomous jobs or delivery activation.
-[Owner commands](OWNER_COMMANDS.md) install definitions only and provide a separate,
-explicit one-message channel test. [Astra handover](ASTRA_HANDOVER.md) records hashes,
-verification, state and remaining owner actions.
+Owner chose the scanner's existing Telegram channel on 17 October 2026, replacing
+the earlier separate-channel requirement. Every message from this sender starts
+with 🌻. No new channel, bot, token or manual channel-ID lookup is needed.
 
-The root service listens on `/run/vivameda-early-lane-sender/sender.sock`, owned
-root:vivameda-early-lane, mode 0660 in a root-owned 0750 directory. Linux SO_PEERCRED
-admits only root and the dedicated lane UID. The existing client authenticates the
-server as root. Requests use newline JSON, protocol `vivameda-early-lane-send-v1`,
-HTML text, an event key and a channel. Replies contain status 200 and a whitelisted
-Telegram receipt, status 429 with retry_after, or a fixed safe refusal reason.
-Messages and raw HTTP errors are never logged.
+Old sender bundle is owner-confirmed installed, stopped and disabled. The shared-
+channel update is prepared but not applied. [One owner command](OWNER_COMMANDS.md)
+hash-verifies the stopped upgrade, preserves state, prepares lane-only routing and
+sends one fixed direct test. It leaves continuous delivery unconfirmed and does
+not start/enable either service. [Astra handover](ASTRA_HANDOVER.md) has hashes,
+state paths, verification and remaining work. Scanner code/services stay untouched.
 
-Every send re-reads the existing owner-only
-`/opt/vivameda-crypto-early-scout/credentials.json` at runtime only. The credential must be a regular owner-only file owned by root or the existing
-vivameda-scout account. Its existing ownership and permissions are preserved. The
-file is never copied, changed or opened during installation/testing. Fields are the scanner's
-existing `bot_token` and `chat_id`. Only the numeric channel in root-owned
-`/etc/vivameda-early-lane/delivery.json` can receive messages; the scanner chat is
-always forbidden. An unknown/non-numeric scanner chat fails closed. Normal socket
-requests also require new_channel_confirmed=true, a positive numeric confirmed_at,
-and the exact socket above. No component here writes delivery.json. The root service bounds its capabilities to
-CAP_DAC_READ_SEARCH so it can read a scanner-owned 0600 credential without changing
-its owner or permissions; scanner data remains explicitly inaccessible.
+The root service implements the unchanged early_lane/transport.py newline JSON
+protocol. Socket /run/vivameda-early-lane-sender/sender.sock is root:lane 0660 in a
+root-owned 0750 directory. SO_PEERCRED admits root and the dedicated lane UID;
+the client authenticates root. Only the exact numeric chat in root-owned delivery.json
+is allowed. The scanner chat additionally needs the owner's explicit
+reuse_scanner_channel=true setting. Normal requests still need the existing wire
+fields new_channel_confirmed=true, a positive confirmed_at and the exact socket.
+The legacy field name is retained; it remains false during the one-shot test.
 
-Root-only `/var/lib/vivameda-early-lane-sender/sender.sqlite` persists immutable first
-payloads, states, retries and real message_id/chat_id/date receipts with WAL and
-synchronous=FULL. A process lock prevents concurrent service/owner-test use. Duplicate
-event keys return the same saved receipt, including across restarts. Changed late
-text on a client retry cannot create a second event or replace its first payload.
-Queued sends acquire a late-age prefix when appropriate. Telegram 429 cooldowns use
-the greater of API retry_after and HTTP Retry-After, including HTTP dates; cooldowns
-persist for the whole sender. The lane outbox drives retries; no background worker
-sends after the lane has stopped requesting delivery. Shared bot limits may also
-reflect scanner traffic; no scanner coordination or changes are made.
+At runtime only, the sender reads the scanner's existing credential at
+/opt/vivameda-crypto-early-scout/credentials.json. It requires a regular file with
+owner-only access, owned by root or vivameda-scout. No token is copied, printed,
+logged or stored. The installer checks metadata only. The service bounds capabilities
+to CAP_DAC_READ_SEARCH for reading the existing scanner-owned 0600 file and makes
+scanner data inaccessible. The owner-only shared test copies chat_id alone to lane
+configuration atomically, preserving ownership/mode, setting the explicit opt-in and
+keeping new_channel_confirmed=false, confirmed_at=null. Socket requests never write
+configuration. A different preconfigured destination or enabled confirmation refuses
+the preparation rather than overwriting it.
 
-Telegram sendMessage has no idempotency parameter. A crash between network acceptance
-and receipt commit, a timeout, a malformed success or a 5xx response is uncertain.
-Such events are durably HELD as ambiguous and **never automatically sent again**.
-This favours avoiding duplicates over claiming impossible exactly-once delivery.
-The unchanged lane client will keep retrying; the sender keeps refusing that held
-key. Owner review of the private database and channel is needed; there is no blind
-reset/retry command. Do not delete state or generate a new key to bypass a hold.
-Definite 400/401/403 API rejections queue a safe delayed retry; redirects and automatic
-chat migration are forbidden. Real successes are the only source of receipts.
+Root-only sender.sqlite under /var/lib/vivameda-early-lane-sender/ uses WAL/FULL to
+persist first payloads, event keys, statuses, cooldowns and whitelisted real Telegram
+chat_id/message_id/date receipts. A process lock serializes service and owner tests.
+Duplicate keys reuse the first event and receipt across restarts. Retry-After uses
+the greater of Telegram parameters and HTTP headers, including HTTP dates; global
+cooldowns persist. Queued messages gain late-age marking. The lane caller drives
+retries; the sender has no autonomous drain. Shared bot limits can affect both feeds;
+scanner operation is not coordinated or changed. No polling/webhook changes.
 
-The one-shot owner test uses a fixed message and a fixed channel-specific event key.
-It requires root and a destination already present in delivery.json, and checks the
-scanner-chat exclusion. It can test while new_channel_confirmed remains false; this
-exception is unavailable through the Unix protocol. It neither starts a service nor
-changes configuration. Repeat invocations return the original receipt. No actual
-Telegram test has been run by engineering.
+Telegram sendMessage cannot atomically commit with SQLite. Inflight crashes,
+timeouts, malformed successes and uncertain 5xx responses are held for owner review,
+never automatically resent. This avoids duplicates but may leave a message unconfirmed.
+Do not delete state or change keys to bypass a hold. Definite rejections/rate limits
+remain safely queued. Redirects and automatic chat migration are forbidden. Raw HTTP
+errors, response descriptions, token URLs and message bodies never enter logs.
 
-Offline tests use synthetic credentials, temporary state and fake HTTP adapters:
+The root-only direct test uses a fixed message/key, unavailable through the socket.
+Repeating the owner command returns the saved receipt. Status 429 gives retry_after;
+status 409 means review the held event. No real Telegram call was made by engineering.
+54 offline tests use temporary files, synthetic credentials and fake HTTP only:
 
 ```bash
 python3.12 -B -m unittest discover -s early_lane/sender/tests -v
 ```
 
-Existing scanner, lane runtime bundle, frozen rules, studies and running services
-are unchanged. Installing the sender does not establish full screening, completed
-rollout validation, channel confirmation or profitable outcomes.
-
-Telegram API references checked 17 October 2026:
-https://core.telegram.org/bots/api#sendmessage and
+Frozen rules and the lane runtime bundle are unchanged. A completed log-only report,
+real channel test and later owner-authorized activation remain separate gates. Tests
+prove neither full screening, universal discovery nor profitable outcomes. References
+checked 17 October 2026: https://core.telegram.org/bots/api#sendmessage and
 https://core.telegram.org/bots/api#responseparameters.
