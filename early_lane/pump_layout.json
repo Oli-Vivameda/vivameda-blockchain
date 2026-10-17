@@ -1,0 +1,1435 @@
+{
+  "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+  "official_commit": "639b87fb45c3adeffa6f7c4a1bf0cb85e392bf22",
+  "instructions": [
+    {
+      "name": "add_quote_control_mint",
+      "discriminator": [
+        2,
+        14,
+        61,
+        138,
+        170,
+        142,
+        14,
+        95
+      ],
+      "accounts": [
+        "authority",
+        "global",
+        "quote_control",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "add_quote_mint",
+      "discriminator": [
+        111,
+        121,
+        21,
+        56,
+        40,
+        24,
+        94,
+        209
+      ],
+      "accounts": [
+        "global",
+        "authority",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "admin_cto",
+      "discriminator": [
+        125,
+        126,
+        214,
+        134,
+        77,
+        229,
+        188,
+        89
+      ],
+      "accounts": [
+        "admin_set_creator_authority",
+        "global",
+        "mint",
+        "quote_mint",
+        "quote_token_program",
+        "associated_token_program",
+        "system_program",
+        "bonding_curve",
+        "current_creator",
+        "current_creator_quote_token_account",
+        "creator_vault",
+        "creator_vault_quote_token_account",
+        "holder_creator_vault",
+        "holder_creator_vault_quote_token_account",
+        "pump_amm",
+        "amm_global_config",
+        "pool_authority",
+        "pool",
+        "pump_amm_event_authority",
+        "coin_creator_vault_authority",
+        "coin_creator_vault_ata",
+        "sharing_config",
+        "pump_fees",
+        "pump_fees_event_authority",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "admin_set_idl_authority",
+      "discriminator": [
+        8,
+        217,
+        96,
+        231,
+        144,
+        104,
+        192,
+        5
+      ],
+      "accounts": [
+        "authority",
+        "global",
+        "idl_account",
+        "system_program",
+        "program_signer",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "admin_update_token_incentives",
+      "discriminator": [
+        209,
+        11,
+        115,
+        87,
+        213,
+        23,
+        124,
+        204
+      ],
+      "accounts": [
+        "authority",
+        "global",
+        "global_volume_accumulator",
+        "mint",
+        "global_incentive_token_account",
+        "associated_token_program",
+        "system_program",
+        "token_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "buy",
+      "discriminator": [
+        102,
+        6,
+        61,
+        18,
+        1,
+        218,
+        235,
+        234
+      ],
+      "accounts": [
+        "global",
+        "fee_recipient",
+        "mint",
+        "bonding_curve",
+        "associated_bonding_curve",
+        "associated_user",
+        "user",
+        "system_program",
+        "token_program",
+        "creator_vault",
+        "event_authority",
+        "program",
+        "global_volume_accumulator",
+        "user_volume_accumulator",
+        "fee_config",
+        "fee_program"
+      ]
+    },
+    {
+      "name": "buy_exact_quote_in_v2",
+      "discriminator": [
+        194,
+        171,
+        28,
+        70,
+        104,
+        77,
+        91,
+        47
+      ],
+      "accounts": [
+        "global",
+        "base_mint",
+        "quote_mint",
+        "base_token_program",
+        "quote_token_program",
+        "associated_token_program",
+        "fee_recipient",
+        "associated_quote_fee_recipient",
+        "buyback_fee_recipient",
+        "associated_quote_buyback_fee_recipient",
+        "bonding_curve",
+        "associated_base_bonding_curve",
+        "associated_quote_bonding_curve",
+        "user",
+        "associated_base_user",
+        "associated_quote_user",
+        "creator_vault",
+        "associated_creator_vault",
+        "sharing_config",
+        "global_volume_accumulator",
+        "user_volume_accumulator",
+        "associated_user_volume_accumulator",
+        "fee_config",
+        "fee_program",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "buy_exact_quote_in_v3",
+      "discriminator": [
+        225,
+        247,
+        80,
+        30,
+        213,
+        179,
+        132,
+        136
+      ],
+      "accounts": [
+        "global",
+        "base_mint",
+        "quote_mint",
+        "base_token_program",
+        "quote_token_program",
+        "bonding_curve",
+        "associated_base_bonding_curve",
+        "associated_quote_bonding_curve",
+        "user",
+        "associated_base_user",
+        "associated_quote_user",
+        "user_volume_accumulator",
+        "fee_config",
+        "buyback_fee_recipient",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "buy_exact_sol_in",
+      "discriminator": [
+        56,
+        252,
+        116,
+        8,
+        158,
+        223,
+        205,
+        95
+      ],
+      "accounts": [
+        "global",
+        "fee_recipient",
+        "mint",
+        "bonding_curve",
+        "associated_bonding_curve",
+        "associated_user",
+        "user",
+        "system_program",
+        "token_program",
+        "creator_vault",
+        "event_authority",
+        "program",
+        "global_volume_accumulator",
+        "user_volume_accumulator",
+        "fee_config",
+        "fee_program"
+      ]
+    },
+    {
+      "name": "buy_v2",
+      "discriminator": [
+        184,
+        23,
+        238,
+        97,
+        103,
+        197,
+        211,
+        61
+      ],
+      "accounts": [
+        "global",
+        "base_mint",
+        "quote_mint",
+        "base_token_program",
+        "quote_token_program",
+        "associated_token_program",
+        "fee_recipient",
+        "associated_quote_fee_recipient",
+        "buyback_fee_recipient",
+        "associated_quote_buyback_fee_recipient",
+        "bonding_curve",
+        "associated_base_bonding_curve",
+        "associated_quote_bonding_curve",
+        "user",
+        "associated_base_user",
+        "associated_quote_user",
+        "creator_vault",
+        "associated_creator_vault",
+        "sharing_config",
+        "global_volume_accumulator",
+        "user_volume_accumulator",
+        "associated_user_volume_accumulator",
+        "fee_config",
+        "fee_program",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "buy_v3",
+      "discriminator": [
+        7,
+        5,
+        29,
+        196,
+        245,
+        23,
+        101,
+        80
+      ],
+      "accounts": [
+        "global",
+        "base_mint",
+        "quote_mint",
+        "base_token_program",
+        "quote_token_program",
+        "bonding_curve",
+        "associated_base_bonding_curve",
+        "associated_quote_bonding_curve",
+        "user",
+        "associated_base_user",
+        "associated_quote_user",
+        "user_volume_accumulator",
+        "fee_config",
+        "buyback_fee_recipient",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "claim_cashback",
+      "discriminator": [
+        37,
+        58,
+        35,
+        126,
+        190,
+        53,
+        228,
+        197
+      ],
+      "accounts": [
+        "user",
+        "user_volume_accumulator",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "claim_cashback_v2",
+      "discriminator": [
+        122,
+        243,
+        204,
+        65,
+        94,
+        116,
+        29,
+        55
+      ],
+      "accounts": [
+        "user",
+        "user_volume_accumulator",
+        "quote_mint",
+        "quote_token_program",
+        "associated_token_program",
+        "associated_user_volume_accumulator",
+        "associated_quote_user",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "claim_token_incentives",
+      "discriminator": [
+        16,
+        4,
+        71,
+        28,
+        204,
+        1,
+        40,
+        27
+      ],
+      "accounts": [
+        "user",
+        "user_ata",
+        "global_volume_accumulator",
+        "global_incentive_token_account",
+        "user_volume_accumulator",
+        "mint",
+        "token_program",
+        "system_program",
+        "associated_token_program",
+        "event_authority",
+        "program",
+        "payer"
+      ]
+    },
+    {
+      "name": "close_user_volume_accumulator",
+      "discriminator": [
+        249,
+        69,
+        164,
+        218,
+        150,
+        103,
+        84,
+        138
+      ],
+      "accounts": [
+        "user",
+        "user_volume_accumulator",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "collect_creator_fee",
+      "discriminator": [
+        20,
+        22,
+        86,
+        123,
+        198,
+        28,
+        219,
+        132
+      ],
+      "accounts": [
+        "creator",
+        "creator_vault",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "collect_creator_fee_v2",
+      "discriminator": [
+        207,
+        17,
+        138,
+        242,
+        4,
+        34,
+        19,
+        56
+      ],
+      "accounts": [
+        "creator",
+        "creator_token_account",
+        "creator_vault",
+        "creator_vault_token_account",
+        "quote_mint",
+        "quote_token_program",
+        "associated_token_program",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "create",
+      "discriminator": [
+        24,
+        30,
+        200,
+        40,
+        5,
+        28,
+        7,
+        119
+      ],
+      "accounts": [
+        "mint",
+        "mint_authority",
+        "bonding_curve",
+        "associated_bonding_curve",
+        "global",
+        "mpl_token_metadata",
+        "metadata",
+        "user",
+        "system_program",
+        "token_program",
+        "associated_token_program",
+        "rent",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "create_v2",
+      "discriminator": [
+        214,
+        144,
+        76,
+        236,
+        95,
+        139,
+        49,
+        180
+      ],
+      "accounts": [
+        "mint",
+        "mint_authority",
+        "bonding_curve",
+        "associated_bonding_curve",
+        "global",
+        "user",
+        "system_program",
+        "token_program",
+        "associated_token_program",
+        "mayhem_program_id",
+        "global_params",
+        "sol_vault",
+        "mayhem_state",
+        "mayhem_token_vault",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "distribute_creator_fees",
+      "discriminator": [
+        165,
+        114,
+        103,
+        0,
+        121,
+        206,
+        247,
+        81
+      ],
+      "accounts": [
+        "mint",
+        "bonding_curve",
+        "sharing_config",
+        "creator_vault",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "distribute_creator_fees_v2",
+      "discriminator": [
+        255,
+        203,
+        19,
+        79,
+        244,
+        68,
+        8,
+        159
+      ],
+      "accounts": [
+        "payer",
+        "mint",
+        "bonding_curve",
+        "sharing_config",
+        "creator_vault",
+        "system_program",
+        "event_authority",
+        "program",
+        "creator_vault_quote_token_account",
+        "quote_mint",
+        "quote_token_program",
+        "associated_token_program"
+      ]
+    },
+    {
+      "name": "distribute_fee_to_holders",
+      "discriminator": [
+        98,
+        54,
+        145,
+        97,
+        2,
+        70,
+        173,
+        43
+      ],
+      "accounts": [
+        "global",
+        "holder_reward_claim_authority",
+        "mint",
+        "holder_rewards",
+        "holder_rewards_token_account",
+        "quote_mint",
+        "quote_token_program",
+        "associated_token_program",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "extend_account",
+      "discriminator": [
+        234,
+        102,
+        194,
+        203,
+        150,
+        72,
+        62,
+        229
+      ],
+      "accounts": [
+        "account",
+        "user",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "get_minimum_distributable_fee",
+      "discriminator": [
+        117,
+        225,
+        127,
+        202,
+        134,
+        95,
+        68,
+        35
+      ],
+      "accounts": [
+        "mint",
+        "bonding_curve",
+        "sharing_config",
+        "creator_vault"
+      ]
+    },
+    {
+      "name": "init_user_volume_accumulator",
+      "discriminator": [
+        94,
+        6,
+        202,
+        115,
+        255,
+        96,
+        232,
+        183
+      ],
+      "accounts": [
+        "payer",
+        "user",
+        "user_volume_accumulator",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "initialize",
+      "discriminator": [
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
+      ],
+      "accounts": [
+        "global",
+        "user",
+        "system_program"
+      ]
+    },
+    {
+      "name": "initialize_quote_control",
+      "discriminator": [
+        239,
+        73,
+        245,
+        173,
+        209,
+        177,
+        84,
+        66
+      ],
+      "accounts": [
+        "quote_control",
+        "user",
+        "system_program"
+      ]
+    },
+    {
+      "name": "migrate",
+      "discriminator": [
+        155,
+        234,
+        231,
+        146,
+        236,
+        158,
+        162,
+        30
+      ],
+      "accounts": [
+        "global",
+        "withdraw_authority",
+        "mint",
+        "bonding_curve",
+        "associated_bonding_curve",
+        "user",
+        "system_program",
+        "token_program",
+        "pump_amm",
+        "pool",
+        "pool_authority",
+        "pool_authority_mint_account",
+        "pool_authority_wsol_account",
+        "amm_global_config",
+        "wsol_mint",
+        "lp_mint",
+        "user_pool_token_account",
+        "pool_base_token_account",
+        "pool_quote_token_account",
+        "token_2022_program",
+        "associated_token_program",
+        "pump_amm_event_authority",
+        "event_authority",
+        "program",
+        "rent"
+      ]
+    },
+    {
+      "name": "migrate_bonding_curve_creator",
+      "discriminator": [
+        87,
+        124,
+        52,
+        191,
+        52,
+        38,
+        214,
+        232
+      ],
+      "accounts": [
+        "mint",
+        "bonding_curve",
+        "sharing_config",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "migrate_v2",
+      "discriminator": [
+        187,
+        203,
+        18,
+        31,
+        206,
+        237,
+        254,
+        41
+      ],
+      "accounts": [
+        "global",
+        "withdraw_authority",
+        "base_mint",
+        "quote_mint",
+        "bonding_curve",
+        "associated_base_bonding_curve",
+        "associated_quote_bonding_curve",
+        "user",
+        "system_program",
+        "pump_amm",
+        "pool",
+        "pool_authority",
+        "pool_authority_mint_account",
+        "pool_authority_quote_account",
+        "amm_global_config",
+        "lp_mint",
+        "user_pool_token_account",
+        "pool_base_token_account",
+        "pool_quote_token_account",
+        "base_token_program",
+        "quote_token_program",
+        "token_2022_program",
+        "associated_token_program",
+        "pump_amm_event_authority",
+        "rent",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "multi_hop_curve_swap",
+      "discriminator": [
+        225,
+        154,
+        117,
+        22,
+        215,
+        86,
+        246,
+        103
+      ],
+      "accounts": [
+        "global",
+        "fee_config",
+        "pump_amm_global_config",
+        "user",
+        "source_authority",
+        "source",
+        "destination",
+        "buyback_fee_recipient",
+        "token_program",
+        "token_2022_program",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "remove_quote_control_mint",
+      "discriminator": [
+        223,
+        7,
+        253,
+        26,
+        81,
+        165,
+        218,
+        166
+      ],
+      "accounts": [
+        "authority",
+        "global",
+        "quote_control",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "remove_quote_mint",
+      "discriminator": [
+        177,
+        65,
+        223,
+        38,
+        88,
+        209,
+        158,
+        155
+      ],
+      "accounts": [
+        "global",
+        "authority",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "sell",
+      "discriminator": [
+        51,
+        230,
+        133,
+        164,
+        1,
+        127,
+        131,
+        173
+      ],
+      "accounts": [
+        "global",
+        "fee_recipient",
+        "mint",
+        "bonding_curve",
+        "associated_bonding_curve",
+        "associated_user",
+        "user",
+        "system_program",
+        "creator_vault",
+        "token_program",
+        "event_authority",
+        "program",
+        "fee_config",
+        "fee_program"
+      ]
+    },
+    {
+      "name": "sell_v2",
+      "discriminator": [
+        93,
+        246,
+        130,
+        60,
+        231,
+        233,
+        64,
+        178
+      ],
+      "accounts": [
+        "global",
+        "base_mint",
+        "quote_mint",
+        "base_token_program",
+        "quote_token_program",
+        "associated_token_program",
+        "fee_recipient",
+        "associated_quote_fee_recipient",
+        "buyback_fee_recipient",
+        "associated_quote_buyback_fee_recipient",
+        "bonding_curve",
+        "associated_base_bonding_curve",
+        "associated_quote_bonding_curve",
+        "user",
+        "associated_base_user",
+        "associated_quote_user",
+        "creator_vault",
+        "associated_creator_vault",
+        "sharing_config",
+        "user_volume_accumulator",
+        "associated_user_volume_accumulator",
+        "fee_config",
+        "fee_program",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "sell_v3",
+      "discriminator": [
+        28,
+        146,
+        222,
+        119,
+        38,
+        196,
+        105,
+        213
+      ],
+      "accounts": [
+        "global",
+        "base_mint",
+        "quote_mint",
+        "base_token_program",
+        "quote_token_program",
+        "bonding_curve",
+        "associated_base_bonding_curve",
+        "associated_quote_bonding_curve",
+        "user",
+        "associated_base_user",
+        "associated_quote_user",
+        "user_volume_accumulator",
+        "fee_config",
+        "buyback_fee_recipient",
+        "system_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "set_creator",
+      "discriminator": [
+        254,
+        148,
+        255,
+        112,
+        207,
+        142,
+        170,
+        165
+      ],
+      "accounts": [
+        "set_creator_authority",
+        "global",
+        "mint",
+        "metadata",
+        "bonding_curve",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "set_max_curve_depth",
+      "discriminator": [
+        32,
+        154,
+        152,
+        219,
+        142,
+        108,
+        218,
+        165
+      ],
+      "accounts": [
+        "global",
+        "authority",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "set_mayhem_virtual_params",
+      "discriminator": [
+        61,
+        169,
+        188,
+        191,
+        153,
+        149,
+        42,
+        97
+      ],
+      "accounts": [
+        "sol_vault_authority",
+        "mayhem_token_vault",
+        "mint",
+        "global",
+        "bonding_curve",
+        "token_program",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "set_metaplex_creator",
+      "discriminator": [
+        138,
+        96,
+        174,
+        217,
+        48,
+        85,
+        197,
+        246
+      ],
+      "accounts": [
+        "mint",
+        "metadata",
+        "bonding_curve",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "set_params",
+      "discriminator": [
+        27,
+        234,
+        178,
+        52,
+        147,
+        2,
+        187,
+        141
+      ],
+      "accounts": [
+        "global",
+        "authority",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "set_quote_control_admin",
+      "discriminator": [
+        62,
+        79,
+        161,
+        211,
+        165,
+        170,
+        214,
+        210
+      ],
+      "accounts": [
+        "global",
+        "authority",
+        "quote_control",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "set_quote_control_mint_reserves",
+      "discriminator": [
+        116,
+        220,
+        107,
+        83,
+        191,
+        44,
+        32,
+        73
+      ],
+      "accounts": [
+        "authority",
+        "global",
+        "quote_control",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "set_quote_control_reserves_admin",
+      "discriminator": [
+        161,
+        195,
+        222,
+        165,
+        225,
+        101,
+        192,
+        62
+      ],
+      "accounts": [
+        "authority",
+        "global",
+        "quote_control",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "set_reserved_fee_recipients",
+      "discriminator": [
+        111,
+        172,
+        162,
+        232,
+        114,
+        89,
+        213,
+        142
+      ],
+      "accounts": [
+        "global",
+        "authority",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "set_virtual_quote_reserves",
+      "discriminator": [
+        101,
+        135,
+        191,
+        104,
+        9,
+        88,
+        20,
+        96
+      ],
+      "accounts": [
+        "global",
+        "authority",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "sweep_creator_fee",
+      "discriminator": [
+        32,
+        246,
+        191,
+        52,
+        8,
+        201,
+        73,
+        186
+      ],
+      "accounts": [
+        "payer",
+        "global",
+        "base_mint",
+        "quote_mint",
+        "quote_token_program",
+        "associated_token_program",
+        "system_program",
+        "bonding_curve",
+        "associated_quote_bonding_curve",
+        "recipient",
+        "associated_quote_recipient",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "sweep_protocol_fee",
+      "discriminator": [
+        8,
+        48,
+        190,
+        7,
+        182,
+        68,
+        183,
+        229
+      ],
+      "accounts": [
+        "payer",
+        "global",
+        "base_mint",
+        "quote_mint",
+        "quote_token_program",
+        "associated_token_program",
+        "system_program",
+        "bonding_curve",
+        "associated_quote_bonding_curve",
+        "recipient",
+        "associated_quote_recipient",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "sync_user_volume_accumulator",
+      "discriminator": [
+        86,
+        31,
+        192,
+        87,
+        163,
+        87,
+        79,
+        238
+      ],
+      "accounts": [
+        "user",
+        "global_volume_accumulator",
+        "user_volume_accumulator",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "toggle_cashback_enabled",
+      "discriminator": [
+        115,
+        103,
+        224,
+        255,
+        189,
+        89,
+        86,
+        195
+      ],
+      "accounts": [
+        "global",
+        "authority",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "toggle_create_v2",
+      "discriminator": [
+        28,
+        255,
+        230,
+        240,
+        172,
+        107,
+        203,
+        171
+      ],
+      "accounts": [
+        "global",
+        "authority",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "toggle_mayhem_mode",
+      "discriminator": [
+        1,
+        9,
+        111,
+        208,
+        100,
+        31,
+        255,
+        163
+      ],
+      "accounts": [
+        "global",
+        "authority",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "update_buyback_config",
+      "discriminator": [
+        251,
+        224,
+        171,
+        146,
+        160,
+        26,
+        113,
+        233
+      ],
+      "accounts": [
+        "global",
+        "authority",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "update_creator_fee_config",
+      "discriminator": [
+        61,
+        175,
+        160,
+        249,
+        66,
+        66,
+        136,
+        175
+      ],
+      "accounts": [
+        "global",
+        "authority",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "update_global_authority",
+      "discriminator": [
+        227,
+        181,
+        74,
+        196,
+        208,
+        21,
+        97,
+        213
+      ],
+      "accounts": [
+        "global",
+        "authority",
+        "new_authority",
+        "event_authority",
+        "program"
+      ]
+    },
+    {
+      "name": "update_holder_reward_config",
+      "discriminator": [
+        225,
+        252,
+        66,
+        4,
+        199,
+        35,
+        236,
+        16
+      ],
+      "accounts": [
+        "global",
+        "authority",
+        "event_authority",
+        "program"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "CompleteEvent",
+      "discriminator": [
+        95,
+        114,
+        97,
+        156,
+        212,
+        46,
+        152,
+        8
+      ]
+    },
+    {
+      "name": "CreateEvent",
+      "discriminator": [
+        27,
+        114,
+        169,
+        77,
+        222,
+        235,
+        99,
+        118
+      ]
+    },
+    {
+      "name": "TradeEvent",
+      "discriminator": [
+        189,
+        219,
+        127,
+        211,
+        78,
+        230,
+        97,
+        238
+      ]
+    }
+  ]
+}
