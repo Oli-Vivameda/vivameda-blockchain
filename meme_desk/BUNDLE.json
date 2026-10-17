@@ -1,0 +1,22 @@
+{
+  "component": "meme_desk_v1",
+  "preregistration_commit": "376c3fed540e89aeee8d8d26c2ce18636c409acf",
+  "schema": 1,
+  "sha256": {
+    "README.md": "d944137c4ecbc82e17647980208c348aca4a1a3ad04b4a0dcd2a086332ac86c3",
+    "REPLAY_PROTOCOL.md": "62c4b3e4b13dbc97a3c973cf22b9fb40eb78a2e006c315e20abd8df92b5195a2",
+    "common.py": "68203a84dc556357c026718fbca16cc9b232cbc2762877a40473222b6c8a753b",
+    "config.json": "701474d4653f201a331007584a34494041746e362df59558043a2cc198234c25",
+    "delivery.py": "33d8fa260ceae7850b62537c1b9ee551294bb096e9c94871895495e2520e3a61",
+    "exporter.py": "2cccb950fab9859e54afec820af18287f5b489dcc3539e636926f2bef6789cf0",
+    "install.py": "d472e20964eab553172c7e2263a3cfce03ecc72ad31f84c7749acb08f9ca8043",
+    "journal.py": "abf2c8fdebc2c3cc30c8d1513c19f5da70ae42afcb19d2f31c3953deb1483ba8",
+    "owner.py": "16871a05d86130e1bdee4a5dd5f1e60f4696298b9540fa4f2d4570c1da9b1d3c",
+    "replay.py": "470e6544a8a229f4bc5e485792c0e8e3afd04246309d7616f5de565bd84f033a",
+    "reserves.py": "ea7a80b383eae64f328b9f349671d4d486e37c4da2d40de3be614b72d64bff2a",
+    "service.py": "4c95331af27b3a704ec7a6c996aadd51ca3a4b3c73ff8d49d1cb67a2b5244e4b",
+    "tests/test_desk.py": "99d4789c90a83b990f0c94bb6ee16cc016b85d5220ce5602ac190fad6ccbf200",
+    "tickets.py": "000a71c331468fd28335da4a237ab72aa767977bd979f86eda2161190099ed56",
+    "verify.py": "57188a78561b26ae954142b497e34da4c6a18df4050a5fc8a9f1897c0f6d802c"
+  }
+}

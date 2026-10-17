@@ -1,0 +1,18 @@
+{
+  "version": "meme-desk-v1-20261017",
+  "mode": "human_review",
+  "phantom_public_address": "TBD",
+  "destination": null,
+  "destination_confirmed": false,
+  "delivery_enabled": false,
+  "poll_seconds": 5,
+  "max_alert_age_s": 60,
+  "min_liquidity_usd": 25000,
+  "max_round_trip_cost_pct": 6,
+  "max_open_taken": 3,
+  "daily_review_loss_usd": 15,
+  "cumulative_halt_loss_usd": 25,
+  "loss_definition": "sum of negative owner-attested closed net PnL; profits do not refund the loss budget; UTC days",
+  "source": "owner-export-only",
+  "network_calls_from_desk": false
+}
