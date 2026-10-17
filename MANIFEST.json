@@ -784,7 +784,7 @@
     "docs/DFLOW_DECODER_20261004.md": "637e5f3483506fad526aa963de39f8c3439ef584ac7b3d032f4e3d3e7cf7e6a0",
     "docs/PUBLICATION_VALIDATION_20261016.json": "8a42f8ed36703f7695ed99edfe5ce6a36246172e769a711d153ddf98f19e0474",
     "docs/TRADINGVIEW_HANDOVER_20261008.md": "58659fbf12d889192f72bf11525daa97fd42c29cc5c229b6c1a7e46506daa894",
-    "docs/REPOSITORY_MAP.md": "88803c113e5118d3d4c0a531c7c7a5f7747d57278c66ed8cf5856fb43dd22a0e",
+    "docs/REPOSITORY_MAP.md": "0171fba4801cb124282e68a111f2a5ec1cefb6e0d9f2ad6d3e8a45db6283a4ac",
     "docs/REPOSITORY_POLICY.md": "26aead3086849e82366e6c689658108ca237365ba9450cb29a86db8afa8404ce",
     "docs/VALIDATION.md": "0eeadea278bc4fb7bc6e94e12336b72cc5a29ddadde4caa0f8aa10241f1da326",
     "docs/FULL_SETUP.md": "4da331f597786c06de8a83e5bf37f8f118fdba124e28d65f3ffedaee37568b67",
@@ -862,6 +862,8 @@
     "agent/context.py": "1020fdbfb3ce80a1bf6497288effd17e3f0ae9baf826dfd47216a7b8a2a8c94a",
     "agent/knowledge_cards.json": "398b8261a0cdf22cc4cdf2d87bcc32c5f700146674ced119db390eee93224a27",
     "legacy/scout_learning.py": "835b3e6cd854ddbb11b0a8af4d2fa8c0fe64b468533e7a14ea714df07e6b5c44",
+    "notifications/README.md": "62f4e677b55ed814decd1ad2c95307e0a8f7624b9bd65da38f603be4e04be0bf",
+    "notifications/mute.py": "db2588c4de3e7d5e6650dc121e30cfe349ac211ec8699d8c3de1e6f9e2a134e1",
     "scout/test_dflow_decoder.py": "f3b1b48352e2e39c41de1fd53506df76dafe2197a386e1e593545ec604e7d171",
     "scout/early_scout.py": "6790a2c192bbdecfcd17abbe6f41f774675f059e5fab52edb0b6b2ab99b4dbf1",
     "scout/test_discovery_guard.py": "ca021355e6e5ad33e6c29ff39dbcfb1fe471ecbdcfbe7d9dc0b46c0e953b7dfe",
@@ -1108,7 +1110,8 @@
     "agent/coin-classification-v1/install_agent_rules.py": "d7784767ce52b0b7ba7021b8db4bbdb6a4d4c3fe4ea93ca39ac64c9030d65b75",
     "agent/coin-classification-v1/AGENT_RULES.md": "cb7166ebbb7c03b04cf480244253868687f590d893c562ac4c6deec133520e7f",
     "agent/coin-classification-v1/classification.py": "3b0ed9207b96b6eaedb43715fc5f58b9e08ac5af9a37077f3fc60391a454bf0f",
-    "agent/coin-classification-v1/test_install_agent_rules.py": "13448f49b2d29ccdf874c9bfe536278543b3b7c93e7b951da931df5d634a4a13"
+    "agent/coin-classification-v1/test_install_agent_rules.py": "13448f49b2d29ccdf874c9bfe536278543b3b7c93e7b951da931df5d634a4a13",
+    "notifications/tests/test_policy.py": "dace057d699ec09fc45dd6173ae563f4ce8e774c369a9f5fb3484cfe0148420f"
   },
   "showcase": {
     "entry_point": "docs/FULL_SETUP.md",
