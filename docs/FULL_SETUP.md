@@ -1,7 +1,7 @@
 # Full crypto setup showcase
 
 > Sender update, 17 October 2026: [early_lane/sender](../early_lane/sender/README.md)
-> now implements the existing Telegram Unix-socket contract. Source and 39 offline
+> now implements the existing Telegram Unix-socket contract. Source and 46 offline
 > tests prepared; not installed, started or enabled. Channel is TBD. Owner-only
 > [install/test commands](../early_lane/sender/OWNER_COMMANDS.md) change no delivery
 > configuration. The repaired lane's log-only observation and pending final result

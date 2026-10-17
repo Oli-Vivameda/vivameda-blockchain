@@ -9,6 +9,13 @@ import subprocess
 import sys
 import tempfile
 
+def snapshot_command(snapshot, command):
+    # Isolated Python deliberately omits the script directory. Add only the
+    # private, hash-verified snapshot before loading reviewed local helpers.
+    bootstrap = ("import runpy,sys; sys.path.insert(0,sys.argv.pop(1)); "
+                 "sys.argv=sys.argv[1:]; runpy.run_path(sys.argv[0],run_name='__main__')")
+    return [sys.executable, '-I', '-B', '-c', bootstrap, str(snapshot)] + command
+
 def main():
     p = argparse.ArgumentParser(); p.add_argument('--expected-bundle', required=True)
     p.add_argument('command', choices=['install', 'serve', 'test-channel'])
@@ -34,5 +41,5 @@ def main():
         if a.command == 'install': command = [str(snap / 'install.py'), '--expected-bundle', a.expected_bundle] + args
         else: command = [str(snap / 'sender.py'), a.command] + args
         # Snapshot contains only reviewed files; safe path first for imports.
-        raise SystemExit(subprocess.run([sys.executable, '-I', '-B'] + command, cwd=snap).returncode)
+        raise SystemExit(subprocess.run(snapshot_command(snap, command), cwd=snap).returncode)
 if __name__ == '__main__': main()

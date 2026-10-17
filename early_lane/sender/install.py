@@ -9,6 +9,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+from sender import credential_metadata_valid
 
 CREDENTIAL = Path('/opt/vivameda-crypto-early-scout/credentials.json')
 UNIT_PATH = Path('/etc/systemd/system/vivameda-early-lane-sender.service')
@@ -41,7 +42,7 @@ ProtectKernelModules=yes
 ProtectControlGroups=yes
 RestrictSUIDSGID=yes
 LockPersonality=yes
-CapabilityBoundingSet=
+CapabilityBoundingSet=CAP_DAC_READ_SEARCH
 RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
 ReadOnlyPaths={CREDENTIAL} /etc/vivameda-early-lane/delivery.json
 ReadWritePaths={STATE} /run/vivameda-early-lane-sender
@@ -66,8 +67,8 @@ def main():
         if hashlib.sha256(data).hexdigest() != expected: raise SystemExit('file_mismatch')
     # Metadata only. Neither the installer nor tests read the live credential.
     st = CREDENTIAL.lstat()
-    if not stat.S_ISREG(st.st_mode) or st.st_uid != 0 or st.st_mode & 0o027:
-        raise SystemExit('credential_requires_root_owned_nonwritable_private_file')
+    if not credential_metadata_valid(st):
+        raise SystemExit('credential_requires_root_or_scanner_owned_owner_only_file')
     pwd.getpwnam('vivameda-early-lane')
     release = Path('/opt/vivameda-early-lane-sender') / a.expected_bundle
     if UNIT_PATH.exists() or UNIT_PATH.is_symlink() or release.exists() or STATE.exists() or STATE.is_symlink():

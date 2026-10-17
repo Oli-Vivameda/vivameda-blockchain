@@ -4,7 +4,7 @@
 
 See [sender/ASTRA_HANDOVER.md](sender/ASTRA_HANDOVER.md) for the independent sender
 bundle, hashes, install-without-start command and owner-only test-message command.
-39 offline sender tests; source only, not installed/started/enabled. delivery.json,
+46 offline sender tests; source only, not installed/started/enabled. delivery.json,
 existing credential and lane runtime are untouched. No Telegram call was made.
 The numeric NEW channel remains missing. Supersedes older 'sender absent' source
 statements below; dated observation/deployment evidence remains unchanged.
@@ -48,7 +48,7 @@ new 7200s log-only run; old commands must not be rerun over the installation.
 | `tests/test_evidence.py` | `c8105acba588c0eead148da73533cb102a62aac69ffd188035f0d8800e975a87` |
 | `tests/test_lane.py` | `9c57d4ac9e83b02dc79dad164397bb85dbef65607bc98ff5e3a5b3fe0e7c2868` |
 | `tests/test_network_contracts.py` | `fdb46921a631f9ee57ff753b09062567ce54e3493a8b1da7f234fa814cd38f1f` |
-| `tests/test_pricing.py` | `add924f4c3f79616a5cf0e6d9ebff2d010fb86450981c46d2b50051c4ba1e377` |
+| `tests/test_pricing.py` | `add924f4c3f79616a5cf0e6d9ebff2d010fb86450982c46d2b50051c4ba1e377` |
 | `tests/test_source_repair.py` | `fde4f74fa86b48235cec9a547db06d0cf0c5e08bdd767e455757e43f3ca42d1c` |
 | `tests/test_transport_owner.py` | `ffab1859a4d54453cc0bce5d5f2a2fdf8513fe0d39c12e2b42167a5061c6e001` |
 | `transport.py` | `98430ed385acd18319deb7e5186614dfe3a99fa3f36ad6cb0a946f624aa3e321` |
@@ -103,3 +103,9 @@ calendar date must be calculated from that eventual receipt, not the old planned
 31 October date. Daily summary remains 08:00 Asia/Nicosia. Review observed
 multiples/dead/median peak time and suppressed 10x rate with coverage/denominators;
 label associations exploratory and change no filters automatically.
+
+Sender ownership correction: the owner reported vivameda-scout:vivameda-scout 0600
+for the existing credential; the initial sender installer refused before writes.
+The corrected independent sender preserves ownership/permissions, accepts the existing
+scanner owner and adds the bounded read capability. See sender/ASTRA_HANDOVER.md
+and its superseding install-only command. No credential/config/service mutation.

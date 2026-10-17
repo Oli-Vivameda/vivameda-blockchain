@@ -14,14 +14,17 @@ HTML text, an event key and a channel. Replies contain status 200 and a whitelis
 Telegram receipt, status 429 with retry_after, or a fixed safe refusal reason.
 Messages and raw HTTP errors are never logged.
 
-Every send re-reads the existing root-owned
-`/opt/vivameda-crypto-early-scout/credentials.json` at runtime only. The file is never
-copied, changed or opened during installation/testing. Fields are the scanner's
+Every send re-reads the existing owner-only
+`/opt/vivameda-crypto-early-scout/credentials.json` at runtime only. The credential must be a regular owner-only file owned by root or the existing
+vivameda-scout account. Its existing ownership and permissions are preserved. The
+file is never copied, changed or opened during installation/testing. Fields are the scanner's
 existing `bot_token` and `chat_id`. Only the numeric channel in root-owned
 `/etc/vivameda-early-lane/delivery.json` can receive messages; the scanner chat is
 always forbidden. An unknown/non-numeric scanner chat fails closed. Normal socket
 requests also require new_channel_confirmed=true, a positive numeric confirmed_at,
-and the exact socket above. No component here writes delivery.json.
+and the exact socket above. No component here writes delivery.json. The root service bounds its capabilities to
+CAP_DAC_READ_SEARCH so it can read a scanner-owned 0600 credential without changing
+its owner or permissions; scanner data remains explicitly inaccessible.
 
 Root-only `/var/lib/vivameda-early-lane-sender/sender.sqlite` persists immutable first
 payloads, states, retries and real message_id/chat_id/date receipts with WAL and

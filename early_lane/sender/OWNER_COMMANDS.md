@@ -13,7 +13,10 @@ its contents, creates only the new sender release/state/unit, and daemon-reloads
 It never changes the existing credential, delivery.json, scanner, lane units or rules.
 It refuses an existing sender installation rather than overwriting it. Python 3.12
 and the existing vivameda-early-lane account are required. Existing credential must
-be a root-owned regular file, not group/world writable or world readable.
+be an owner-only regular file (0400/0600) owned by root or vivameda-scout. Existing
+scanner ownership and permissions are preserved. The service's only bounded
+capability is CAP_DAC_READ_SEARCH for this runtime read; no permission change or
+credential copy is required.
 
 ```bash
 python3 - <<'PY'
@@ -21,8 +24,8 @@ from pathlib import Path
 import hashlib, sys
 p = Path('/var/lib/vivameda-engineering/repo/early_lane/sender/owner.py')
 b = p.read_bytes()
-assert hashlib.sha256(b).hexdigest() == 'e209057c437d9ca24d9220a2de13ac4e1ef18c3ded434850b63cd10d2b58f268', 'sender owner.py hash mismatch'
-sys.argv = [str(p), '--expected-bundle', 'f5b6bd39c8e12fe323c0242d5a81d437e59ee190b4c67c09ba3f4e17b3fd1dcc', 'install']
+assert hashlib.sha256(b).hexdigest() == '4f49e1ed7cd166527c2df008e4231fdf15bc2e2ecb040c973e6949209d2a3274', 'sender owner.py hash mismatch'
+sys.argv = [str(p), '--expected-bundle', '5ae872c9f5295ef58cc954d7f9eddac6319fecab2afebe6cf3f81d13b706518b', 'install']
 exec(compile(b, str(p), 'exec'), {'__name__': '__main__', '__file__': str(p)})
 PY
 ```
@@ -30,8 +33,10 @@ PY
 Expected JSON: installed=true, started=false, enabled=false,
 delivery_config_changed=false, credential_contents_read=false.
 If checks fail, retain state and report the fixed error; do not change permissions
-or bypass a hash. Metadata was inaccessible to the engineering account, so the
-owner-side check remains necessary. Partial installation failures are visible and
+or bypass a hash. Owner metadata confirmed vivameda-scout ownership and mode 0600. The original
+sender installer wrongly assumed root ownership and stopped before any install
+writes. This corrected bundle accepts the existing scanner account and still
+rejects other owners, symlinks and all group/world access. Partial installation failures are visible and
 require review; the installer does not start anything or remove existing state.
 
 ## 2. Owner-only channel test, when the channel ID is available
@@ -52,10 +57,10 @@ Repeating the command returns the saved receipt rather than sending another mess
 python3 - <<'PY'
 from pathlib import Path
 import hashlib, sys
-p = Path('/opt/vivameda-early-lane-sender/f5b6bd39c8e12fe323c0242d5a81d437e59ee190b4c67c09ba3f4e17b3fd1dcc/owner.py')
+p = Path('/opt/vivameda-early-lane-sender/5ae872c9f5295ef58cc954d7f9eddac6319fecab2afebe6cf3f81d13b706518b/owner.py')
 b = p.read_bytes()
-assert hashlib.sha256(b).hexdigest() == 'e209057c437d9ca24d9220a2de13ac4e1ef18c3ded434850b63cd10d2b58f268', 'sender owner.py hash mismatch'
-sys.argv = [str(p), '--expected-bundle', 'f5b6bd39c8e12fe323c0242d5a81d437e59ee190b4c67c09ba3f4e17b3fd1dcc', 'test-channel', '--', '--expected-channel', 'PASTE_NUMERIC_NEW_CHANNEL_ID']
+assert hashlib.sha256(b).hexdigest() == '4f49e1ed7cd166527c2df008e4231fdf15bc2e2ecb040c973e6949209d2a3274', 'sender owner.py hash mismatch'
+sys.argv = [str(p), '--expected-bundle', '5ae872c9f5295ef58cc954d7f9eddac6319fecab2afebe6cf3f81d13b706518b', 'test-channel', '--', '--expected-channel', 'PASTE_NUMERIC_NEW_CHANNEL_ID']
 exec(compile(b, str(p), 'exec'), {'__name__': '__main__', '__file__': str(p)})
 PY
 ```
@@ -79,6 +84,6 @@ separate. No start/enable command is supplied: continuous delivery is outside th
 task and requires the owner-confirmed channel, a reviewed rollout result and a later
 explicit activation action. Test-channel confirmation alone does not enable it.
 
-Bundle SHA-256: f5b6bd39c8e12fe323c0242d5a81d437e59ee190b4c67c09ba3f4e17b3fd1dcc
+Bundle SHA-256: 5ae872c9f5295ef58cc954d7f9eddac6319fecab2afebe6cf3f81d13b706518b
 
-Bootstrap SHA-256: e209057c437d9ca24d9220a2de13ac4e1ef18c3ded434850b63cd10d2b58f268
+Bootstrap SHA-256: 4f49e1ed7cd166527c2df008e4231fdf15bc2e2ecb040c973e6949209d2a3274

@@ -14,6 +14,7 @@ from unittest.mock import Mock, patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import sender
 import install
+import owner
 
 CHANNEL = '-1001234567890'
 SCANNER = '-1009999999999'
@@ -218,10 +219,51 @@ class SocketTests(unittest.TestCase):
             finally:
                 a.close(); b.close(); journal.close()
 
+class CredentialOwnershipTests(unittest.TestCase):
+    def setUp(self):
+        self.lookup = patch.object(sender.pwd, 'getpwnam', return_value=Mock(pw_uid=996))
+        self.lookup.start(); self.addCleanup(self.lookup.stop)
+    def test_existing_scanner_private_owner_is_accepted(self):
+        self.assertTrue(sender.credential_metadata_valid(Mock(st_mode=0o100600, st_uid=996)))
+        self.assertTrue(sender.credential_metadata_valid(Mock(st_mode=0o100400, st_uid=996)))
+    def test_root_private_owner_remains_accepted(self):
+        self.assertTrue(sender.credential_metadata_valid(Mock(st_mode=0o100600, st_uid=0)))
+    def test_other_owner_group_read_or_write_and_symlinks_refused(self):
+        for mode, uid in ((0o100600, 994), (0o100640, 996), (0o100620, 996), (0o100604, 996), (0o120777, 996)):
+            self.assertFalse(sender.credential_metadata_valid(Mock(st_mode=mode, st_uid=uid)))
+    def test_runtime_reads_scanner_owned_dummy_file_only(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'dummy.json'; path.write_text(json.dumps({'bot_token': TOKEN, 'chat_id': SCANNER})); path.chmod(0o600)
+            with patch.object(sender.os, 'fstat', return_value=Mock(st_mode=0o100600, st_uid=996)):
+                self.assertEqual(sender.secure_json(path, private=True)['bot_token'], TOKEN)
+                with self.assertRaises(sender.Refused): sender.secure_json(path)
+    def test_installer_metadata_check_never_opens_credential(self):
+        source = Path(install.__file__).read_text()
+        self.assertIn('credential_metadata_valid(st)', source)
+        self.assertIn('st = CREDENTIAL.lstat()', source)
+        self.assertNotIn('CREDENTIAL.open', source); self.assertNotIn('CREDENTIAL.read', source)
+    def test_root_service_can_read_existing_scanner_private_file(self):
+        unit = install.unit_text(Path('/opt/vivameda-early-lane-sender/' + 'a' * 64))
+        self.assertIn('CapabilityBoundingSet=CAP_DAC_READ_SEARCH', unit)
+        self.assertIn('InaccessiblePaths=-/opt/vivameda-crypto-early-scout/data', unit)
+
+class SnapshotBootstrapTests(unittest.TestCase):
+    def test_isolated_child_imports_only_reviewed_snapshot_helper(self):
+        import subprocess
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / 'reviewed_helper.py').write_text('VALUE = 42\n')
+            (root / 'entry.py').write_text('import reviewed_helper, sys\nprint(reviewed_helper.VALUE, sys.argv[1])\n')
+            argv = owner.snapshot_command(root, [str(root / 'entry.py'), 'fixture'])
+            result = subprocess.run(argv, capture_output=True, text=True, cwd='/')
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout.strip(), '42 fixture')
+            self.assertIn('-I', argv)
+
 class InstallerTests(unittest.TestCase):
     def test_unit_is_isolated_and_never_enables_or_starts(self):
         unit = install.unit_text(Path('/opt/vivameda-early-lane-sender/' + 'a' * 64))
-        for expected in ('User=root', 'Group=vivameda-early-lane', 'ProtectSystem=strict', 'CapabilityBoundingSet=', 'RuntimeDirectoryMode=0750', 'StateDirectoryMode=0700'):
+        for expected in ('User=root', 'Group=vivameda-early-lane', 'ProtectSystem=strict', 'CapabilityBoundingSet=CAP_DAC_READ_SEARCH', 'RuntimeDirectoryMode=0750', 'StateDirectoryMode=0700'):
             self.assertIn(expected, unit)
         source = Path(install.__file__).read_text()
         self.assertNotIn("'start'", source); self.assertNotIn("'enable'", source)

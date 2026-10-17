@@ -28,12 +28,19 @@ TEST_TEXT = 'EARLY LANE CHANNEL TEST. Owner requested; not a token alert. Delive
 class Refused(Exception):
     """Only fixed public reason codes may be returned to clients."""
 
+def credential_metadata_valid(st):
+    """Trust the existing scanner account without changing its private file."""
+    scanner_uid = pwd.getpwnam('vivameda-scout').pw_uid
+    return (stat.S_ISREG(st.st_mode) and st.st_uid in (0, scanner_uid)
+            and not st.st_mode & 0o077)
+
 def secure_json(path, *, private=False):
     fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
     with os.fdopen(fd, 'rb') as stream:
         st = os.fstat(stream.fileno())
-        if not stat.S_ISREG(st.st_mode) or st.st_uid != 0 or st.st_mode & (0o027 if private else 0o022):
-            raise Refused('unsafe_root_file')
+        valid = credential_metadata_valid(st) if private else (stat.S_ISREG(st.st_mode) and st.st_uid == 0 and not st.st_mode & 0o022)
+        if not valid:
+            raise Refused('unsafe_protected_file')
         raw = stream.read(16385)
     if len(raw) > 16384:
         raise Refused('root_file_too_large')

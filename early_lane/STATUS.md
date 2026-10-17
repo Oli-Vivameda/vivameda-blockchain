@@ -24,12 +24,18 @@ Keep runtime rows/logs private. Publish aggregates and limitations. See OWNER_CO
 
 The separate sender/ package implements the existing root Unix-socket contract,
 durable idempotency and Telegram receipts, persisted Retry-After, exact configured
-channel enforcement and scanner-chat exclusion. 39 new offline tests; source only.
+channel enforcement and scanner-chat exclusion. 46 new offline tests; source only.
 NOT installed, started or enabled. No Telegram message sent, credential contents
 read by engineering, delivery.json change or lane executable-bundle change.
 The current log-only run and its pending result remain as reported above.
 See [sender handover](sender/ASTRA_HANDOVER.md) and the
 [owner install-only/test commands](sender/OWNER_COMMANDS.md). The new numeric channel
 and separately authorized configuration are still missing. Uncertain network sends
-are held for owner review, never automatically resent. Repository gate: 975 tests
-across 27 suites, including 109 lane tests and 39 sender tests.
+are held for owner review, never automatically resent. Repository gate: 982 tests
+across 27 suites, including 109 lane tests and 46 sender tests.
+
+Owner installation attempt stopped before writes at the credential ownership check.
+Metadata confirms the existing scanner owns its 0600 credential. Corrected sender
+bundle accepts root or vivameda-scout owner-only files, preserves that file, and
+retains root-only delivery config checks. 46 sender tests / 982 repository tests.
+Sender installation and real channel test remain pending; nothing was started.

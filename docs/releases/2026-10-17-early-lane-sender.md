@@ -7,14 +7,14 @@ was installed, started, stopped or enabled, no delivery config was edited and no
 Telegram request was made. Credential metadata was inaccessible to engineering;
 no credential contents were opened.
 
-39 offline sender tests pass on server Python 3.12. Full scripts/verify_release.py:
-975 tests in 27 suites, 393 file hashes verified. Prepared unit syntax passes
+46 offline sender tests pass on server Python 3.12. Full scripts/verify_release.py:
+982 tests in 27 suites, 393 file hashes verified. Prepared unit syntax passes
 systemd-analyze verify using an existing interpreter placeholder before installation;
 the owner installer checks the actual new source/runtime paths during installation.
 No live root sandbox or channel delivery validation is claimed.
 
-BUNDLE.json SHA-256: f5b6bd39c8e12fe323c0242d5a81d437e59ee190b4c67c09ba3f4e17b3fd1dcc.
-Bootstrap SHA-256: e209057c437d9ca24d9220a2de13ac4e1ef18c3ded434850b63cd10d2b58f268.
+BUNDLE.json SHA-256: 5ae872c9f5295ef58cc954d7f9eddac6319fecab2afebe6cf3f81d13b706518b.
+Bootstrap SHA-256: 4f49e1ed7cd166527c2df008e4231fdf15bc2e2ecb040c973e6949209d2a3274.
 
 [Sender design/limits](../../early_lane/sender/README.md),
 [owner install-without-start and one-message test](../../early_lane/sender/OWNER_COMMANDS.md),
@@ -25,3 +25,16 @@ open. Telegram's API cannot atomically commit with SQLite; uncertain sends are h
 instead of automatically repeated. Normal queue retries honour persisted cooldowns.
 The two-hour rollout's aggregate result is still pending. Source publication does
 not confirm delivery readiness, universal discovery or profitable outcomes.
+
+## Owner-reported credential ownership correction
+
+The first install stopped before writes: existing credential is a regular 0600 file
+owned by vivameda-scout, not root as initially assumed. Source now accepts only root
+or the existing scanner UID with owner-only access. Root-only delivery configuration
+checks stay intact. Installer still inspects metadata only; runtime reads the existing
+file without copying or changing it. The sandbox bounds capabilities to
+CAP_DAC_READ_SEARCH to permit that read, with scanner data inaccessible. Seven added
+regression tests pass: 46 sender tests, 982 full repository tests across 27 suites;
+393 file hashes and proposed unit syntax verified. No service installed/started or
+Telegram message sent by engineering. The first failed attempt requires no cleanup;
+use the corrected bundle command linked above.

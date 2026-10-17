@@ -8,7 +8,7 @@
 Experimental read-only Pump.fun observer, separate from the scanner. The owner
 applied the RPC pricing repair and started a new two-hour log-only run. Supplied
 startup logs show fresh input/prices and no selected alerts. Final validation is
-pending. Telegram channel remains TBD. The separate sender is built with 39 offline
+pending. Telegram channel remains TBD. The separate sender is built with 46 offline
 tests; it is not installed, started or enabled. No trading code, wallet connection,
 signup or paid fallback. Meme desk remains paused.
 
