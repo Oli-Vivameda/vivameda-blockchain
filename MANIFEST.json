@@ -771,7 +771,7 @@
     "docs/FULL_SETUP.md": "4da331f597786c06de8a83e5bf37f8f118fdba124e28d65f3ffedaee37568b67",
     "docs/MONITORS.md": "c4c26f29431b8aaa2a339fa6e23cf70cd2d4212cb31229009b402ddd46f0841b",
     "docs/PUBLICATION_VALIDATION_20261016.json": "8a42f8ed36703f7695ed99edfe5ce6a36246172e769a711d153ddf98f19e0474",
-    "docs/REPOSITORY_MAP.md": "0f424242f30ed1269a579c7d7c18703a58ed770f0ec8f2736bf8ab1f1ae4bab3",
+    "docs/REPOSITORY_MAP.md": "36fc2e69f69f7a6b2a19bd3791defbd055f3138eccf6ea2753d9a16ecde5d984",
     "docs/REPOSITORY_POLICY.md": "26aead3086849e82366e6c689658108ca237365ba9450cb29a86db8afa8404ce",
     "docs/SETUP.md": "0c5ba2e5780db52d942178616d9acee83a2b317625859c1f020a72a6854857b0",
     "docs/TRADINGVIEW_HANDOVER_20261008.md": "58659fbf12d889192f72bf11525daa97fd42c29cc5c229b6c1a7e46506daa894",
@@ -1083,7 +1083,9 @@
     "scripts/test_verify_release.py": "6e7e2a7d36a6a55827373633d98716f7a22e4e051a52be01c303624fbc025ea4",
     "scripts/test_wallet_diagnostics.py": "4e4065747ef1d246f590c5fa8472e51983357afad13727e8b6acf471291c5c40",
     "scripts/verify_release.py": "7b44d5cfc9ca3eba60accb8df84ed8f59c92f32c137027236f113dd3a16b85e9",
-    "scripts/wallet_ops.py": "1f212c7a2fc489ff1fdf30e46619038f89d942d9bd442b6d90a0d027180b8c37"
+    "scripts/wallet_ops.py": "1f212c7a2fc489ff1fdf30e46619038f89d942d9bd442b6d90a0d027180b8c37",
+    "learning/robinhood_alert_review/REVIEW_20261017.md": "bb60a6a0f6a9715b1a2b956e852cc18283b9fdb9f66935b8b9279a493489d7b3",
+    "learning/robinhood_alert_review/HANDOVER_INDEX.md": "fb37598d10df8f78a70011c3bf3e3e51411905bc1ffc9c2395c336a923902630"
   },
   "showcase": {
     "entry_point": "docs/FULL_SETUP.md",
@@ -1275,5 +1277,30 @@
     "private_output_only": true,
     "status": "six_private_samples_diagnosed",
     "tests_passed": 4
+  },
+  "robinhood_alert_review_20261017": {
+    "status": "preliminary_retrospective_remaining_work_paused",
+    "aggregate_publication_owner_approved": "2026-10-17",
+    "alerts": 4585,
+    "contracts": 4425,
+    "current_indexed_contracts": 136,
+    "reconstructed_entries": 66,
+    "witnessed_2x": 41,
+    "witnessed_70pct_decline": 38,
+    "both": 17,
+    "complete_24h_histories": 2,
+    "all_alert_win_rate": null,
+    "offline_tests": 19,
+    "release_verification": {
+      "verified_files": 399,
+      "tests_total": 1008,
+      "test_suites": 28,
+      "python": "3.12",
+      "full_suite_passed": true
+    },
+    "stampede_sender_link_patch_applied": false,
+    "remaining_analysis_paused": true,
+    "production_changed": false,
+    "raw_case_data_published": false
   }
 }

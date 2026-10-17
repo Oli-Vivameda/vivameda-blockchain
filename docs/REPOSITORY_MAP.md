@@ -72,3 +72,11 @@ observed endpoints are exploratory. Owner export excluded both requested identit
 as frozen-study members before case data was read: zero eligible learning cases.
 No production journal, model, scanner or service changes. See the
 [dated source receipt](releases/2026-10-17-contrast-review.md).
+
+## Robinhood Stampede retrospective review — 17 October 2026
+
+The [preliminary ten-point review](../learning/robinhood_alert_review/REVIEW_20261017.md)
+accounts for 4,585 owner-exported alerts / 4,425 contracts. Limited reconstructed
+price observations do not establish an overall win rate or executable returns.
+Individual cases stay private. The owner approved aggregate publication and paused
+all remaining analysis, Mac evidence collection and the Stampede sender link patch.
