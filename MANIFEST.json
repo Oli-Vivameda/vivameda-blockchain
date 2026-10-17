@@ -1003,7 +1003,8 @@
     "scripts/test_verify_release.py": "6e7e2a7d36a6a55827373633d98716f7a22e4e051a52be01c303624fbc025ea4",
     "scripts/test_wallet_diagnostics.py": "4e4065747ef1d246f590c5fa8472e51983357afad13727e8b6acf471291c5c40",
     "scripts/verify_release.py": "7b44d5cfc9ca3eba60accb8df84ed8f59c92f32c137027236f113dd3a16b85e9",
-    "scripts/wallet_ops.py": "1f212c7a2fc489ff1fdf30e46619038f89d942d9bd442b6d90a0d027180b8c37"
+    "scripts/wallet_ops.py": "1f212c7a2fc489ff1fdf30e46619038f89d942d9bd442b6d90a0d027180b8c37",
+    "meme_desk/STATUS.md": "f64f18a2a2e0816397b24b17efc6b629de21751bcab8e768c6fc3f88976b29b6"
   },
   "showcase": {
     "entry_point": "docs/FULL_SETUP.md",
