@@ -4,8 +4,10 @@ Prepared 17 October 2026. Two owner-selected examples were received for a runner
 collapse comparison. Exact identities, owner feedback, public API captures and case
 rows remain private server-side. No individual live alert is published here.
 
-Current status: public-source capture and method review completed; frozen membership
-and original retained alert context still need the owner-run read-only export. No
+Current status: the owner ran the checked read-only export. Both requested identities
+are frozen-study members and were excluded before any case data was read. Zero
+eligible comparison/training cases. Private intake/public-source notes are quarantined
+and must not be used for model fitting, feature selection or live rule changes. No
 causal explanation, feature separation, new entry rule or trained weights is claimed.
 A two-case comparison is exploratory and selected after the outcomes were known.
 
@@ -72,8 +74,8 @@ production databases or use the network.
 python3.12 -B -m unittest discover -s learning/contrast_review/tests -v
 ```
 
-Next: review the owner export; keep frozen identities out of case learning. If both
-are eligible and evidence exists, add an explicitly exploratory private case note
+Next: retain this pair's exclusion; do not re-export case data or bypass the frozen
+gate. For a separate pair of eligible non-frozen cases with evidence, add an explicitly exploratory private case note
 with observed differences, counter-evidence and missing facts. Any new screening
 feature then needs a separately preregistered prospective shadow test across many
 cases. No Qwen fine-tune, numerical weight update or live policy change follows from

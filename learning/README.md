@@ -71,6 +71,7 @@ Current owner decision (8 October): journal **dormant by design until the predic
 A separate [read-only contrast review](contrast_review/README.md) now prepares exact
 first-retained-alert context for two privately supplied examples. It checks frozen
 membership before any case access, never reads prediction values or frozen outcomes,
-and does not write this production journal or memory. Owner export is pending;
-no pair-derived feature finding or weight/policy change is claimed. Source publication
+and does not write this production journal or memory. Owner export completed: both requested identities are frozen members and were
+excluded before case data access; zero eligible learning cases. Intake is quarantined,
+and no pair-derived feature finding or weight/policy change is claimed. Source publication
 includes methods and synthetic tests only, not live identities or provider responses.

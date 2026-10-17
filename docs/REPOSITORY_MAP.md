@@ -68,6 +68,7 @@ handover and current owner command; no service was started by engineering.
 [Contrast review](../learning/contrast_review/README.md) provides a hash-checked owner
 read-only audit for two privately supplied tokens. All frozen-ledger identities are
 excluded before case data is opened. As-of checks, reconstructed features and bounded
-observed endpoints are exploratory; original alert export/eligibility are pending.
+observed endpoints are exploratory. Owner export excluded both requested identities
+as frozen-study members before case data was read: zero eligible learning cases.
 No production journal, model, scanner or service changes. See the
 [dated source receipt](releases/2026-10-17-contrast-review.md).
