@@ -30,7 +30,7 @@ class Runner:
         self.log=logging.getLogger('early-lane:'+str(self.path.resolve()));self.log.setLevel(logging.INFO);self.log.propagate=False
         if not self.log.handlers:
             h=RotatingFileHandler(self.path/'lane.log',maxBytes=2*1024**2,backupCount=2);h.setFormatter(logging.Formatter('%(message)s'));self.log.addHandler(h)
-        self.last_processed={}
+        self.last_processed={};self.stream_mode=stream;self.schedule_turn=0
         self.last_priced={};self.price_cache={}
     def poll(self,frame,now=None,fixtures=False,log_only=True):
         now=time.time() if now is None else now
@@ -42,6 +42,10 @@ class Runner:
         launches=[x for x in frame['launches'] if 0<=now-x['created_at']<=1800]
         for x in launches:
             self.j.atomic(lambda:self.j.add('launch','launch:'+x['mint'],{'mint':x['mint'],'created_at':x['created_at'],'first_observed_at':now,'late_discovery_s':max(0,now-x['created_at'])},now))
+        self.collector.prune({x['mint']for x in launches})
+        self.schedule_turn+=1
+        births=self.collector.captured_births(now)if self.stream_mode else set()
+        birth_priority=self.stream_mode and self.schedule_turn%5!=0
         facts=[];collection_issues={};enriched=0;self.collector.rpc.budget(12)
         price_issue=None
         if not fixtures:
@@ -53,7 +57,7 @@ class Runner:
                 if c:
                     done={r['body']['horizon_min'] for r in self.j.rows('checkpoint',x['mint'])}
                     urgent=any(h not in done and abs(c['at']+h*60-now)<=120 for h in HORIZONS)
-                return (0 if urgent else 1,self.last_priced.get(x['mint'],0),-x['created_at'],x['mint'])
+                return (0 if urgent else 1,0 if birth_priority and x['mint']in births else 1,self.last_priced.get(x['mint'],0),-x['created_at'],x['mint'])
             batch=sorted(watched.values(),key=priority)[:30]
             try:
                 marks=Marks(self.collector.rpc).read(batch)
@@ -75,7 +79,7 @@ class Runner:
             self.last_priced={m:v for m,v in self.last_priced.items() if m in watched}
         # Fair round-robin of price-eligible candidates; missing evidence cannot
         # turn budget pressure into a PASS or an undocumented population change.
-        launches.sort(key=lambda x:(self.last_processed.get(x['mint'],0),x['created_at'],x['mint']))
+        launches.sort(key=lambda x:(0 if birth_priority and x['mint']in births else 1,self.last_processed.get(x['mint'],0),x['created_at'],x['mint']))
         for launch in launches:
             if launch['mint'] in existing:continue
             f=dict(launch)
@@ -109,7 +113,7 @@ class Runner:
         atomic(self.path/'tracked.json',requests)
         self.collector.prune({x['mint'] for x in launches})
         complete=sum(all(v!='UNKNOWN' for v in checks(f,decision_at).values())for f in facts)
-        return {'enriched_candidates':enriched,'fully_evaluated_candidates':complete,'collection_issues':collection_issues,'launches_in_window':len(launches),'fresh_market_marks':fresh_marks,'pricing_issue':price_issue,'decisions':len(chosen),'selected':sum(c['selection']=='ALERT' for c in chosen),'suppressed':sum(c['selection']=='CAP_SUPPRESSED' for c in chosen),'coverage':frame.get('coverage')}
+        return {'stream_queue':self.collector.queue_summary(end)if self.stream_mode else None,'captured_birth_candidates':len(births.intersection(x['mint']for x in launches)),'scheduling':'captured_birth_priority'if birth_priority else 'fair_round_robin','enriched_candidates':enriched,'fully_evaluated_candidates':complete,'collection_issues':collection_issues,'launches_in_window':len(launches),'fresh_market_marks':fresh_marks,'pricing_issue':price_issue,'decisions':len(chosen),'selected':sum(c['selection']=='ALERT' for c in chosen),'suppressed':sum(c['selection']=='CAP_SUPPRESSED' for c in chosen),'coverage':frame.get('coverage')}
 
 def volume_report(j):
     buckets={}
