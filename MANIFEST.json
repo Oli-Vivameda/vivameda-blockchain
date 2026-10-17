@@ -772,6 +772,7 @@
     "learning/test_diagnose_journal_counts.py": "652ede2064e547eefcebd365893877cb89f46f2b6f072c3892bd930073ee1d44",
     "learning/test_paper_outcomes.py": "ca0982ac11221fea45921cd6d8bd73b74666f1e6860c35d822606876c2e9bb99",
     "legacy/scout_learning.py": "835b3e6cd854ddbb11b0a8af4d2fa8c0fe64b468533e7a14ea714df07e6b5c44",
+    "meme_desk/REPLAY_PROTOCOL.md": "62c4b3e4b13dbc97a3c973cf22b9fb40eb78a2e006c315e20abd8df92b5195a2",
     "monitors/100x-watchlist/README.md": "c135fb907779c120096325560481a1f6f899b85ee53006621ff1cfe521d8bc5d",
     "monitors/100x-watchlist/install.py": "4eb391d1d6d1e3bf58f43cb3f594a4d002f15dc98cae4396d3207f31152b305e",
     "monitors/100x-watchlist/notifier.py": "e0f7e8905b6e1a97bcd0a43d63247b814786666bfb2cc296bed2dc371d5d1556",
