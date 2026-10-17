@@ -1,3 +1,5 @@
+> Current phase: the owner has already applied the repair. Do not rerun the upgrade or start duplicate workers. The active log-only unit is vivameda-early-lane-rollout-rpc2.service. After about 12:21 Cyprus, inspect `/var/lib/vivameda-early-lane/log_only_receipt.json`. The commands below are retained for their documented phases; preserve the journal.
+
 # Owner commands — source repair, 17 October 2026
 
 The initial d3811acb413725198003870b55b39ad775261289a53cf85f906c657e384a8442 installation succeeded, but Pump.fun's website API returns
@@ -35,8 +37,8 @@ state or bypass a hash/activation check. Do not restart the old HTTP-dependent r
 ## Only AFTER successful upgrade: start a fresh log-only run
 
 ```bash
-systemctl start vivameda-early-lane-export.timer
-systemd-run --unit=vivameda-early-lane-rollout-rpc --uid=vivameda-early-lane --gid=vivameda-early-lane --property=WorkingDirectory=/opt/vivameda-early-lane/41b453fb10042452c0f35a215973d6eb0c21fb07703ce59425558dc41946ea1d --property=NoNewPrivileges=yes --property=UMask=0027 /usr/bin/python3 -B /opt/vivameda-early-lane/41b453fb10042452c0f35a215973d6eb0c21fb07703ce59425558dc41946ea1d/owner.py --expected-bundle 41b453fb10042452c0f35a215973d6eb0c21fb07703ce59425558dc41946ea1d log-only -- --state-dir /var/lib/vivameda-early-lane --input /var/lib/vivameda-early-lane-inbox/feed.json --duration 7200
+systemctl start vivameda-early-lane-export.service && systemctl start vivameda-early-lane-export.timer
+systemd-run --unit=vivameda-early-lane-rollout-rpc2 --uid=vivameda-early-lane --gid=vivameda-early-lane --property=WorkingDirectory=/opt/vivameda-early-lane/41b453fb10042452c0f35a215973d6eb0c21fb07703ce59425558dc41946ea1d --property=NoNewPrivileges=yes --property=UMask=0027 /usr/bin/python3 -B /opt/vivameda-early-lane/41b453fb10042452c0f35a215973d6eb0c21fb07703ce59425558dc41946ea1d/owner.py --expected-bundle 41b453fb10042452c0f35a215973d6eb0c21fb07703ce59425558dc41946ea1d log-only -- --state-dir /var/lib/vivameda-early-lane --input /var/lib/vivameda-early-lane-inbox/feed.json --duration 7200
 ```
 
 This NEW run uses the SAME preserved state; old missing-input waiting is not counted.
@@ -47,7 +49,7 @@ sends to Telegram, even if a delivery config is present.
 ## Immediate check and completed receipt
 
 ```bash
-journalctl -u vivameda-early-lane-export.service -u vivameda-early-lane-rollout-rpc.service -n 20 --no-pager -o cat
+journalctl -u vivameda-early-lane-export.service -u vivameda-early-lane-rollout-rpc2.service -n 20 --no-pager -o cat
 ```
 
 Fresh owner-feed polls AND fresh_market_marks must appear. A running unit alone is
@@ -71,7 +73,7 @@ There is still no valid two-hour result or booked 14-day review date.
 If stopping the experiment is needed, affect only its units:
 
 ```bash
-systemctl stop vivameda-early-lane-export.timer vivameda-early-lane-rollout-rpc.service vivameda-early-lane.service
+systemctl stop vivameda-early-lane-export.timer vivameda-early-lane-rollout-rpc2.service vivameda-early-lane.service
 ```
 
 Initial installation instructions are preserved in Git commit b0b4d375. They must not
