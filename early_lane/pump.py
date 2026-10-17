@@ -101,7 +101,9 @@ def decode_tx(tx,mint,signature):
         if data[:8]==events.get('CreateEvent'):
             r=Reader(data[8:]);r.text();r.text();r.text();em=r.key();curve=r.key();r.key();creator=r.key();r.i64();r.u64();r.u64();initial=r.u64();supply=r.u64()
             if em==mint and creation:
-                if curve!=creation['curve'] or creator!=creation['creator'] or initial<=0:raise EvidenceError('create_event_identity')
+                if curve!=creation['curve']:raise EvidenceError('create_event_curve_mismatch')
+                if creator!=creation['creator']:raise EvidenceError('create_event_creator_mismatch')
+                if initial<=0:raise EvidenceError('create_event_initial_reserves_unsupported')
                 creation.update(initial_curve_tokens=initial,initial_supply=supply)
         if data[:8]==events.get('TradeEvent'):
             r=Reader(data[8:]);em=r.key();sol=r.u64();qty=r.u64();direction=r.take(1)[0];user=r.key();stamp=r.i64()
@@ -130,7 +132,10 @@ def curve(account,mint,creation):
     raw=base64.b64decode(account['data'][0],validate=True)
     if len(raw)<81 or raw[:8]!=bytes([23,183,248,55,96,216,172,96]):raise EvidenceError('curve_layout')
     r=Reader(raw[8:]);vtoken=r.u64();vquote=r.u64();real=r.u64();realquote=r.u64();supply=r.u64();complete=r.take(1)[0];creator=r.key()
-    if complete not in (0,1) or creator!=creation['creator'] or supply!=creation.get('initial_supply') or vtoken<=0:raise EvidenceError('curve_identity_or_supply')
+    if complete not in (0,1):raise EvidenceError('curve_complete_flag')
+    if creator!=creation['creator']:raise EvidenceError('curve_creator_mismatch')
+    if supply!=creation.get('initial_supply'):raise EvidenceError('curve_supply_mismatch')
+    if vtoken<=0:raise EvidenceError('curve_virtual_reserves')
     if len(raw)>81 and raw[81]!=0:raise EvidenceError('mayhem_not_supported')
     initial=creation.get('initial_curve_tokens')
     if not initial or not 0<=real<=initial:raise EvidenceError('curve_progress_unavailable')

@@ -8,6 +8,7 @@ import signal
 import socket
 import sqlite3
 import time
+import uuid
 from pathlib import Path
 from core import Journal,canonical,digest
 from pump import PUMP
@@ -15,13 +16,16 @@ from stream_events import normalize,StreamGap
 from stream_wire import PublicSocket,Refused
 
 class Capture:
-    def __init__(self,state):
+    def __init__(self,state,session_id=None):
+        self.session_id=session_id or uuid.uuid4().hex
+        if not isinstance(self.session_id,str) or not 1<=len(self.session_id)<=64 or not self.session_id.isalnum():raise ValueError('capture_session_id')
         self.path=Path(state);self.path.mkdir(parents=True,exist_ok=True,mode=0o750)
         self.db=sqlite3.connect(self.path/'stream_cache.sqlite3');self.db.row_factory=sqlite3.Row
         self.db.executescript('''PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL;
         CREATE TABLE IF NOT EXISTS config(key TEXT PRIMARY KEY,body TEXT);
         CREATE TABLE IF NOT EXISTS notifications(signature TEXT PRIMARY KEY,slot INTEGER,observed_at REAL,body_hash TEXT);
         CREATE TABLE IF NOT EXISTS creations(mint TEXT PRIMARY KEY,at REAL,generation INTEGER,body TEXT);
+        CREATE TABLE IF NOT EXISTS creation_sessions(mint TEXT PRIMARY KEY,session TEXT,observed_at REAL);
         CREATE TABLE IF NOT EXISTS trades(signature TEXT,event TEXT,mint TEXT,at REAL,slot INTEGER,generation INTEGER,body TEXT,PRIMARY KEY(signature,event));
         CREATE INDEX IF NOT EXISTS trade_mint ON trades(mint,slot,signature);
         CREATE TABLE IF NOT EXISTS mint_gaps(mint TEXT PRIMARY KEY,at REAL,reason TEXT);
@@ -117,6 +121,7 @@ class Capture:
                 old=self.db.execute('SELECT body FROM creations WHERE mint=?',(c['mint'],)).fetchone()
                 if old and json.loads(old[0])!=c:raise StreamGap('conflicting_creation')
                 self.db.execute('INSERT OR IGNORE INTO creations VALUES(?,?,?,?)',(c['mint'],c['created_at'],g,canonical(c)))
+                self.db.execute('INSERT OR IGNORE INTO creation_sessions VALUES(?,?,?)',(c['mint'],self.session_id,now))
             for trade in item['trades']:
                 trade.update(slot=slot,source='public_rpc_pump_log_shadow',source_hash=h,admissible_for_screening=False)
                 self.db.execute('INSERT INTO trades VALUES(?,?,?,?,?,?,?)',(signature,trade['event'],trade['mint'],trade['at'],slot,g,canonical(trade)))
@@ -165,6 +170,7 @@ class Capture:
             self.db.execute('DELETE FROM transaction_gaps WHERE observed_at<?',(now-1860,))
             self.db.execute('DELETE FROM notifications WHERE observed_at<?',(now-1860,))
             self.db.execute('DELETE FROM creations WHERE at<?',(now-1860,))
+            self.db.execute('DELETE FROM creation_sessions WHERE observed_at<?',(now-1860,))
             self.db.execute('DELETE FROM trades WHERE at<?',(now-1860,))
             self.db.execute('DELETE FROM recoveries WHERE at<?',(now-1860,))
             self.db.execute('DELETE FROM mint_gaps WHERE at<?',(now-1860,))
@@ -173,11 +179,11 @@ class Capture:
         return dict(**self.counts,retained_trades=self.db.execute('SELECT COUNT(*) FROM trades').fetchone()[0],retained_creations=self.db.execute('SELECT COUNT(*) FROM creations').fetchone()[0],generation=self.get('generation',0),subscription_ready=self.get('ready',False),admissible_for_screening=False,telegram_sent=0)
     def close(self):self.db.close();self.audit.db.close()
 
-def run(state,duration=60):
+def run(state,duration=60,session_id=None):
     if not 1<=duration<=7200:raise ValueError('bounded_shadow_duration_1_to_7200_seconds')
     path=Path(state);path.mkdir(parents=True,exist_ok=True,mode=0o750)
     lock=open(path/'stream_process.lock','a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-    capture=Capture(path);until=time.monotonic()+duration;start=time.time();running=True;attempts=0;last_ping=0;last_prune=0
+    capture=Capture(path,session_id);until=time.monotonic()+duration;start=time.time();running=True;attempts=0;last_ping=0;last_prune=0
     def stop(*_):
         nonlocal running
         running=False

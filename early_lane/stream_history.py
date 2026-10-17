@@ -20,6 +20,8 @@ def confirmed_failed(entry):
     return entry.get("confirmationStatus")=="finalized" and ((isinstance(error,dict)and bool(error))or(isinstance(error,str)and bool(error)))
 
 class StreamCollector(EvidenceCollector):
+    scan_table='stream_scan'
+    scan_tables=('stream_scan',)
     def __init__(self,path,stream_path,http=None):
         super().__init__(path,http)
         self.stream_path=Path(stream_path)/'stream_cache.sqlite3'
@@ -161,16 +163,16 @@ class StreamCollector(EvidenceCollector):
         finally:db.close()
 
     def queue_summary(self,now):
-        states=[json.loads(r[0])for r in self.cache.execute('SELECT body FROM stream_scan')]
+        states=[json.loads(r[0])for r in self.cache.execute('SELECT body FROM '+self.scan_table)]
         return dict(scans=len(states),initial_scans=sum(x.get('cursor')is None for x in states),
             pending_transactions=sum(len(x.get('pending',[]))for x in states),
             oldest_scan_age_s=max((max(0,now-x['scan_at'])for x in states if x.get('scan_at')is not None),default=0))
 
     def history(self,mint):
-        row=self.cache.execute('SELECT body FROM stream_scan WHERE mint=?',(mint,)).fetchone()
+        row=self.cache.execute('SELECT body FROM '+self.scan_table+' WHERE mint=?',(mint,)).fetchone()
         s=json.loads(row[0])if row else dict(cursor=None,before=None,head=None,pending=[],paging_done=False,scan_at=None,last_slot=None)
         def save():
-            self.cache.execute('INSERT OR REPLACE INTO stream_scan VALUES(?,?)',(mint,canonical(s)));self.cache.commit()
+            self.cache.execute('INSERT OR REPLACE INTO '+self.scan_table+' VALUES(?,?)',(mint,canonical(s)));self.cache.commit()
         self.compact_stream_pending(mint,s);save()
         while not s['paging_done']:
             options={'limit':1000,'commitment':'finalized'}
@@ -213,13 +215,13 @@ class StreamCollector(EvidenceCollector):
         return rows,creation,stamp
     def prune(self,active):
         super().prune(active)
-        for table in ('stream_scan','stream_proofs'):
+        for table in (*self.scan_tables,'stream_proofs'):
             for row in self.cache.execute('SELECT mint FROM '+table).fetchall():
                 if row[0]not in active:self.cache.execute('DELETE FROM '+table+' WHERE mint=?',(row[0],))
         # Shared full bodies only serve active watch-window scans. Preserve hashes
         # in the lane journal, not an unbounded raw transaction archive.
         needed={r[0]for r in self.cache.execute('SELECT sig FROM tx')}
-        for row in self.cache.execute('SELECT body FROM stream_scan'):
+        for row in self.cache.execute(' UNION ALL '.join('SELECT body FROM '+table for table in self.scan_tables)):
             needed.update(x['signature']for x in json.loads(row[0]).get('pending',[]))
         for row in self.cache.execute('SELECT signature FROM repair').fetchall():
             if row[0]not in needed:self.cache.execute('DELETE FROM repair WHERE signature=?',(row[0],))

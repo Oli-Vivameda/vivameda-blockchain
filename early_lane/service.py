@@ -19,11 +19,11 @@ from transport import configuration,UnixSender
 from pricing import Marks
 
 class Runner:
-    def __init__(self,state,stream=False):
+    def __init__(self,state,stream=False,collector=None):
         self.path=Path(state);self.path.mkdir(mode=0o750,parents=True,exist_ok=True)
         if shutil.disk_usage(self.path).free<3*1024**3:raise ValueError('disk_reserve_below_3GiB')
-        self.j=Journal(self.path/'lane.sqlite3');self.lane=Lane(self.j);self.collector=Collector(self.path/'rpc_cache.sqlite3')
-        if stream:
+        self.j=Journal(self.path/'lane.sqlite3');self.lane=Lane(self.j);self.collector=collector if collector is not None else Collector(self.path/'rpc_cache.sqlite3')
+        if stream and collector is None:
             from stream_history import StreamCollector
             self.collector.cache.close()
             self.collector=StreamCollector(self.path/'stream_rpc_cache.sqlite3',self.path/'stream')
@@ -32,6 +32,10 @@ class Runner:
             h=RotatingFileHandler(self.path/'lane.log',maxBytes=2*1024**2,backupCount=2);h.setFormatter(logging.Formatter('%(message)s'));self.log.addHandler(h)
         self.last_processed={};self.stream_mode=stream;self.schedule_turn=0
         self.last_priced={};self.price_cache={}
+    def prepare_launches(self,frame,now):
+        return [dict(x)for x in frame['launches']if 0<=now-x['created_at']<=1800]
+    def birth_priority(self):return self.stream_mode and self.schedule_turn%5!=0
+    def market_batch(self,watched,existing,now,priority):return sorted(watched.values(),key=priority)[:30]
     def poll(self,frame,now=None,fixtures=False,log_only=True):
         now=time.time() if now is None else now
         if frame.get('schema')!='early-lane-feed-v1' or frame.get('rules_sha256')!=RULES_SHA or not 0<=now-frame['exported_at']<=60:raise ValueError('missing_stale_or_wrong_owner_feed')
@@ -39,13 +43,13 @@ class Runner:
         for o in frame.get('observations',[]):
             if o['mint'] in existing and o.get('mc') is not None:
                 record(self.lane,o['mint'],o['observed_at'],o['mc'],o.get('liquidity'),now,o['source_id'],o['provenance'])
-        launches=[x for x in frame['launches'] if 0<=now-x['created_at']<=1800]
+        launches=self.prepare_launches(frame,now)
         for x in launches:
             self.j.atomic(lambda:self.j.add('launch','launch:'+x['mint'],{'mint':x['mint'],'created_at':x['created_at'],'first_observed_at':now,'late_discovery_s':max(0,now-x['created_at'])},now))
         self.collector.prune({x['mint']for x in launches})
         self.schedule_turn+=1
         births=self.collector.captured_births(now)if self.stream_mode else set()
-        birth_priority=self.stream_mode and self.schedule_turn%5!=0
+        birth_priority=self.birth_priority()
         facts=[];collection_issues={};enriched=0;self.collector.rpc.budget(12)
         price_issue=None
         if not fixtures:
@@ -58,7 +62,7 @@ class Runner:
                     done={r['body']['horizon_min'] for r in self.j.rows('checkpoint',x['mint'])}
                     urgent=any(h not in done and abs(c['at']+h*60-now)<=120 for h in HORIZONS)
                 return (0 if urgent else 1,0 if birth_priority and x['mint']in births else 1,self.last_priced.get(x['mint'],0),-x['created_at'],x['mint'])
-            batch=sorted(watched.values(),key=priority)[:30]
+            batch=self.market_batch(watched,existing,now,priority)
             try:
                 marks=Marks(self.collector.rpc).read(batch)
                 for x in batch:
@@ -87,7 +91,8 @@ class Runner:
             except (ValueError,KeyError,TypeError):cheap=False
             if fixtures and 'fixture_facts' in f:f=f['fixture_facts']
             elif cheap and self.collector.rpc.remaining>0:
-                f=self.collector.enrich(f,now);self.last_processed[f['mint']]=now;enriched+=1
+                f=self.collector.enrich(f,now)
+                if f.get('collection_attempted',True):self.last_processed[f['mint']]=now;enriched+=1
                 for stage,reason in f.get('collection_issues',{}).items():
                     key=stage+':'+reason;collection_issues[key]=collection_issues.get(key,0)+1
             facts.append(f)

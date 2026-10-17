@@ -52,7 +52,9 @@ class EvidenceCollector(Collector):
                 amount=int(i['tokenAmount']['amount'])
                 if amount<0:raise SourceUnavailable('negative_token_balance')
                 total+=amount;holders[i['owner']]+=amount
-            if total!=supply:raise SourceUnavailable('holder_supply_not_reconciled')
+            if total!=supply:
+                f['provenance']['holder_reconciliation']={'mint_supply':supply,'census_total':total,'difference':total-supply,'accounts':len(census['value']),'mint_slot':market['context']['slot'],'census_slot':census['context']['slot']}
+                raise SourceUnavailable('holder_supply_not_reconciled')
             self.account_snapshot.update(holders=holders,at=time.time())
             f.update(census_complete=True,holders_at=time.time(),top_holder_pct=str(max((number(v)/supply*100 for k,v in holders.items()if k not in excluded),default=number(0))))
             f['provenance'].update(account_snapshot_hash=digest(market),holder_census_hash=digest(census),source_slots=[market['context']['slot'],census['context']['slot']])
