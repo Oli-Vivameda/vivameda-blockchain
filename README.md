@@ -1,49 +1,81 @@
-# Vivameda Blockchain
+# Vivameda Blockchain (Crypto Lab)
 
-Public source and documentation for Vivameda's Crypto Lab: Solana small-cap discovery, wallet screening, monitoring, agent interpretation and prospective outcome research.
+Research on Solana meme and small-cap tokens: discovery, safety screening, alerts and prospective outcome studies. This repository holds no trading keys and executes no trades. Every study is preregistered and published with its limits, including the results that did not work.
 
-**Start with the [repository map](docs/REPOSITORY_MAP.md).** Crypto source belongs here. Company/workforce intelligence belongs in [vivameda-intelligence-stack](https://github.com/Oli-Vivameda/vivameda-intelligence-stack). Credentials, private configuration and runtime databases stay on the server.
+## Running now
 
-## Latest scanner release — 16 October 2026
+Status as of 17 October 2026.
 
-[Discovery safeguards](docs/DISCOVERY_SAFEGUARDS.md) are deployed: independent feed commits, bounded catch-up, malformed-row handling, discovery-delay measurements and system-level health warnings. The retained postflight showed both feeds saving data, with one invalid trade-feed row excluded.
+| Component | What it does | Status |
+|---|---|---|
+| [Scanner](scout/early_scout.py) | Finds Solana launches 30 minutes to 6 hours old at $30k to $750k market cap, scores them on 11 transparent signals, alerts on Telegram | Running |
+| [Safety screening](scout/SCREENING_V2.md) | Seven checks before any alert: mint and freeze authority, pool and LP authenticity, real sells by distinct wallets, holder concentration, creator behaviour, linked-wallet clusters, wallet age. Any explicit REJECT blocks the alert. | Running |
+| [Monitors](docs/MONITORS.md) | Pool liquidity and watchlist observation alerts | Running |
+| [Crypto agent](agent/) | Interprets alerts with a [runner knowledge pack](research/runner-study-20261011/AGENT_KNOWLEDGE.md): phase, audience, demand, exhaustion | Running |
+| [Prediction ledger](research/) | Frozen prospective cohort; closes at 200 eligible tokens or 3 November 2026 | Collecting |
+| [Early lane v1](early_lane/RULES.md) | Alerts for Pump.fun tokens at $8k to $25k with fail-closed holder and buyer checks, plus 24-hour outcome tracking. Rules frozen for 14 days before the first alert. | Building |
+| [Meme desk v1](meme_desk/STATUS.md) | Trade tickets and exit-rule replay for human-executed flips | Paused |
+| [Copy paper experiment](copy_trading/README.md) | Delayed copying of verified wallets, on paper | Waiting for verified wallets |
 
-The canonical scanner is [scout/early_scout.py](scout/early_scout.py). Its SHA-256 matches the deployed snapshot in [the release record](docs/releases/2026-10-16-discovery.md). This publication does not redeploy services. A dated source snapshot is not continuous live status.
+## What we have learned so far
 
-| Area | Location |
-|---|---|
-| Scanner, wallet screening and tests | [scout/](scout/) |
-| Independent watchlist and research monitors | [monitors/](monitors/) |
-| Crypto agent and bounded interpretation | [agent/](agent/) |
-| Timed learning and chart analysis | [learning/](learning/) |
-| Frozen studies, shadow models and baseline | [research/](research/) |
-| Paper trading scaffold | [agent_trader/](agent_trader/) |
-| Service templates and utilities | [deploy/](deploy/), [scripts/](scripts/) |
-| Explanations and dated records | [docs/](docs/), [changelog](CHANGELOG.md) |
+**The first fitted model lost to the base rate.** A seven-feature logistic model trained on 42 tokens and tested on 18 later ones scored Brier 0.110 against 0.100 for simply predicting the base rate, and log loss 0.443 against 0.359. It was published as a negative result and never used for alerts. The scanner stays a transparent rule count, not a probability. [Details](research/README.md).
 
-Read [signals](SIGNALS.md), [full setup](docs/FULL_SETUP.md), [screening](scout/SCREENING_V2.md), [security](SECURITY.md) and the [maintenance policy](docs/REPOSITORY_POLICY.md). The [earlier overview and updates](docs/history/README_THROUGH_20261011.md) remain available as dated history.
+**Peaks are not profits.** Outcome labels record the highest multiple a token reached. A later buyer cannot sell at the peak, so these figures are kept separate from anything that could be called realized return. No profitable execution has been established.
+
+**Screening is the most mature part.** Several common failure modes are visible on chain before an alert: authorities not revoked, liquidity that can be pulled, concentrated or linked holders, creators with a history. The scanner only alerts when those checks pass. That reduces exposure to these risks; it does not prove a token is safe.
+
+**Copying "successful" wallets is harder than it looks.** The copy experiment admitted no wallet yet: social-media attributions could not be verified. We also expect many attractive wallets to profit from being first, which a delayed follower cannot copy; that is a hypothesis to test, not a finding. A historical copyability screen comes before any wallet is admitted.
+
+## How it works
+
+```mermaid
+flowchart LR
+  L[New Solana launches] --> S[Scanner<br/>11-signal score]
+  S --> G[Safety screening<br/>7 on-chain checks]
+  G -->|PASS| T[Telegram alert]
+  G -->|REJECT| X[Blocked]
+  T --> A[Crypto agent<br/>interpretation]
+  T --> O[Outcome tracking<br/>prospective ledger]
+```
+
+## How studies are run
+
+- Rules, cohorts and evaluation are frozen and committed before outcomes exist.
+- Frozen cohorts are never re-selected after looking at results; missing data stays missing.
+- Each component has its own state, installer and tests; one component never changes another's data.
+- Paper and observation only. Keys, signing and execution are outside this repository.
+
+What is published and what is not: [publication policy](PUBLICATION_POLICY.md).
 
 ## Verify
 
-Use Python 3.12; frozen scorer AST contracts are version-bound.
+Use Python 3.12; frozen scorer contracts are version-bound.
 
 ```sh
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt -r research/requirements.txt
-.venv/bin/python -m unittest discover -s scout -p 'test_discovery_guard.py'
 .venv/bin/python scripts/verify_release.py
 ```
 
-Publication validation: **735 tests passed across 23 isolated suites**; see the [dated validation record](docs/PUBLICATION_VALIDATION_20261016.json).
+The verifier checks every file against MANIFEST.json and runs each test directory in isolation.
 
-The verifier checks the file manifest and runs every test directory in isolated processes. Discovery tests extract scanner definitions without importing the production module or accessing providers, Telegram or production state.
+## Repository layout
 
-Scores are not calibrated probabilities; observed peak multiples are not realized profit. Complete discovery coverage, profitable execution and completed prospective model validation have not been established. The [published baseline result](research/README.md) remains experimental. Frozen study artifacts retain their dates and gates. Fresh-host installation remains unverified. No license grant has been selected.
+| Path | Contents |
+|---|---|
+| `scout/` | Scanner, screening, wallet evidence and tests |
+| `monitors/` | Independent watchlist and pool monitors |
+| `agent/` | Crypto agent and bounded interpretation |
+| `learning/`, `research/` | Daily learning, frozen studies, shadow models, published baseline |
+| `early_lane/`, `meme_desk/`, `copy_trading/` | Newer experiments, each isolated |
+| `deploy/`, `scripts/` | Service templates and release utilities |
+| `docs/` | Explanations, dated releases and history |
 
-## Isolated Solana copy paper experiment — 16 October 2026
+Start with the [repository map](docs/REPOSITORY_MAP.md) for detail.
 
-The separate [copy-paper project](copy_trading/README.md) contains its frozen empty watchlist, accounting, tests and dedicated installer. It is **WAITING_FOR_VERIFIED_WALLETS**. Source publication does not mean the service is installed: the engineering connector cannot create its dedicated system unit. Strategy B and quote-provider access remain disabled. See the [release receipt](docs/releases/2026-10-16-copy-paper.md) for exact verification, limitations and the owner installation command.
+## History
 
-## Human-review meme desk v1 — 17 October 2026
+The previous README with full release notes: [docs/history/README_THROUGH_20261017.md](docs/history/README_THROUGH_20261017.md). Earlier: [docs/history/README_THROUGH_20261011.md](docs/history/README_THROUGH_20261011.md).
 
-Separate [source and operating instructions](meme_desk/README.md) cover exit-rule replay and manual trade tickets. The [preregistration](meme_desk/REPLAY_PROTOCOL.md) was committed before replay code/tests. Historical replay and a genuine 60-minute shadow run are **blocked pending owner export and authenticated reserve evidence**. No service is installed; no ticket destination/sender confirmed. Existing scanner and frozen-study boundaries are unchanged. See the [release status](docs/releases/2026-10-17-meme-desk.md) and [Astra handover](meme_desk/ASTRA_HANDOVER.md) for exact hash-checked owner commands.
+No licence has been granted: the source is visible for review, all rights reserved.
