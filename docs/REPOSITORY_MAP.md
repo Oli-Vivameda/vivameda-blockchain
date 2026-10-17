@@ -62,3 +62,12 @@ Owner diagnostic clarified scanner destination is a private chat. Sender exact-m
 private-chat correction/test is prepared; automatic activation is still blocked by
 the unchanged lane client confirmation guard and pending rollout review. See sender
 handover and current owner command; no service was started by engineering.
+
+## Owner-selected contrast review — 17 October 2026
+
+[Contrast review](../learning/contrast_review/README.md) provides a hash-checked owner
+read-only audit for two privately supplied tokens. All frozen-ledger identities are
+excluded before case data is opened. As-of checks, reconstructed features and bounded
+observed endpoints are exploratory; original alert export/eligibility are pending.
+No production journal, model, scanner or service changes. See the
+[dated source receipt](releases/2026-10-17-contrast-review.md).

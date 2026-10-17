@@ -1,3 +1,7 @@
+> Completed owner receipt: bundle 40c80bc0 installed/stopped/disabled; the direct 🌻
+> private-chat test returned status 200. No need to rerun. Commands below remain an
+> idempotent reference; automatic delivery stays off.
+
 # Owner command — existing private scanner chat + 🌻 — 17 October 2026
 
 Owner selected the same destination as the scanner. Metadata-only owner diagnostics

@@ -57,3 +57,8 @@ scanner private chat under root opt-in, with 🌻 and unchanged idempotency. New
 one-test command is pending. No service starts. 58 sender / 994 repository tests.
 The current lane transport's -100 confirmation guard remains a separate compatibility
 blocker before any continuous private-chat activation. See sender/ASTRA_HANDOVER.md.
+
+Owner subsequently confirmed sender bundle 40c80bc0 installed/stopped/disabled and
+one successful direct 🌻 test with a real Telegram receipt. Private chat/message IDs
+stay private. Continuous delivery is still off; the lane-client private-chat guard
+and completed log-only result remain unresolved before any activation.

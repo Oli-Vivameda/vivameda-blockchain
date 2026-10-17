@@ -65,3 +65,12 @@ Daily GitHub updates should publish dates, aggregate evidence coverage, service/
 The paper endpoint extension was activated at 12:29:55 UTC. See [paper evaluation](PAPER_EVALUATION.md) and [activation receipt](ENDPOINT_ACTIVATION_20261005.md). Its first aggregate counts were zero; prospective observations must accumulate.
 
 Current owner decision (8 October): journal **dormant by design until the prediction ledger closes (200 eligible or 2026-11-03T06:45:43Z)**. Keep the frozen population; do not amend. After closure, verify ALERT-to-writer admission and publish the first non-zero aggregate.
+
+## Owner-selected contrast intake — 17 October 2026
+
+A separate [read-only contrast review](contrast_review/README.md) now prepares exact
+first-retained-alert context for two privately supplied examples. It checks frozen
+membership before any case access, never reads prediction values or frozen outcomes,
+and does not write this production journal or memory. Owner export is pending;
+no pair-derived feature finding or weight/policy change is claimed. Source publication
+includes methods and synthetic tests only, not live identities or provider responses.

@@ -83,3 +83,13 @@ Important remaining integration issue: installed lane transport.configuration st
 requires -100 for enabled confirmation. No lane executable/source/bundle is changed
 here. Before continuous private-chat activation, separately review that compatibility
 update and actual log-only readiness; do not flip confirmation or start the lane.
+
+## Owner receipt after this source release
+
+Owner ran the checked 40c80bc0 upgrade/test: installed true, started false, enabled
+false, state preserved. The direct runtime test returned status 200 with a real
+Telegram receipt. Exactly one test acceptance is confirmed; private destination and
+message identifiers are not published. No continuous sender/lane activation. The
+unchanged lane transport's private-chat compatibility guard and completed rollout
+readiness remain separate outstanding gates. This supersedes the pending-test status
+above; it does not claim a live automatic alert or production service sandbox pass.

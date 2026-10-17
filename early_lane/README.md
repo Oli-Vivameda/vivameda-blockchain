@@ -1,6 +1,6 @@
 > Current status: owner applied the RPC repair and began the new log-only run.
 > Startup data/prices were observed; the completed two-hour result is pending.
-> Sender's previous bundle is installed and stopped; shared-channel update/test pending. See
+> Sender is installed/stopped; one 🌻 private-chat test succeeded. Automatic delivery stays off. See
 > [sender handover](sender/ASTRA_HANDOVER.md) and [install-only commands](sender/OWNER_COMMANDS.md).
 
 # Early lane v1
@@ -9,7 +9,7 @@ Experimental read-only Pump.fun observer, separate from the scanner. The owner
 applied the RPC pricing repair and started a new two-hour log-only run. Supplied
 startup logs show fresh input/prices and no selected alerts. Final validation is
 pending. Owner selected the existing scanner private bot chat with 🌻. The separate sender is built with 58 offline
-tests; its previous bundle is installed and stopped; the shared-channel update and owner test are pending. No trading code, wallet connection,
+tests; it is installed and stopped, and one direct private-chat test succeeded. Automatic delivery is off. No trading code, wallet connection,
 signup or paid fallback. Meme desk remains paused.
 
 Read [frozen rules](RULES.md), [source/terms check](SOURCE_TERMS.md),

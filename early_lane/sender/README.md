@@ -4,8 +4,8 @@ Owner chose the scanner's existing Telegram channel on 17 October 2026, replacin
 the earlier separate-channel requirement. Every message from this sender starts
 with 🌻. No new channel, bot, token or manual channel-ID lookup is needed.
 
-Old sender bundle is owner-confirmed installed, stopped and disabled. The shared-
-channel update is prepared but not applied. [One owner command](OWNER_COMMANDS.md)
+Sender bundle 40c80bc0 is owner-confirmed installed, stopped and disabled. One direct
+🌻 private-chat test succeeded with a real Telegram receipt. Automatic delivery is off. [One owner command](OWNER_COMMANDS.md)
 hash-verifies the stopped upgrade, preserves state, prepares lane-only routing and
 sends one fixed direct test. It leaves continuous delivery unconfirmed and does
 not start/enable either service. [Astra handover](ASTRA_HANDOVER.md) has hashes,
@@ -49,7 +49,7 @@ errors, response descriptions, token URLs and message bodies never enter logs.
 
 The root-only direct test uses a fixed message/key, unavailable through the socket.
 Repeating the owner command returns the saved receipt. Status 429 gives retry_after;
-status 409 means review the held event. No real Telegram call was made by engineering.
+status 409 means review the held event. No real Telegram call was made by engineering; the owner ran and confirmed one direct test.
 58 offline tests use temporary files, synthetic credentials and fake HTTP only:
 
 ```bash
