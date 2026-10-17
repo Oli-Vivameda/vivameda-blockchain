@@ -47,3 +47,7 @@ Source-only publication contains no live case rows, protected-state aggregates o
 credentials. Existing pending queue-repair publication is a separate workstream.
 The capture-only STREAM_HANDOVER.md describes the previous component boundary;
 this document supersedes its unimplemented-adapter statements for this new source.
+
+Activated-journal staging correction: see STREAM_STAGE_FIX.md. The earlier
+bundle reused an initial-repair guard and refused an activated study before
+copying; the corrected bundle preserves and verifies activation and cohorts.

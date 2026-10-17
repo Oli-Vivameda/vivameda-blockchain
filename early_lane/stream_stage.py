@@ -5,11 +5,32 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sqlite3
 import sys
 from install import BASE,STATE,NAME
 from verify import verify
-from upgrade import journal_state
+from core import digest
 OLD='0a595dc64aa0d660bbfebd878a885fdee5c7daf4e5a1dedb384821bb2d181390'
+
+def journal_state(path):
+    """Read-only integrity snapshot, including an already activated study.
+
+    Staging must preserve activation and cohorts. The initial-source-repair
+    helper deliberately rejects them, so it cannot be reused for this operation.
+    """
+    path=Path(path)
+    if not path.is_file():raise ValueError('existing_state_required')
+    c=sqlite3.connect(path.resolve().as_uri()+'?mode=ro',uri=True)
+    try:
+        c.execute('PRAGMA query_only=ON');c.execute('BEGIN')
+        previous='';n=0;cohorts=0;activation=None
+        for seq,ts,kind,key,body,prev,h in c.execute('SELECT seq,ts,kind,key,body,previous,hash FROM events ORDER BY seq'):
+            data=json.loads(body);n+=1
+            if seq!=n or prev!=previous or h!=digest(dict(seq=seq,ts=ts,kind=kind,key=key,body=data,previous=prev)):raise ValueError('existing_journal_corrupt')
+            previous=h;cohorts+=kind=='cohort'
+            if kind=='activation':activation=ts
+        return {'events':n,'head':previous,'cohorts':cohorts,'activation':activation}
+    finally:c.rollback();c.close()
 
 def stage(expected,root=None,run=subprocess.run):
     if os.geteuid()!=0:raise ValueError('owner_root_action_required')

@@ -52,3 +52,7 @@ They require complete finalized mint-signature coverage and original creator
 authentication. No continuous runtime or Telegram delivery is enabled. See
 STREAM_INTEGRATION_HANDOVER.md and STREAM_INTEGRATION_COMMANDS.md for the
 no-start staging and bounded owner shadow. Source tests are not live readiness.
+
+Staging fix: activated studies are accepted only after read-only hash-chain
+verification; original activation and cohorts must remain identical. See
+STREAM_STAGE_FIX.md. No owner rollout has passed yet.

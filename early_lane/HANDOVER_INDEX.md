@@ -7,3 +7,5 @@
 | 2026-10-17 | Public RPC stream shadow source | Standalone, admission disabled | [Protocol](STREAM_PROTOCOL.md), [handover](STREAM_HANDOVER.md) |
 
 | 2026-10-17 | Signature-audited stream repairs and screening shadow | [STREAM_INTEGRATION_HANDOVER.md](STREAM_INTEGRATION_HANDOVER.md) | source only; owner validation pending |
+
+| 2026-10-17 | Activated-journal staging regression | [STREAM_STAGE_FIX.md](STREAM_STAGE_FIX.md) | no-start staging correction; owner retry required |
