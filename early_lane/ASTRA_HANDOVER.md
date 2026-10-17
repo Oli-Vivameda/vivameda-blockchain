@@ -1,3 +1,7 @@
+# Current handover — evidence repair, 17 October 2026
+
+See [evidence repair handover](EVIDENCE_REPAIR_20261017.md) and [current owner commands](EVIDENCE_OWNER_COMMANDS.md). 1,027 repository tests passed; owner upgrade and full live screening remain pending. This supersedes earlier rollout/readiness and private-chat compatibility status below.
+
 # Astra handover — early lane — 17 October 2026
 
 ## Separate sender prepared after the observation startup

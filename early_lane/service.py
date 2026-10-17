@@ -10,8 +10,8 @@ from pathlib import Path
 import shutil
 import signal
 import time
-from core import Journal,Lane,canonical,number,RULES_SHA,digest,CHECKS
-from sources import Collector
+from core import Journal,Lane,canonical,number,RULES_SHA,digest,CHECKS,checks
+from evidence import EvidenceCollector as Collector
 from exporter import atomic
 from outcomes import record,finalize,due_daily,review,individual,HORIZONS
 from alerts import message,flush
@@ -38,7 +38,7 @@ class Runner:
         launches=[x for x in frame['launches'] if 0<=now-x['created_at']<=1800]
         for x in launches:
             self.j.atomic(lambda:self.j.add('launch','launch:'+x['mint'],{'mint':x['mint'],'created_at':x['created_at'],'first_observed_at':now,'late_discovery_s':max(0,now-x['created_at'])},now))
-        facts=[];self.collector.rpc.budget(12)
+        facts=[];collection_issues={};enriched=0;self.collector.rpc.budget(12)
         price_issue=None
         if not fixtures:
             watched={x['mint']:x for x in launches}
@@ -79,7 +79,9 @@ class Runner:
             except (ValueError,KeyError,TypeError):cheap=False
             if fixtures and 'fixture_facts' in f:f=f['fixture_facts']
             elif cheap and self.collector.rpc.remaining>0:
-                f=self.collector.enrich(f,now);self.last_processed[f['mint']]=now
+                f=self.collector.enrich(f,now);self.last_processed[f['mint']]=now;enriched+=1
+                for stage,reason in f.get('collection_issues',{}).items():
+                    key=stage+':'+reason;collection_issues[key]=collection_issues.get(key,0)+1
             facts.append(f)
         decision_at=now if fixtures else time.time()
         fresh_marks=sum(x.get('mc') is not None and x.get('market_at') is not None and 0<=decision_at-x['market_at']<=60 and decision_at<=x.get('market_expires_at',decision_at) for x in launches)
@@ -102,7 +104,8 @@ class Runner:
         requests.sort(key=lambda x:(x['priority'],x['target_at'] if x['priority']==0 else x['last_observed_at'],x['mint']))
         atomic(self.path/'tracked.json',requests)
         self.collector.prune({x['mint'] for x in launches})
-        return {'launches_in_window':len(launches),'fresh_market_marks':fresh_marks,'pricing_issue':price_issue,'decisions':len(chosen),'selected':sum(c['selection']=='ALERT' for c in chosen),'suppressed':sum(c['selection']=='CAP_SUPPRESSED' for c in chosen),'coverage':frame.get('coverage')}
+        complete=sum(all(v!='UNKNOWN' for v in checks(f,decision_at).values())for f in facts)
+        return {'enriched_candidates':enriched,'fully_evaluated_candidates':complete,'collection_issues':collection_issues,'launches_in_window':len(launches),'fresh_market_marks':fresh_marks,'pricing_issue':price_issue,'decisions':len(chosen),'selected':sum(c['selection']=='ALERT' for c in chosen),'suppressed':sum(c['selection']=='CAP_SUPPRESSED' for c in chosen),'coverage':frame.get('coverage')}
 
 def volume_report(j):
     buckets={}
@@ -125,6 +128,10 @@ def volume_report(j):
         b['unique_mints_passing_each']={k:len({r['body']['mint'] for r in audits if r['body']['checks'][k]=='PASS'}) for k in CHECKS}
     return {dt.datetime.fromtimestamp(t,dt.timezone.utc).isoformat():v for t,v in sorted(buckets.items())}
 
+def rollout_gate(duration,valid,priced,max_feed_gap,max_price_gap,fully_evaluated):
+    transport=duration>=7200 and valid>0 and priced>0 and max_feed_gap<=120 and max_price_gap<=120
+    return {'transport_rollout_pass':transport,'screening_rollout_pass':transport and fully_evaluated>0,'live_rollout_pass':transport and fully_evaluated>0}
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('command',choices=['run','log-only','once','report']);p.add_argument('--state-dir',required=True);p.add_argument('--input');p.add_argument('--duration',type=int,default=7200);p.add_argument('--delivery-config');a=p.parse_args()
     path=Path(a.state_dir);path.mkdir(parents=True,exist_ok=True)
@@ -138,7 +145,7 @@ def main():
         nonlocal running
         running=False
     signal.signal(signal.SIGTERM,stop);signal.signal(signal.SIGINT,stop)
-    start=time.time();until=time.monotonic()+a.duration if a.command=='log-only' else float('inf');valid=0;cycles=0;errors={};valid_times=[];priced_times=[]
+    start=time.time();until=time.monotonic()+a.duration if a.command=='log-only' else float('inf');valid=0;cycles=0;errors={};valid_times=[];priced_times=[];fully_evaluated=0;issue_totals={}
     while running:
         if shutil.disk_usage(path).free<3*1024**3:raise SystemExit(75)
         cycles+=1
@@ -149,6 +156,8 @@ def main():
                 except (ValueError,OSError,KeyError):r.log.error(canonical({'kind':'DELIVERY_CONFIG_BLOCKED'}))
             frame=json.loads(Path(a.input).read_text());data=r.poll(frame,log_only=not conf.get('new_channel_confirmed',False));valid+=1;valid_times.append(time.time());status='LOG_ONLY'
             if data.get('fresh_market_marks',0)>0:priced_times.append(time.time())
+            fully_evaluated+=data.get('fully_evaluated_candidates',0)
+            for key,count in data.get('collection_issues',{}).items():issue_totals[key]=issue_totals.get(key,0)+count
             if conf.get('new_channel_confirmed'):
                 flush(r.lane,UnixSender(conf['socket']),conf,time.time());status='CONFIRMED_DELIVERY_QUEUE'
         except (OSError,ValueError,KeyError,TypeError) as exc:
@@ -159,6 +168,7 @@ def main():
         while running and time.monotonic()<target:time.sleep(min(1,max(0,target-time.monotonic())))
     finished=time.time();gaps=[b-a for a,b in zip([start]+valid_times,valid_times+[finished])];max_gap=max(gaps,default=finished-start)
     price_gap=max((b-a for a,b in zip([start]+priced_times,priced_times+[finished])),default=finished-start)
-    receipt={'maximum_valid_feed_gap_s':max_gap,'priced_polls':len(priced_times),'maximum_priced_poll_gap_s':price_gap,'started_at':start,'finished_at':time.time(),'duration_s':time.time()-start,'valid_owner_feed_polls':valid,'cycles':cycles,'errors':errors,'volume_per_hour':volume_report(r.j),'telegram_sent':0,'live_rollout_pass':valid>0 and bool(priced_times) and time.time()-start>=7200 and max_gap<=120 and price_gap<=120,'status':'OBSERVED_LOG_ONLY' if priced_times else 'BLOCKED_NO_USABLE_PRICES_NOT_A_ROLLOUT_PASS'}
+    gate=rollout_gate(finished-start,valid,len(priced_times),max_gap,price_gap,fully_evaluated);transport_pass=gate['transport_rollout_pass']
+    receipt={'transport_rollout_pass':transport_pass,'screening_rollout_pass':transport_pass and fully_evaluated>0,'fully_evaluated_candidate_polls':fully_evaluated,'collection_issues':issue_totals,'maximum_valid_feed_gap_s':max_gap,'priced_polls':len(priced_times),'maximum_priced_poll_gap_s':price_gap,'started_at':start,'finished_at':time.time(),'duration_s':time.time()-start,'valid_owner_feed_polls':valid,'cycles':cycles,'errors':errors,'volume_per_hour':volume_report(r.j),'telegram_sent':0,'live_rollout_pass':transport_pass and fully_evaluated>0,'status':'OBSERVED_LOG_ONLY' if priced_times else 'BLOCKED_NO_USABLE_PRICES_NOT_A_ROLLOUT_PASS'}
     atomic(path/'log_only_receipt.json',receipt);print(canonical(receipt))
 if __name__=='__main__':main()

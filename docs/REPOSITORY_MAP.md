@@ -80,3 +80,5 @@ accounts for 4,585 owner-exported alerts / 4,425 contracts. Limited reconstructe
 price observations do not establish an overall win rate or executable returns.
 Individual cases stay private. The owner approved aggregate publication and paused
 all remaining analysis, Mac evidence collection and the Stampede sender link patch.
+
+Early-lane evidence repair (17 October 2026): [handover](../early_lane/EVIDENCE_REPAIR_20261017.md), [owner upgrade/shadow commands](../early_lane/EVIDENCE_OWNER_COMMANDS.md). Source tested; full live screening and delivery activation pending.

@@ -5,6 +5,8 @@ sender implementing this protocol; none is installed or assumed to exist.
 """
 import html
 import json
+import math
+import re
 import os
 from pathlib import Path
 import socket
@@ -18,7 +20,11 @@ def configuration(path):
     if not stat.S_ISREG(st.st_mode) or st.st_uid!=0 or st.st_mode&0o022:raise ValueError('delivery_config_requires_root_owned_nonwritable_file')
     data=json.loads(p.read_text())
     if data.get('new_channel_confirmed'):
-        if not str(data.get('channel','')).startswith('-100') or not str(data['channel'])[1:].isdigit() or not data.get('confirmed_at'):raise ValueError('confirmed_new_channel_required')
+        shared=data.get('reuse_scanner_channel')is True
+        pattern=r'-?[1-9][0-9]*'if shared else r'-100[0-9]+'
+        channel=str(data.get('channel',''));confirmed=data.get('confirmed_at')
+        if (data.get('new_channel_confirmed')is not True or not re.fullmatch(pattern,channel) or abs(int(channel))>2**53-1 or
+                type(confirmed)not in(int,float)or not math.isfinite(confirmed)or confirmed<=0):raise ValueError('confirmed_destination_required')
         if not Path(data.get('socket','')).is_absolute():raise ValueError('absolute_sender_socket_required')
     return data
 

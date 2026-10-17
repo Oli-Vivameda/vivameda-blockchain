@@ -62,6 +62,8 @@ def instructions(tx):
 
 def decode_tx(tx,mint,signature):
     if not tx:raise EvidenceError('transaction_unavailable')
+    version=tx.get('version','legacy')
+    if version!='legacy' and (type(version) is not int or version not in (0,1)):raise EvidenceError('unsupported_transaction_version')
     if tx['meta']['err'] is not None:return {'signature':signature,'slot':tx['slot'],'trades':[],'failed':True,'complete':True}
     if tx.get('blockTime') is None:raise EvidenceError('missing_block_time')
     pmap,amap,events=maps();ixs=instructions(tx);payloads={};methods=[];creation=None;migration=None;pool=None

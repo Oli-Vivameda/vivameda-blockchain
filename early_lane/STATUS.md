@@ -1,64 +1,46 @@
-# Early lane status — 17 October 2026, 10:22 Cyprus
+# Early lane status — 17 October 2026: evidence repair candidate
 
-RUNNING LOG-ONLY; DATA/PRICING OBSERVED; TWO-HOUR VALIDATION IN PROGRESS.
+SOURCE TESTED; OWNER UPGRADE AND NEW LIVE LOG-ONLY VALIDATION PENDING.
+Telegram delivery remains disabled. No continuous lane or sender started by engineering.
 
-Owner applied bundle 41b453fb10042452c0f35a215973d6eb0c21fb07703ce59425558dc41946ea1d. Upgrade receipt: journal preserved, no scanner change, no service auto-start; live pricing preflight priced 16 of 30 sampled mints. The old HTTP-dependent rollout was stopped with zero valid polls and is not a successful observation.
+The owner's completed RPC rollout observed 898 valid polls and 889 priced polls
+in 7201.43 seconds, with no poll errors and zero alerts/suppressed candidates.
+First-seen candidates totalled 2,893; 89,571 repeated filter evaluations had nine
+mandatory fields UNKNOWN. These are transport observations, not a screening pass.
+The original live_rollout_pass:true tested prices/feed only and was insufficient.
+No real example alerts exist from that run; synthetic examples are not substitutes.
 
-The repaired exporter succeeded: 644 retained launch rows, zero scanner market snapshots, query_only true and scanner_modified false. Prices now come from the separate permitted public RPC path. Starting the exporter service before its timer resolved the inactive timer on this resumed installation. No source or timer definition was changed for that startup ordering.
+Candidate fixes version-1 Solana transaction fetches, uses 1,000-signature pages,
+collects fresh authorities/full holder census before history completion, and uses
+authenticated cached creation for independent social/curve/developer checks.
+Caches expire; every frozen gate remains fail-closed. History remains complete-only
+for buyer growth/share and first-two-block membership. Account results are reused
+for at most 40 seconds under the existing 60-second freshness limit.
+New heartbeat/receipt counters expose collection failures and distinguish transport
+from full screening. Explicit owner-opted-in shared/private chat is supported by
+the client without changing delivery.json. Every lane alert includes DEX Screener.
 
-Owner then started vivameda-early-lane-rollout-rpc2.service. Supplied logs show 10 valid polls, pricing_issue null, and 129 fresh market marks among 627 tokens in the latest cycle. Selected/suppressed decisions remain 0; Telegram false throughout. These are startup observations, not final hourly counts, a full-screening pass, universal coverage or a completed two-hour rollout. Most watched tokens still lack a fresh mark in that latest cycle. Missing/unsupported evidence remains UNKNOWN; no filter relaxation.
+128 lane offline tests passed locally and on server Python 3.12. A live independent
+account probe returned authorities PASS, top_holder PASS, complete census true in
+two RPC calls. Current public RPC also returned a successful version-1 envelope;
+that sampled transaction contained no direct Pump instructions, so it is not a
+successful Pump trade-decoder validation. A larger trade-history probe hit RPC
+rate limiting; backoff was respected, no provider/endpoint cycling or paid fallback.
+A successful version-1 economic buy is covered by an offline authenticated fixture.
+No complete live screening path or new two-hour run is claimed yet.
 
-First supplied fresh-data heartbeat: 2026-10-17 07:20:58 UTC (10:20:58 Cyprus). Exact persisted activation must be confirmed from the journal/report; expected review date 31 October if activation is this run. Failed missing-input waits do not count. The new run should finish around 12:21 Cyprus; inspect actual receipt timestamps, duration, valid/priced polls and gaps before accepting it.
+Protected lane state/inbox remain unreadable to engineering; no permissions changed.
+The root-only migration accepts installed RPC bundle 41b453fb, verifies exact old
+units and both bundles, locks the stopped lane, validates the append-only journal,
+and preserves its existing activation/cohorts. It starts nothing. The original
+study clock is not reset. Exact persisted review timestamp requires owner report;
+if activation was the supplied 17 October run, day-14 review is 31 October 2026,
+with a later maturity follow-up for the last day's selections.
 
-No Telegram channel or existing sender confirmed; no execution/signing/keys/paid calls. Scanner, learner, monitors and frozen rules unchanged. Meme desk remains paused. Source release gate: 936 tests across 26 suites, including 109 early-lane tests. Current observation adds no source/threshold changes.
+Open issues: free-RPC history throughput and complete live eligibility, incomplete
+launch-source coverage, new shadow receipt and real eligible examples. Shared 🌻
+destination one-shot succeeded earlier; continuous confirmation still disabled.
+Scanner, learner, monitors, frozen study, rules and meme desk remain unchanged.
+See EVIDENCE_OWNER_COMMANDS.md and EVIDENCE_REPAIR_20261017.md.
 
-After the run, from the root server terminal:
-
-```bash
-cat /var/lib/vivameda-early-lane/log_only_receipt.json
-```
-
-Keep runtime rows/logs private. Publish aggregates and limitations. See OWNER_COMMANDS, ROLLOUT and ASTRA_HANDOVER.
-
-## Sender source prepared — 17 October 2026
-
-The separate sender/ package implements the existing root Unix-socket contract,
-durable idempotency and Telegram receipts, persisted Retry-After, exact configured
-channel enforcement and scanner-chat exclusion. 46 new offline tests; source only.
-NOT installed, started or enabled. No Telegram message sent, credential contents
-read by engineering, delivery.json change or lane executable-bundle change.
-The current log-only run and its pending result remain as reported above.
-See [sender handover](sender/ASTRA_HANDOVER.md) and the
-[owner install-only/test commands](sender/OWNER_COMMANDS.md). The new numeric channel
-and separately authorized configuration are still missing. Uncertain network sends
-are held for owner review, never automatically resent. Repository gate: 982 tests
-across 27 suites, including 109 lane tests and 46 sender tests.
-
-Owner installation attempt stopped before writes at the credential ownership check.
-Metadata confirms the existing scanner owns its 0600 credential. Corrected sender
-bundle accepts root or vivameda-scout owner-only files, preserves that file, and
-retains root-only delivery config checks. 46 sender tests / 982 repository tests.
-Sender installation and real channel test remain pending; nothing was started.
-
-## Shared-channel owner amendment — 17 October 2026
-
-Owner confirmed the existing scanner channel with a 🌻 prefix. Sender old bundle
-5ae872c9 is owner-confirmed installed, stopped, disabled. New source adds explicit
-root-config shared-channel opt-in, 🌻 on every send, and a checked stopped upgrade
-plus one direct owner test. No channel ID or new bot/channel needed. The owner
-command writes only the lane delivery settings, keeps confirmation false, and never
-starts continuous services. It has not been run by engineering. 58 sender tests;
-994 repository tests / 27 suites / 393 verified files. See sender/OWNER_COMMANDS.md.
-
-Owner's shared sender upgrade to 28ee6a42 succeeded, stopped/disabled, state preserved.
-The direct test refused before config/API because the existing scanner sends to a
-private chat rather than a -100 channel. New sender correction accepts only the exact
-scanner private chat under root opt-in, with 🌻 and unchanged idempotency. New upgrade/
-one-test command is pending. No service starts. 58 sender / 994 repository tests.
-The current lane transport's -100 confirmation guard remains a separate compatibility
-blocker before any continuous private-chat activation. See sender/ASTRA_HANDOVER.md.
-
-Owner subsequently confirmed sender bundle 40c80bc0 installed/stopped/disabled and
-one successful direct 🌻 test with a real Telegram receipt. Private chat/message IDs
-stay private. Continuous delivery is still off; the lane-client private-chat guard
-and completed log-only result remain unresolved before any activation.
+Repository release verification: Python 3.12; 1,027 tests /28 suites passed, 405 files verified. Scanner and learner remain active with unchanged source hashes. This verifies source, not deployment or live screening.

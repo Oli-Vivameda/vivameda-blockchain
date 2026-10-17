@@ -12,6 +12,7 @@ def message(c,now=None):
            f"Dev {number(f['dev_pct']):.1f}% | dev+first2 {number(f['dev_first_pct']):.1f}% | top {number(f['top_holder_pct']):.1f}%",
            f"Buyers {f['unique_buyers']} (+{growth:.0f}%/5m) | buys {share:.0f}%",
            ' '.join(x['url'] for x in f['socials'][:3]),
+           'https://dexscreener.com/solana/'+mint,
            'https://pump.fun/coin/'+mint,
            'https://axiom.trade/t/'+mint,
            'https://gmgn.ai/sol/token/'+mint,FOOTER]

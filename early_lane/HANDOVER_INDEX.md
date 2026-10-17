@@ -1,0 +1,5 @@
+# Early lane handover index
+
+| Date | Work | Status | Evidence |
+|---|---|---|---|
+| 2026-10-17 | Independent evidence / transaction-v1 repair | 128 offline tests; live accounts verified; upgrade and shadow pending | [Handover](EVIDENCE_REPAIR_20261017.md), [commands](EVIDENCE_OWNER_COMMANDS.md) |

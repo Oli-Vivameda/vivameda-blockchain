@@ -102,14 +102,14 @@ class Collector:
         s=json.loads(row[0]) if row else {'cursor':None,'before':None,'head':None,'pending':[],'paging_done':False,'scan_at':None}
         # Complete the prior scan first, then the next poll catches up from its head.
         while not s['paging_done']:
-            options={'limit':100,'commitment':'confirmed'}
+            options={'limit':1000,'commitment':'confirmed'}
             if s['before']:options['before']=s['before']
             page=self.rpc.call('getSignaturesForAddress',[mint,options])
             if s['head'] is None:s['head']=page[0]['signature'] if page else s['cursor'];s['scan_at']=time.time()
             boundary=next((i for i,x in enumerate(page) if x['signature']==s['cursor']),None)
             selected=page[:boundary] if boundary is not None else page
             s['pending'].extend(x for x in selected if not self.cache.execute('SELECT 1 FROM tx WHERE mint=? AND sig=?',(mint,x['signature'])).fetchone())
-            if boundary is not None or len(page)<100:
+            if boundary is not None or len(page)<1000:
                 if s['cursor'] and boundary is None:raise SourceUnavailable('rpc_history_cursor_gap')
                 s['paging_done']=True
             else:s['before']=page[-1]['signature']
@@ -118,7 +118,7 @@ class Collector:
         s['pending'].sort(key=lambda r:(r['slot'],r['signature']))
         while s['pending']:
             entry=s['pending'][0]
-            tx=self.rpc.call('getTransaction',[entry['signature'],{'encoding':'jsonParsed','commitment':'confirmed','maxSupportedTransactionVersion':0}])
+            tx=self.rpc.call('getTransaction',[entry['signature'],{'encoding':'jsonParsed','commitment':'confirmed','maxSupportedTransactionVersion':1}])
             if tx is None:raise SourceUnavailable('transaction_gap_retry')
             try:parsed=decode_tx(tx,mint,entry['signature'])
             except (ValueError,KeyError,TypeError,IndexError) as exc:parsed={'signature':entry['signature'],'slot':entry['slot'],'error':str(exc)[:100]}
