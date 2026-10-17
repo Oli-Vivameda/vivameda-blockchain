@@ -104,3 +104,11 @@ At activation +14 days report the frozen cohort, with final maturation at +15 da
 +120s. Activation has not happened, so there is no booked review date yet. If
 activation occurs on 17 October 2026, day 14 is 31 October and final follow-up is
 1 November +120s at the corresponding UTC time (Cyprus DST can change local hour).
+
+## Signature-audited stream shadow — 17 October 2026
+
+Transaction-level repair and an optional frozen-screening adapter are built.
+They require complete finalized mint-signature coverage and original creator
+authentication. No continuous runtime or Telegram delivery is enabled. See
+STREAM_INTEGRATION_HANDOVER.md and STREAM_INTEGRATION_COMMANDS.md for the
+no-start staging and bounded owner shadow. Source tests are not live readiness.

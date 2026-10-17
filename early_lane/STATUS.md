@@ -44,3 +44,11 @@ Scanner, learner, monitors, frozen study, rules and meme desk remain unchanged.
 See EVIDENCE_OWNER_COMMANDS.md and EVIDENCE_REPAIR_20261017.md.
 
 Repository release verification: Python 3.12; 1,027 tests /28 suites passed, 405 files verified. Scanner and learner remain active with unchanged source hashes. This verifies source, not deployment or live screening.
+
+## Signature-audited stream shadow — 17 October 2026
+
+Transaction-level repair and an optional frozen-screening adapter are built.
+They require complete finalized mint-signature coverage and original creator
+authentication. No continuous runtime or Telegram delivery is enabled. See
+STREAM_INTEGRATION_HANDOVER.md and STREAM_INTEGRATION_COMMANDS.md for the
+no-start staging and bounded owner shadow. Source tests are not live readiness.

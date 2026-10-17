@@ -25,7 +25,7 @@ def normalize(value,observed_at):
     if not isinstance(logs,list)or len(logs)>4096 or any(not isinstance(x,str)for x in logs):raise StreamGap('log_shape')
     if value['err']is not None and not((isinstance(value['err'],dict)or isinstance(value['err'],str))and bool(value['err'])):raise StreamGap('invalid_failure_status')
     if value['err']is not None:return {'signature':signature,'failed':True,'creations':[],'trades':[],'source_hash':digest(value),'admissible_for_screening':False}
-    pmap,_,events=layout();known={x['name'].replace('_','').lower()for x in pmap.values()};stack=[];payloads={};methods=[];pump_seen=False;amm_seen=False
+    pmap,_,events=layout();known={x['name'].replace('_','').lower()for x in pmap.values()};stack=[];payloads={};methods=[];all_methods=[];pump_seen=False;amm_seen=False
     for line in logs:
         if 'Log truncated'in line:raise StreamGap('logs_truncated')
         match=re.fullmatch(r'Program (\w+) invoke \[(\d+)\]',line)
@@ -39,6 +39,7 @@ def normalize(value,observed_at):
         if stack and stack[-1]==PUMP:
             if line.startswith('Program log: Instruction: '):
                 method=line.split(': ',2)[2].replace('_','').lower()
+                all_methods.append(method)
                 if method not in known:raise StreamGap('unsupported_pump_method')
                 if method.startswith(('buy','sell')):methods.append('buy'if method.startswith('buy')else'sell')
             elif line.startswith('Program data: '):
@@ -67,4 +68,4 @@ def normalize(value,observed_at):
     for event in creations+trades:
         at=event.get('at',event.get('created_at'))
         if not 0<=observed_at-at<=60:raise MintGap('event_time_not_fresh',scope)
-    return dict(signature=signature,failed=False,pump_seen=pump_seen,amm_seen=amm_seen,creations=creations,trades=trades,source_hash=digest(value),admissible_for_screening=False)
+    return dict(signature=signature,failed=False,pump_seen=pump_seen,amm_seen=amm_seen,fast_path_safe=bool(methods)and not amm_seen and not creations and all(m.startswith(('buy','sell'))for m in all_methods),creations=creations,trades=trades,source_hash=digest(value),admissible_for_screening=False)

@@ -84,3 +84,5 @@ all remaining analysis, Mac evidence collection and the Stampede sender link pat
 Early-lane evidence repair (17 October 2026): [handover](../early_lane/EVIDENCE_REPAIR_20261017.md), [owner upgrade/shadow commands](../early_lane/EVIDENCE_OWNER_COMMANDS.md). Source tested; full live screening and delivery activation pending.
 
 Standalone stream shadow source: [protocol](../early_lane/STREAM_PROTOCOL.md) and [handover](../early_lane/STREAM_HANDOVER.md). Source-only; no admission or deployment.
+
+- Signature-audited stream shadow: early_lane/STREAM_INTEGRATION_HANDOVER.md; staged files only, bounded owner screening validation required.

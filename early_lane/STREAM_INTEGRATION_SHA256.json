@@ -1,0 +1,12 @@
+{
+  "BUNDLE.json": "f2e428814ddbb8922969287de23859d726bbb76f45b8a16db9e00597d70daebb",
+  "STREAM_INTEGRATION_PROTOCOL.md": "b586e92919b0a8d76fa9f298b9d9e7b8ac2159e33aebe3d940d9bc1977881f10",
+  "service.py": "df18039823ed111bcc8342aa3d147fd42baa9e141f6ad2fdb69db8119420d77a",
+  "stream_capture.py": "b646180fbb93b525b26b7e682239055d3ac3209e04d731816c415a98730e28c3",
+  "stream_events.py": "16f83c452678aa8502615d87857770feb9a8886e146a9507117d77f40ad0e61f",
+  "stream_history.py": "c124c539b1ae2174f4cbc196d513fd43fe980fa4c247c17db9c275b3e36b216b",
+  "stream_owner.py": "d709d835078cfd33fd30ceb208fd1ce16fb119692e519b0b90530c4d077186cd",
+  "stream_shadow.py": "bf74af4224df6e6e8f92c5fa4cafe7e6cd17130b5ad698e2d1b7e50b0914daaf",
+  "stream_stage.py": "4fa009314cc40b954533eddfb1fdc7c039d7ccbe67cb7ad83a941e33a48d6b6b",
+  "tests/test_stream_history.py": "f781b393d75a8a080e15636d71dfc48eae1114963f705565cfdd1e1fc066f87a"
+}

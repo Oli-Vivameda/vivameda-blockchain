@@ -19,10 +19,14 @@ from transport import configuration,UnixSender
 from pricing import Marks
 
 class Runner:
-    def __init__(self,state):
+    def __init__(self,state,stream=False):
         self.path=Path(state);self.path.mkdir(mode=0o750,parents=True,exist_ok=True)
         if shutil.disk_usage(self.path).free<3*1024**3:raise ValueError('disk_reserve_below_3GiB')
         self.j=Journal(self.path/'lane.sqlite3');self.lane=Lane(self.j);self.collector=Collector(self.path/'rpc_cache.sqlite3')
+        if stream:
+            from stream_history import StreamCollector
+            self.collector.cache.close()
+            self.collector=StreamCollector(self.path/'stream_rpc_cache.sqlite3',self.path/'stream')
         self.log=logging.getLogger('early-lane:'+str(self.path.resolve()));self.log.setLevel(logging.INFO);self.log.propagate=False
         if not self.log.handlers:
             h=RotatingFileHandler(self.path/'lane.log',maxBytes=2*1024**2,backupCount=2);h.setFormatter(logging.Formatter('%(message)s'));self.log.addHandler(h)

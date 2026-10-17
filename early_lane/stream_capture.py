@@ -25,6 +25,8 @@ class Capture:
         CREATE TABLE IF NOT EXISTS trades(signature TEXT,event TEXT,mint TEXT,at REAL,slot INTEGER,generation INTEGER,body TEXT,PRIMARY KEY(signature,event));
         CREATE INDEX IF NOT EXISTS trade_mint ON trades(mint,slot,signature);
         CREATE TABLE IF NOT EXISTS mint_gaps(mint TEXT PRIMARY KEY,at REAL,reason TEXT);
+        CREATE TABLE IF NOT EXISTS captured_transactions(signature TEXT PRIMARY KEY,slot INTEGER,observed_at REAL,body TEXT,conflict INTEGER NOT NULL DEFAULT 0);
+        CREATE TABLE IF NOT EXISTS transaction_gaps(signature TEXT PRIMARY KEY,slot INTEGER,observed_at REAL,reason TEXT);
         CREATE TABLE IF NOT EXISTS recoveries(mint TEXT PRIMARY KEY,at REAL,generation INTEGER,body TEXT);
         ''')
         self.audit=Journal(self.path/'stream_audit.sqlite3');self.subs={};self.counts={k:0 for k in('notifications','failed','duplicates','creations','trades','gaps','root_updates','non_economic_notifications','scoped_gaps','global_gaps')}
@@ -74,7 +76,26 @@ class Capture:
         if kind!='logsNotification'or 1 not in self.subs or params.get('subscription')!=self.subs[1]:raise StreamGap('unexpected_notification')
         result=params.get('result',{});slot=result.get('context',{}).get('slot')
         if type(slot)is not int or slot<=0:raise StreamGap('log_slot_shape')
-        item=normalize(result.get('value'),now);signature=item['signature'];h=item['source_hash']
+        value=result.get('value')
+        try:item=normalize(value,now)
+        except StreamGap as exc:
+            # Repair is demand-driven: queue one signature, never all mint history.
+            # Unlocatable/malformed signatures remain a global stream gap.
+            from stream_events import address
+            signature=address(value.get('signature'),64)if isinstance(value,dict)else None
+            if signature:
+                with self.db:
+                    self.db.execute('INSERT OR REPLACE INTO transaction_gaps VALUES(?,?,?,?)',(signature,slot,now,str(exc)))
+                    self.db.execute('UPDATE captured_transactions SET conflict=1 WHERE signature=?',(signature,))
+            raise
+        signature=item['signature'];h=item['source_hash']
+        if item.get('fast_path_safe'):
+            old=self.db.execute('SELECT body,slot FROM captured_transactions WHERE signature=?',(signature,)).fetchone()
+            with self.db:
+                if old and (json.loads(old['body'])['source_hash']!=h or old['slot']!=slot):
+                    self.db.execute('UPDATE captured_transactions SET conflict=1 WHERE signature=?',(signature,))
+                    self.db.execute('INSERT OR REPLACE INTO transaction_gaps VALUES(?,?,?,?)',(signature,slot,now,'conflicting_signature_notification'))
+                else:self.db.execute('INSERT OR IGNORE INTO captured_transactions VALUES(?,?,?,?,0)',(signature,slot,now,canonical(item)))
         if item['failed']or not(item['trades']or item['creations']):
             self.counts['notifications']+=1;self.counts['failed']+=item['failed'];self.counts['non_economic_notifications']+=not item['failed']
             if now-(self.get('last_log_at',0)or 0)>=1:
@@ -82,7 +103,11 @@ class Capture:
             return
         old=self.db.execute('SELECT body_hash FROM notifications WHERE signature=?',(signature,)).fetchone()
         if old:
-            if old[0]!=h:raise StreamGap('conflicting_signature_notification')
+            if old[0]!=h:
+                with self.db:
+                    self.db.execute('UPDATE captured_transactions SET conflict=1 WHERE signature=?',(signature,))
+                    self.db.execute('INSERT OR REPLACE INTO transaction_gaps VALUES(?,?,?,?)',(signature,slot,now,'conflicting_signature_notification'))
+                raise StreamGap('conflicting_signature_notification')
             self.counts['duplicates']+=1;return
         g=self.get('generation',0)
         with self.db:
@@ -136,6 +161,8 @@ class Capture:
         return out
     def prune(self,now):
         with self.db:
+            self.db.execute('DELETE FROM captured_transactions WHERE observed_at<?',(now-1860,))
+            self.db.execute('DELETE FROM transaction_gaps WHERE observed_at<?',(now-1860,))
             self.db.execute('DELETE FROM notifications WHERE observed_at<?',(now-1860,))
             self.db.execute('DELETE FROM creations WHERE at<?',(now-1860,))
             self.db.execute('DELETE FROM trades WHERE at<?',(now-1860,))
@@ -147,7 +174,7 @@ class Capture:
     def close(self):self.db.close();self.audit.db.close()
 
 def run(state,duration=60):
-    if not 1<=duration<=600:raise ValueError('bounded_shadow_duration_1_to_600_seconds')
+    if not 1<=duration<=7200:raise ValueError('bounded_shadow_duration_1_to_7200_seconds')
     path=Path(state);path.mkdir(parents=True,exist_ok=True,mode=0o750)
     lock=open(path/'stream_process.lock','a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
     capture=Capture(path);until=time.monotonic()+duration;start=time.time();running=True;attempts=0;last_ping=0;last_prune=0
