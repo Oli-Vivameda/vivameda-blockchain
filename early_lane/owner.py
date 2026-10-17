@@ -12,7 +12,7 @@ import tempfile
 def main():
     p=argparse.ArgumentParser()
     p.add_argument('--expected-bundle',required=True)
-    p.add_argument('command',choices=['export','install','log-only','report','once'])
+    p.add_argument('command',choices=['export','install','upgrade','log-only','report','once'])
     p.add_argument('args',nargs=argparse.REMAINDER);a=p.parse_args()
     root=Path(__file__).resolve().parent
     raw=(root/'BUNDLE.json').read_bytes()
@@ -34,6 +34,7 @@ def main():
         args=a.args[1:] if a.args[:1]==['--'] else a.args
         if a.command=='export':cmd=[str(snap/'exporter.py'),'--expected-bundle',a.expected_bundle]+args
         elif a.command=='install':cmd=[str(snap/'install.py'),'--expected-bundle',a.expected_bundle]+args
+        elif a.command=='upgrade':cmd=[str(snap/'upgrade.py'),'--expected-bundle',a.expected_bundle]+args
         else:cmd=[str(snap/'service.py'),a.command]+args
         raise SystemExit(subprocess.run([sys.executable,'-B']+cmd,cwd=snap).returncode)
 if __name__=='__main__':main()

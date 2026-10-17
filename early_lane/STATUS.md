@@ -1,20 +1,23 @@
-# Early lane status — 17 October 2026
+# Early lane status — source repair, 17 October 2026
 
-BUILT / OFFLINE TESTED; LIVE VALIDATION BLOCKED; NOT INSTALLED.
+INITIAL BUNDLE INSTALLED; EXPERIMENT STOPPED; REPAIR PREPARED, NOT APPLIED.
 
-Built: frozen rules, read-only owner exporter, public RPC evidence collector,
-fail-closed eligibility, growth-ranked rolling cap, immutable selected/suppressed
-cohorts, hash-chained journal, sampled 24h outcomes, Cyprus daily summaries and
-14-day review, disabled credential-free sender interface, owner installer.
+The owner installed d3811acb, then launched log-only. The public Pump.fun endpoint
+returned HTTP 403/Cloudflare, so the exporter never wrote a feed. Owner output
+showed 0 valid polls. Owner stopped only early-lane jobs; engineering read-only
+systemd checks confirm the timer and rollout inactive. Scanner/learner remain active.
+A scanner-only diagnostic export returned 597 recent launches, 0 market snapshots.
 
-Tested: 83 offline tests locally and on server Python 3.12. Missing-feed probe
-correctly blocked. Public RPC health and WebSocket handshake only.
+The prepared repair uses that approved discovery export and independently reads
+Pump curve/PumpSwap vault marks with a fully verified, fresh on-chain SOL/USD Pyth
+feed through public Solana RPC. No website price refresh, keys, accounts or paid
+calls. Frozen RULES and screening thresholds unchanged. 109 local tests pass; see
+the dated release for final server/full-suite checks. Owner upgrade preflight must
+obtain live prices before any unit change, otherwise aborts. No real screening or
+successful two-hour rollout has been established; no alert/outcome result exists.
 
-Missing: owner-exported live input; genuine two-hour candidate/filter statistics;
-three observed alerts; throughput/completeness validation; confirmed NEW Telegram
-channel; compatible existing authenticated sender; root installation and live
-verification. No real outcome or 10x-rate result exists. No activation/review date.
-
-Universal launch coverage is not established with the retained NSFW-excluded feed.
-Rug-name registry rule omitted; independent liquidity-drain evidence unavailable.
-See README, ROLLOUT and ASTRA_HANDOVER for precise limits and owner actions.
+Remaining limits: NSFW-excluded discovery, public-RPC completeness/throughput,
+unsupported USDC/mayhem/boost pools, metadata reachability, full-history freshness,
+new Telegram channel TBD and compatible authenticated sender absent. Journal is
+preserved; missing prices cannot start the observation clock or pass the rollout.
+See SOURCE_REPAIR, OWNER_COMMANDS and ASTRA_HANDOVER.

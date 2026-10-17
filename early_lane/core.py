@@ -31,7 +31,7 @@ def checks(f,now):
     test('age',lambda:0<=now-number(f['created_at'])<=1800)
     # Caller supplies RPC-normalized evidence, never scanner's self-asserted verdict.
     fresh=lambda key:evidence(0<=now-number(f[key])<=60)
-    test('market_cap',lambda:fresh('market_at') and 8000<=number(f['mc'])<=25000)
+    test('market_cap',lambda:fresh('market_at') and evidence(now<=number(f['market_expires_at']) if 'market_expires_at' in f else True) and 8000<=number(f['mc'])<=25000)
     test('curve',lambda:fresh('curve_at') and f['curve_authenticated'] is True and
          (f['on_curve'] is True or f['on_curve'] is False and 0<=now-number(f['graduated_at'])<=300) and 0<=number(f['curve_progress_pct'])<=100)
     complete=lambda:evidence(f['census_complete'] is True) and fresh('holders_at')

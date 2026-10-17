@@ -16,6 +16,7 @@ from exporter import atomic
 from outcomes import record,finalize,due_daily,review,individual,HORIZONS
 from alerts import message,flush
 from transport import configuration,UnixSender
+from pricing import Marks
 
 class Runner:
     def __init__(self,state):
@@ -26,6 +27,7 @@ class Runner:
         if not self.log.handlers:
             h=RotatingFileHandler(self.path/'lane.log',maxBytes=2*1024**2,backupCount=2);h.setFormatter(logging.Formatter('%(message)s'));self.log.addHandler(h)
         self.last_processed={}
+        self.last_priced={};self.price_cache={}
     def poll(self,frame,now=None,fixtures=False,log_only=True):
         now=time.time() if now is None else now
         if frame.get('schema')!='early-lane-feed-v1' or frame.get('rules_sha256')!=RULES_SHA or not 0<=now-frame['exported_at']<=60:raise ValueError('missing_stale_or_wrong_owner_feed')
@@ -37,6 +39,36 @@ class Runner:
         for x in launches:
             self.j.atomic(lambda:self.j.add('launch','launch:'+x['mint'],{'mint':x['mint'],'created_at':x['created_at'],'first_observed_at':now,'late_discovery_s':max(0,now-x['created_at'])},now))
         facts=[];self.collector.rpc.budget(12)
+        price_issue=None
+        if not fixtures:
+            watched={x['mint']:x for x in launches}
+            for mint,c in existing.items():
+                if now<=c['at']+86400+120:watched.setdefault(mint,{'mint':mint,'created_at':c['facts']['created_at']})
+            def priority(x):
+                c=existing.get(x['mint']);urgent=False
+                if c:
+                    done={r['body']['horizon_min'] for r in self.j.rows('checkpoint',x['mint'])}
+                    urgent=any(h not in done and abs(c['at']+h*60-now)<=120 for h in HORIZONS)
+                return (0 if urgent else 1,self.last_priced.get(x['mint'],0),-x['created_at'],x['mint'])
+            batch=sorted(watched.values(),key=priority)[:30]
+            try:
+                marks=Marks(self.collector.rpc).read(batch)
+                for x in batch:
+                    mint=x['mint'];self.last_priced[mint]=now
+                    mark=marks.get(mint,{})
+                    if mark.get('mc') is not None:self.price_cache[mint]=mark
+                    else:self.price_cache.pop(mint,None)
+            except (OSError,ValueError,KeyError,TypeError,IndexError) as exc:
+                price_issue=str(exc)[:100]
+            current=time.time()
+            for x in launches:
+                mark=self.price_cache.get(x['mint'])
+                if mark and 0<=current-mark['market_at']<=60 and current<=mark['market_expires_at']:x.update(mark)
+            for mint,mark in self.price_cache.items():
+                if mint in existing and 0<=current-mark['market_at']<=60:
+                    record(self.lane,mint,mark['market_at'],mark['mc'],mark.get('liquidity'),current,digest([mint,mark['market_at'],mark['pricing_provenance']]),mark['pricing_provenance'])
+            self.price_cache={m:v for m,v in self.price_cache.items() if m in watched}
+            self.last_priced={m:v for m,v in self.last_priced.items() if m in watched}
         # Fair round-robin of price-eligible candidates; missing evidence cannot
         # turn budget pressure into a PASS or an undocumented population change.
         launches.sort(key=lambda x:(self.last_processed.get(x['mint'],0),x['created_at'],x['mint']))
@@ -50,7 +82,8 @@ class Runner:
                 f=self.collector.enrich(f,now);self.last_processed[f['mint']]=now
             facts.append(f)
         decision_at=now if fixtures else time.time()
-        chosen=self.lane.consider(facts,decision_at,live=frame.get('source_live') is True and not fixtures,log_only=log_only)
+        fresh_marks=sum(x.get('mc') is not None and x.get('market_at') is not None and 0<=decision_at-x['market_at']<=60 and decision_at<=x.get('market_expires_at',decision_at) for x in launches)
+        chosen=self.lane.consider(facts,decision_at,live=frame.get('source_live') is True and not fixtures and fresh_marks>0,log_only=log_only)
         # Persist decision/anchor observation BEFORE emitting any log message.
         for c in chosen:
             record(self.lane,c['mint'],c['at'],c['mc'],None,c['at'],'anchor:'+c['mint'],{'source':'eligibility_decision'},)
@@ -69,7 +102,7 @@ class Runner:
         requests.sort(key=lambda x:(x['priority'],x['target_at'] if x['priority']==0 else x['last_observed_at'],x['mint']))
         atomic(self.path/'tracked.json',requests)
         self.collector.prune({x['mint'] for x in launches})
-        return {'launches_in_window':len(launches),'decisions':len(chosen),'selected':sum(c['selection']=='ALERT' for c in chosen),'suppressed':sum(c['selection']=='CAP_SUPPRESSED' for c in chosen),'coverage':frame.get('coverage')}
+        return {'launches_in_window':len(launches),'fresh_market_marks':fresh_marks,'pricing_issue':price_issue,'decisions':len(chosen),'selected':sum(c['selection']=='ALERT' for c in chosen),'suppressed':sum(c['selection']=='CAP_SUPPRESSED' for c in chosen),'coverage':frame.get('coverage')}
 
 def volume_report(j):
     buckets={}
@@ -105,7 +138,7 @@ def main():
         nonlocal running
         running=False
     signal.signal(signal.SIGTERM,stop);signal.signal(signal.SIGINT,stop)
-    start=time.time();until=time.monotonic()+a.duration if a.command=='log-only' else float('inf');valid=0;cycles=0;errors={};valid_times=[]
+    start=time.time();until=time.monotonic()+a.duration if a.command=='log-only' else float('inf');valid=0;cycles=0;errors={};valid_times=[];priced_times=[]
     while running:
         if shutil.disk_usage(path).free<3*1024**3:raise SystemExit(75)
         cycles+=1
@@ -115,6 +148,7 @@ def main():
                 try:conf=configuration(a.delivery_config)
                 except (ValueError,OSError,KeyError):r.log.error(canonical({'kind':'DELIVERY_CONFIG_BLOCKED'}))
             frame=json.loads(Path(a.input).read_text());data=r.poll(frame,log_only=not conf.get('new_channel_confirmed',False));valid+=1;valid_times.append(time.time());status='LOG_ONLY'
+            if data.get('fresh_market_marks',0)>0:priced_times.append(time.time())
             if conf.get('new_channel_confirmed'):
                 flush(r.lane,UnixSender(conf['socket']),conf,time.time());status='CONFIRMED_DELIVERY_QUEUE'
         except (OSError,ValueError,KeyError,TypeError) as exc:
@@ -124,6 +158,7 @@ def main():
         target=min(until,time.monotonic()+5)
         while running and time.monotonic()<target:time.sleep(min(1,max(0,target-time.monotonic())))
     finished=time.time();gaps=[b-a for a,b in zip([start]+valid_times,valid_times+[finished])];max_gap=max(gaps,default=finished-start)
-    receipt={'maximum_valid_feed_gap_s':max_gap,'started_at':start,'finished_at':time.time(),'duration_s':time.time()-start,'valid_owner_feed_polls':valid,'cycles':cycles,'errors':errors,'volume_per_hour':volume_report(r.j),'telegram_sent':0,'live_rollout_pass':valid>0 and time.time()-start>=7200 and max_gap<=120,'status':'OBSERVED_LOG_ONLY' if valid else 'BLOCKED_NO_OWNER_FEED_NOT_A_ROLLOUT_PASS'}
+    price_gap=max((b-a for a,b in zip([start]+priced_times,priced_times+[finished])),default=finished-start)
+    receipt={'maximum_valid_feed_gap_s':max_gap,'priced_polls':len(priced_times),'maximum_priced_poll_gap_s':price_gap,'started_at':start,'finished_at':time.time(),'duration_s':time.time()-start,'valid_owner_feed_polls':valid,'cycles':cycles,'errors':errors,'volume_per_hour':volume_report(r.j),'telegram_sent':0,'live_rollout_pass':valid>0 and bool(priced_times) and time.time()-start>=7200 and max_gap<=120 and price_gap<=120,'status':'OBSERVED_LOG_ONLY' if priced_times else 'BLOCKED_NO_USABLE_PRICES_NOT_A_ROLLOUT_PASS'}
     atomic(path/'log_only_receipt.json',receipt);print(canonical(receipt))
 if __name__=='__main__':main()

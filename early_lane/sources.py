@@ -56,7 +56,7 @@ class PublicHTTPS:
         raise SourceUnavailable('redirect_bound')
 
 class Rpc:
-    ALLOWED={'getHealth','getAccountInfo','getMultipleAccounts','getProgramAccounts','getSignaturesForAddress','getTransaction','getBlocks','getSlot'}
+    ALLOWED={'getHealth','getAccountInfo','getMultipleAccounts','getProgramAccounts','getSignaturesForAddress','getTransaction','getBlocks','getSlot','getBlockTime'}
     def __init__(self,cache,http=None):
         self.cache=cache;self.http=http or PublicHTTPS();self.remaining=0
     def budget(self,n=12):self.remaining=n
@@ -78,7 +78,14 @@ class Rpc:
             self.cache.execute("INSERT OR REPLACE INTO config VALUES('cooldown',?)",(canonical(time.time()+delay),));self.cache.commit();raise SourceUnavailable('rpc_throttled_or_blocked')
         if response['status']!=200:raise SourceUnavailable('rpc_http')
         value=json.loads(response['body'])
-        if 'error' in value:raise SourceUnavailable('rpc_method_unavailable')
+        if 'error' in value:
+            error=value['error'];code=error.get('code') if isinstance(error,dict) else None
+            message=str(error.get('message','')).lower() if isinstance(error,dict) else ''
+            if code in (429,-32429,-32005) or 'too many requests' in message or 'rate limit' in message:
+                delay=retry_seconds(response['headers'])
+                self.cache.execute("INSERT OR REPLACE INTO config VALUES('cooldown',?)",(canonical(time.time()+delay),));self.cache.commit()
+                raise SourceUnavailable('rpc_throttled_or_overloaded')
+            raise SourceUnavailable('rpc_method_unavailable:'+str(code))
         return value['result']
 
 class Collector:

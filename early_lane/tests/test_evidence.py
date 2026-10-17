@@ -125,7 +125,7 @@ class Integration(unittest.TestCase):
             r.j.db.close();r.collector.cache.close()
     def test_installer_units_separate_and_no_scanner_execution(self):
         result=units('/opt/reviewed','hash',999,'/opt/scanner/data/db.sqlite')
-        self.assertEqual(len(result),3);self.assertIn('User=vivameda-early-lane',result['vivameda-early-lane.service']);self.assertIn('--refresh-launch-feed',result['vivameda-early-lane-export.service']);self.assertIn('CAP_DAC_READ_SEARCH',result['vivameda-early-lane-export.service'])
+        self.assertEqual(len(result),3);self.assertIn('User=vivameda-early-lane',result['vivameda-early-lane.service']);self.assertNotIn('--refresh-launch-feed',result['vivameda-early-lane-export.service']);self.assertIn('CAP_DAC_READ_SEARCH',result['vivameda-early-lane-export.service'])
         self.assertNotIn('early_scout.py',''.join(result.values()));self.assertNotIn('Restart=always',''.join(result.values()))
     def test_bundle_tamper_and_unsafe_path(self):
         with tempfile.TemporaryDirectory() as d:

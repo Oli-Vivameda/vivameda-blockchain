@@ -1,8 +1,14 @@
+> Current status: initial bundle installed, then STOPPED after HTTP 403. Prepared
+> RPC pricing repair has 109 offline tests; not applied. See [SOURCE_REPAIR](SOURCE_REPAIR.md)
+> and the superseding [owner commands](OWNER_COMMANDS.md). Earlier deployment
+> statements below describe the initial publication, not current live readiness.
+
 # Early lane v1
 
-Experimental read-only Pump.fun observer, separate from the scanner. Source and 83
-offline tests are built. **NOT installed; live two-hour rollout BLOCKED on owner
-export; Telegram channel TBD and authenticated sender absent.** No trading code,
+Experimental read-only Pump.fun observer, separate from the scanner. Initial source is installed but the experiment is stopped after a blocked price
+endpoint. A reviewed RPC pricing repair is prepared with 109 offline tests; it is
+NOT yet applied. Live two-hour validation remains blocked. Telegram channel TBD
+and authenticated sender absent. No trading code,
 wallet connection, keys, signup or paid fallback. Meme desk remains paused.
 
 Read [frozen rules](RULES.md), [source/terms check](SOURCE_TERMS.md),
@@ -15,6 +21,10 @@ formatting only; they are not observed opportunities.
 - `exporter.py`: owner-run mode=ro/query_only SQLite export, column/table allowlist,
   bounded queries; optional explicit refresh of the scanner's same public launch
   endpoint. No source import, database writes or permission changes.
+- `pricing.py`: authenticated on-chain SOL curve/PumpSwap marks and fresh verified
+  Pyth SOL/USD through public RPC; no website price endpoint or Hermes API.
+- `upgrade.py`: checked repair for the stopped initial installation, preserving
+  state and requiring live pricing preflight before any unit replacement.
 - `sources.py`, `pump.py`, pinned official `*_layout.json`: public RPC history,
   authenticated Pump creation/curve, successful economic trades, first two produced
   blocks, complete holder census reconciled to supply, owner-level concentration,
