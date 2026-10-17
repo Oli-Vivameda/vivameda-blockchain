@@ -1,4 +1,14 @@
-# Astra handover — early lane — 17 October 2026, 10:22 Cyprus
+# Astra handover — early lane — 17 October 2026
+
+## Separate sender prepared after the observation startup
+
+See [sender/ASTRA_HANDOVER.md](sender/ASTRA_HANDOVER.md) for the independent sender
+bundle, hashes, install-without-start command and owner-only test-message command.
+39 offline sender tests; source only, not installed/started/enabled. delivery.json,
+existing credential and lane runtime are untouched. No Telegram call was made.
+The numeric NEW channel remains missing. Supersedes older 'sender absent' source
+statements below; dated observation/deployment evidence remains unchanged.
+
 
 ## Owner-confirmed running observation — 17 October 2026, 10:22 Cyprus
 

@@ -1,6 +1,6 @@
 # Repository map
 
-Updated 16 October 2026. This repository is the canonical public home of Vivameda's Crypto Lab.
+Updated 17 October 2026. This repository is the canonical public home of Vivameda's Crypto Lab.
 
 | Material | Home |
 |---|---|
@@ -43,3 +43,13 @@ The separate [copy-paper project](../copy_trading/README.md) contains its frozen
 ## Early lane source repair — 17 October 2026
 
 The owner installed the initial bundle and started log-only. A Pump.fun HTTP 403 blocked its exporter, so 0 valid polls were collected. The owner stopped early lane. Scanner-only diagnostic export: 597 recent launches, 0 fresh market snapshots. A replacement using permitted public RPC on-chain pricing is prepared with 109 offline tests; NOT applied. Frozen rules and existing scanner/services unchanged. See [current status](../early_lane/STATUS.md), [source repair evidence](../early_lane/SOURCE_REPAIR.md), [superseding owner commands](../early_lane/OWNER_COMMANDS.md) and [Astra handover](../early_lane/ASTRA_HANDOVER.md). No genuine two-hour result, Telegram delivery or review activation exists. Earlier installation/readiness statements describe their dated publication.
+
+## Early lane sender — 17 October 2026
+
+The owner applied the RPC pricing repair and started a new log-only observation;
+startup input/prices were observed, final two-hour report pending. This supersedes
+older readiness statements above. Separate [sender source](../early_lane/sender/README.md)
+now implements the existing Unix protocol, durable event keys, real receipts,
+Retry-After and configured-channel/scanner-chat checks. It is NOT installed,
+started or enabled; channel TBD. See [dated release](releases/2026-10-17-early-lane-sender.md)
+and [exact install-only/test commands](../early_lane/sender/OWNER_COMMANDS.md).

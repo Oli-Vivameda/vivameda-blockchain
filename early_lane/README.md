@@ -1,15 +1,16 @@
-> Current status: initial bundle installed, then STOPPED after HTTP 403. Prepared
-> RPC pricing repair has 109 offline tests; not applied. See [SOURCE_REPAIR](SOURCE_REPAIR.md)
-> and the superseding [owner commands](OWNER_COMMANDS.md). Earlier deployment
-> statements below describe the initial publication, not current live readiness.
+> Current status: owner applied the RPC repair and began the new log-only run.
+> Startup data/prices were observed; the completed two-hour result is pending.
+> Sender source is built and tested, but is not installed or started. See
+> [sender handover](sender/ASTRA_HANDOVER.md) and [install-only commands](sender/OWNER_COMMANDS.md).
 
 # Early lane v1
 
-Experimental read-only Pump.fun observer, separate from the scanner. Initial source is installed but the experiment is stopped after a blocked price
-endpoint. A reviewed RPC pricing repair is prepared with 109 offline tests; it is
-NOT yet applied. Live two-hour validation remains blocked. Telegram channel TBD
-and authenticated sender absent. No trading code,
-wallet connection, keys, signup or paid fallback. Meme desk remains paused.
+Experimental read-only Pump.fun observer, separate from the scanner. The owner
+applied the RPC pricing repair and started a new two-hour log-only run. Supplied
+startup logs show fresh input/prices and no selected alerts. Final validation is
+pending. Telegram channel remains TBD. The separate sender is built with 39 offline
+tests; it is not installed, started or enabled. No trading code, wallet connection,
+signup or paid fallback. Meme desk remains paused.
 
 Read [frozen rules](RULES.md), [source/terms check](SOURCE_TERMS.md),
 [rollout evidence](ROLLOUT.md), [exact owner commands](OWNER_COMMANDS.md), and
@@ -38,8 +39,10 @@ formatting only; they are not observed opportunities.
   requests prioritized around checkpoint deadlines, volume and coverage receipts.
 - `alerts.py`, `transport.py`: disabled-by-default confirmed-new-channel queue with
   retry/late-age marking, optional root-authenticated Unix sender protocol. No direct
-  bot API or credential reader. An existing owner-provided sender must implement
-  durable idempotency and actual Telegram delivery; no such sender is supplied here.
+  bot API or credential reader in the lane process. The separate [sender](sender/README.md)
+  implements this contract with a root Unix socket, durable idempotency/receipts and
+  Retry-After. It reads the existing bot credential at runtime only; it never copies
+  it or writes delivery configuration. Installation and a test remain owner actions.
 - `owner.py`, `verify.py`, `BUNDLE.json`, `install.py`: hash-pinned snapshot execution
   and owner-only installer for NEW lane/export units. Installer enables/starts none.
 
@@ -47,6 +50,7 @@ formatting only; they are not observed opportunities.
 
 ```
 python3.12 -B -m unittest discover -s early_lane/tests -v
+python3.12 -B -m unittest discover -s early_lane/sender/tests -v
 ```
 
 Tests never make network calls or send Telegram. Synthetic Runner tests explicitly

@@ -1,0 +1,9 @@
+{
+  "format": "early-lane-sender-v1",
+  "sha256": {
+    "sender.py": "f7f1db7ddc844309ff3781a2435c4d98bc79cd385638ccc131cc41ba9334af67",
+    "install.py": "d59641a96dca6cf10ab29c45407618f7685b4e88175f5a24e9f43c344987cb9a",
+    "owner.py": "e209057c437d9ca24d9220a2de13ac4e1ef18c3ded434850b63cd10d2b58f268",
+    "tests/test_sender.py": "7648c72150bbf570b89e21d36f8f5dc6b5b8fe116b79d5ad8a24d51f1a9dd29e"
+  }
+}

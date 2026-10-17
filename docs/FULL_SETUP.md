@@ -1,5 +1,12 @@
 # Full crypto setup showcase
 
+> Sender update, 17 October 2026: [early_lane/sender](../early_lane/sender/README.md)
+> now implements the existing Telegram Unix-socket contract. Source and 39 offline
+> tests prepared; not installed, started or enabled. Channel is TBD. Owner-only
+> [install/test commands](../early_lane/sender/OWNER_COMMANDS.md) change no delivery
+> configuration. The repaired lane's log-only observation and pending final result
+> remain separate. No scanner/rules/services were changed for the sender.
+
 Operational status reference: 8 October 2026, with separately dated snapshots below. The 5 October snapshot is historical. TradingView/market-monitoring addendum: 8 October 2026; see the dated handover below. Maintained alongside crypto changes. For an introduction, read the repository README; for exact thresholds, follow the linked source guides. This is the Crypto Lab lane, separate from Vivameda's workforce intelligence and client delivery stack.
 
 ## Latest scanner update — 16 October 2026
